@@ -85,8 +85,8 @@ class PluginYagpConfig extends CommonDBTM {
 		$config->showFormHeader(['colspan' => 4]);
 
 		echo "<tr class='tab_bg_1'>";
-		echo "<td >".__("Actualtime","yagp")."</td><td >";
-		Dropdown::showYesNo("actualtime", $config->fields["actualtime"]);
+		echo "<td >".__("Ticketsolveddate","yagp")."</td><td >";
+		Dropdown::showYesNo("ticketsolveddate", $config->fields["ticketsolveddate"]);
 		echo "</td></tr>\n";
 
 		$config->showFormButtons(array('candel'=>false));
@@ -128,7 +128,7 @@ class PluginYagpConfig extends CommonDBTM {
          $DB->query($query) or die ($DB->error());
          $config->add([
                   'id'                          => 1,
-                  'actualtime'              		=> 1,
+                  'ticketsolveddate'              		=> 1,
                ]);
       }
    }
