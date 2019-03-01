@@ -72,21 +72,6 @@ else
   echo "$RELEASE has not been found in setup.php. Exiting."
   exit 1;
 fi
-if grep --quiet $RELEASE yagp.xml; then
-  echo "$RELEASE found in yagp.xml, OK."
-else
-  echo "$RELEASE has not been found in yagp.xml. Exiting."
-  exit 1;
-fi
-
-echo "Set version and official release"
-sed \
-   -e 's/"PLUGIN_YAGP_OFFICIAL_RELEASE", "0"/"PLUGIN_YAGP_OFFICIAL_RELEASE", "1"/' \
-   -e 's/ SNAPSHOT//' \
-   -i '' setup.php
-
-#echo "Minify stylesheets and javascripts"
-#$INIT_PWD/vendor/bin/robo minify
 
 echo "Compile locale files"
 ./tools/update_mo.pl
@@ -109,7 +94,6 @@ echo "Delete various scripts and directories"
 \rm -rf .tx;
 \rm -rf yagp.xml;
 \rm -rf screenshots;
-\find pics/ -type f -name "*.eps" -exec rm -rf {} \;
 
 echo "Creating tarball";
 cd ..;
