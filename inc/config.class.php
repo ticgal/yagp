@@ -89,6 +89,11 @@ class PluginYagpConfig extends CommonDBTM {
 		Dropdown::showYesNo("ticketsolveddate", $config->fields["ticketsolveddate"]);
 		echo "</td></tr>\n";
 
+		echo "<tr class='tab_bg_1'>";
+		echo "<td >".__("Contract Renew","yagp")."</td><td >";
+		Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
+		echo "</td></tr>\n";
+
 		$config->showFormButtons(['candel'=>false]);
 
 		return false;
@@ -116,7 +121,7 @@ class PluginYagpConfig extends CommonDBTM {
 
       $table  = self::getTable();
       $config = new self();
-      //This class is available since version 1.3.0
+      
       if (!$DB->tableExists($table) && !$DB->tableExists("glpi_plugin_yagp_config")){
 			$migration->displayMessage("Installing $table");
 			//Install
@@ -124,12 +129,14 @@ class PluginYagpConfig extends CommonDBTM {
 			$query = "CREATE TABLE `$table` (
 							`id` int(11) NOT NULL auto_increment,
                      `ticketsolveddate` tinyint(1) NOT NULL default '0',
+                     `contractrenew` tinyint(1) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
          $config->add([
                   'id'                          => 1,
                   'ticketsolveddate'            => 0,
+                  'contractrenew'               => 0,
                ]);
       }
    }

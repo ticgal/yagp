@@ -56,8 +56,16 @@ function plugin_yagp_updateitem(CommonDBTM $item){
             'state'=>1,
             'mode'  => CronTask::MODE_EXTERNAL
          ]);
-      }else{
+      }else if ($input["ticketsolveddate"]==0){
          Crontask::Unregister("YagpTicketsolveddate");
+      }
+      if ($input["contractrenew"]==1) {
+         Crontask::Register("PluginYagpContractrenew", 'renewContract', DAY_TIMESTAMP, [
+            'state'=>1,
+            'mode'  => CronTask::MODE_EXTERNAL
+         ]);
+      }else if ($input["contractrenew"]==0){
+         Crontask::Unregister("YagpContractrenew");
       }
    }
 }
