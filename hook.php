@@ -20,15 +20,8 @@ function plugin_yagp_install() {
          }
       }
    }
+
    return true;
-}
-
-function plugin_yagp_item_stats($item) {
-   PluginYagpActualtimeTask::showStats($item);
-}
-
-function plugin_yagp_item_update($item) {
-   PluginYagpActualtimeTask::preUpdate($item);
 }
 /**
  * Uninstall previously installed elements of the plugin
@@ -37,7 +30,7 @@ function plugin_yagp_item_update($item) {
  */
 function plugin_yagp_uninstall() {
 
-   $migration = new Migration(PLUGIN_ACTUALTIME_VERSION);
+   $migration = new Migration(PLUGIN_YAGP_VERSION);
 
    // Parse inc directory
    foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
@@ -53,4 +46,18 @@ function plugin_yagp_uninstall() {
    }
 
    return true;
+}
+
+function plugin_yagp_updateitem(CommonDBTM $item){
+   if ($item::getType()=="PluginYagpConfig") {
+      $input=$item->input;
+      if ($input["ticketsolveddate"]==1) {
+         Crontask::Register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
+            'state'=>1,
+            'mode'  => CronTask::MODE_EXTERNAL
+         ]);
+      }else{
+         Crontask::Unregister("YagpTicketsolveddate");
+      }
+   }
 }

@@ -43,4 +43,8 @@ function plugin_init_yagp() {
    }
    $PLUGIN_HOOKS['csrf_compliant']['yagp'] = true;
 
+   $PLUGIN_HOOKS['pre_item_update']['yagp'] = [
+      'PluginYagpConfig'  => 'plugin_yagp_updateitem'
+   ];
+
 }
