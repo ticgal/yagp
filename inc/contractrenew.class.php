@@ -14,7 +14,7 @@ class PluginYagpContractrenew extends CommonDBTM {
    }
 
    public static function cronRenewContract($task){
-   	global $DB;
+   	global $DB,$CFG_GLPI;
 
    	$query=[
    		'FROM'=>'glpi_contracts',
@@ -38,7 +38,7 @@ class PluginYagpContractrenew extends CommonDBTM {
       foreach ($DB->request($query) as $id => $row) {
          $contract->update(['id'=>$row["id"],'duration'=>($row['duration']+$row['periodicity'])]);
          $task->addVolume(1);
-         $task->log(sprintf(__("Renewed Contract id: %s","yagp"),$row["id"]));
+         $task->log("<a href='".$CFG_GLPI['root_doc']."/front/contract.form.php?id=".$row["id"]."'>".sprintf(__("Renewed Contract id: %s","yagp"),$row["id"])."</a>");
       }
       return true;
    }
