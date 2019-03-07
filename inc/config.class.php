@@ -94,14 +94,6 @@ class PluginYagpConfig extends CommonDBTM {
       Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
       echo "</td></tr>\n";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Test text", "yagp")."</td><td >";
-      echo "</td></tr>\n";
-
-      echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Second test text", "yagp")."</td><td >";
-      echo "</td></tr>\n";
-
       $config->showFormButtons(['candel'=>false]);
 
       return false;

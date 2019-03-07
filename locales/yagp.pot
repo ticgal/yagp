@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-07 16:54+0100\n"
+"POT-Creation-Date: 2019-03-07 16:57+0100\n"
 "PO-Revision-Date: 2019-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:45 inc/config.class.php:114
+#: inc/config.class.php:45 inc/config.class.php:106
 msgid "Yagp"
 msgstr ""
 
@@ -27,14 +27,6 @@ msgstr ""
 
 #: inc/config.class.php:93
 msgid "Auto renew tacit contracts"
-msgstr ""
-
-#: inc/config.class.php:98
-msgid "Test text"
-msgstr ""
-
-#: inc/config.class.php:102
-msgid "Second test text"
 msgstr ""
 
 #: inc/contractrenew.class.php:5
