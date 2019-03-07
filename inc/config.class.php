@@ -85,12 +85,12 @@ class PluginYagpConfig extends CommonDBTM {
 		$config->showFormHeader(['colspan' => 4]);
 
 		echo "<tr class='tab_bg_1'>";
-		echo "<td >".__("Ticketsolveddate","yagp")."</td><td >";
+		echo "<td >".__("Change ticket solved date to last task end time","yagp")."</td><td >";
 		Dropdown::showYesNo("ticketsolveddate", $config->fields["ticketsolveddate"]);
 		echo "</td></tr>\n";
 
 		echo "<tr class='tab_bg_1'>";
-		echo "<td >".__("Contract Renew","yagp")."</td><td >";
+		echo "<td >".__("Auto renew tacit contracts","yagp")."</td><td >";
 		Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
 		echo "</td></tr>\n";
 

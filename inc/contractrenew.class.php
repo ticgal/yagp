@@ -8,7 +8,7 @@ class PluginYagpContractrenew extends CommonDBTM {
    static function cronInfo($name) {
       switch ($name) {
          case 'renewContract':
-            return ['description' => __('Renew contract', 'yagp')];
+            return ['description' => __('Renews tacit contracts', 'yagp')];
       }
       return [];
    }
