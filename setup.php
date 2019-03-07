@@ -38,7 +38,7 @@ function plugin_init_yagp() {
    global $PLUGIN_HOOKS;
 
    if (Session::haveRightsOr("config", [READ, UPDATE])) {
-      Plugin::registerClass('PluginYagpConfig', array('addtabon' => 'Config'));
+      Plugin::registerClass('PluginYagpConfig', ['addtabon' => 'Config']);
       $PLUGIN_HOOKS['config_page']['yagp'] = 'front/config.form.php';
    }
    $PLUGIN_HOOKS['csrf_compliant']['yagp'] = true;

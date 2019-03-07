@@ -3,17 +3,17 @@ include ( "../../../inc/includes.php");
 
 $config = new PluginYagpConfig();
 if (isset($_POST["update"])) {
-	$config->check($_POST['id'], UPDATE);
+   $config->check($_POST['id'], UPDATE);
 
-	// save
-	$config->update($_POST);
+   // save
+   $config->update($_POST);
 
 
-	Html::back();
+   Html::back();
 
 } else if (isset($_POST["refresh"])) {
-	$config->refresh($_POST); // used to refresh process list, task category list
-	Html::back();
+   $config->refresh($_POST); // used to refresh process list, task category list
+   Html::back();
 }
 
 Html::redirect($CFG_GLPI["root_doc"]."/front/config.form.php?forcetab=".urlencode('PluginYagpConfig$1'));

@@ -48,7 +48,7 @@ function plugin_yagp_uninstall() {
    return true;
 }
 
-function plugin_yagp_updateitem(CommonDBTM $item){
+function plugin_yagp_updateitem(CommonDBTM $item) {
    if ($item::getType()=="PluginYagpConfig") {
       $input=$item->input;
       if ($input["ticketsolveddate"]==1) {
@@ -56,7 +56,7 @@ function plugin_yagp_updateitem(CommonDBTM $item){
             'state'=>1,
             'mode'  => CronTask::MODE_EXTERNAL
          ]);
-      }else if ($input["ticketsolveddate"]==0){
+      } else if ($input["ticketsolveddate"]==0) {
          Crontask::Unregister("YagpTicketsolveddate");
       }
       if ($input["contractrenew"]==1) {
@@ -64,7 +64,7 @@ function plugin_yagp_updateitem(CommonDBTM $item){
             'state'=>1,
             'mode'  => CronTask::MODE_EXTERNAL
          ]);
-      }else if ($input["contractrenew"]==0){
+      } else if ($input["contractrenew"]==0) {
          Crontask::Unregister("YagpContractrenew");
       }
    }
