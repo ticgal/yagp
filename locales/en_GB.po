@@ -7,8 +7,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-07 16:27+0100\n"
-"PO-Revision-Date: 2019-03-07 16:27+0100\n"
+"POT-Creation-Date: 2019-03-07 16:28+0100\n"
+"PO-Revision-Date: 2019-03-07 16:28+0100\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
 "Language: en_GB\n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/config.class.php:45 inc/config.class.php:106
+#: inc/config.class.php:45 inc/config.class.php:110
 msgid "Yagp"
 msgstr "Yagp"
 
@@ -28,6 +28,10 @@ msgstr "Change ticket solved date to last task end time"
 #: inc/config.class.php:93
 msgid "Auto renew tacit contracts"
 msgstr "Auto renew tacit contracts"
+
+#: inc/config.class.php:98
+msgid "Test text"
+msgstr "Test text"
 
 #: inc/contractrenew.class.php:5
 msgid "YagpContractRenew"
