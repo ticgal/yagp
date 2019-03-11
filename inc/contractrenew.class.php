@@ -38,7 +38,7 @@ class PluginYagpContractrenew extends CommonDBTM {
       foreach ($DB->request($query) as $id => $row) {
          $contract->update(['id'=>$row["id"],'duration'=>($row['duration']+$row['periodicity'])]);
          $task->addVolume(1);
-         $task->log("<a href='".$CFG_GLPI['root_doc']."/front/contract.form.php?id=".$row["id"]."'>".sprintf(__("Renewed Contract id: %s", "yagp"), $row["id"])."</a>");
+         $task->log("<a href='".Contract::getFormURLWithID($row["id"])."'>".sprintf(__("Renewed Contract id: %s","yagp"),$row["id"])."</a>");
       }
       return true;
    }

@@ -101,7 +101,7 @@ class PluginYagpTicketsolveddate extends CommonDBTM {
             }
             $ticket->update(['id' => $row["id"],'solvedate' => $row["last_task_end"]]);
             $task->addVolume(1);
-            $task->log("<a href='".$CFG_GLPI['root_doc']."/front/ticket.form.php?id=".$row["id"]."'>Updated Ticket id: ".$row["id"]."</a>");
+            $task->log("<a href='".Ticket::getFormURLWithID($row["id"])."'>Updated Ticket id: ".$row["id"]."</a>");
          }
          return true;
       } else {
