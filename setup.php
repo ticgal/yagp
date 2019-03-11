@@ -1,5 +1,5 @@
 <?php
-define ('PLUGIN_YAGP_VERSION', '1.0.0');
+define ('PLUGIN_YAGP_VERSION', '1.0.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "9.3.0");
 // Maximum GLPI version, exclusive

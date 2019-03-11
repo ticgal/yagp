@@ -74,7 +74,7 @@ else
 fi
 
 echo "Compile locale files"
-./tools/update_mo.pl
+./tools/generate_locales.sh
 
 echo "Delete various scripts and directories"
 \rm -rf vendor;
