@@ -44,7 +44,7 @@ class PluginYagpTicketsolveddate extends CommonDBTM {
          $sub_taskstart=new QuerySubQuery([
             'SELECT'=>[
                'tickets_id',
-               'MIN'=>'begin AS firts_task_begin',
+               'MIN'=>'begin AS first_task_begin',
             ],
             'FROM'=>'glpi_tickettasks',
             'WHERE'=>[
@@ -82,23 +82,36 @@ class PluginYagpTicketsolveddate extends CommonDBTM {
                'solvedate'=>['!=','last_task_end']
             ]
          ];*/
-         $query="select id,date,solvedate,taskstart.firts_task_begin,task.last_task_end from glpi_tickets as ticket
-	            INNER JOIN 
-	               (select tickets_id,max(end)as last_task_end from glpi_tickettasks where end is not null group by tickets_id) as task
-	               on ticket.id=task.tickets_id
-	            INNER JOIN 
-	               (SELECT tickets_id,min(begin)AS firts_task_begin FROM glpi_tickettasks
-	                  WHERE begin IS NOT NULL GROUP BY tickets_id) AS taskstart
-	               ON ticket.id=taskstart.tickets_id
-	            where ticket.status>=5 and ticket.solvedate<>task.last_task_end and ticket.is_deleted=0".$limit;
+         $query="SELECT id,date,solvedate,taskstart.first_task_begin,task.last_task_end 
+         	FROM glpi_tickets as ticket
+	         INNER JOIN (
+	         	select tickets_id,CASE 
+	         		WHEN max(end)>max(ADDDATE(date,INTERVAL actiontime SECOND)) THEN max(end)
+	         		ELSE max(ADDDATE(date,INTERVAL actiontime SECOND))
+	         		END as last_task_end
+	         	from glpi_tickettasks
+	         	group by tickets_id) as task
+	         ON ticket.id=task.tickets_id
+	         LEFT JOIN (
+	         	SELECT tickets_id,min(begin)AS first_task_begin
+	         	FROM glpi_tickettasks
+	            WHERE begin IS NOT NULL
+	            GROUP BY tickets_id) AS taskstart
+	         ON ticket.id=taskstart.tickets_id
+	         WHERE ticket.status=5
+	         AND ticket.solvedate<>task.last_task_end
+	         AND ticket.is_deleted=0".$limit;
+
          foreach ($DB->request($query) as $id => $row) {
-            if ($row["date"]>$row["firts_task_begin"]) {
-               $newdate = strtotime ( '-1 hour', strtotime ( $row["firts_task_begin"] ) );
-               $newdate = date ( 'Y-m-d H:i', $newdate );
-               $ticket->update(['id' => $row["id"],'date' => $newdate]);
-               $task->addVolume(1);
-               $task->log("Updated Ticket open date id: ".$row["id"]);
-            }
+         	if (!is_null($row["first_task_begin"])){
+	            if ($row["date"]>$row["first_task_begin"]) {
+	               $newdate = strtotime ( '-1 hour', strtotime ( $row["first_task_begin"] ) );
+	               $newdate = date ( 'Y-m-d H:i', $newdate );
+	               $ticket->update(['id' => $row["id"],'date' => $newdate]);
+	               $task->addVolume(1);
+	               $task->log("Updated Ticket open date id: ".$row["id"]);
+	            }
+         	}
             $ticket->update(['id' => $row["id"],'solvedate' => $row["last_task_end"]]);
             $task->addVolume(1);
             $task->log("<a href='".Ticket::getFormURLWithID($row["id"])."'>Updated Ticket id: ".$row["id"]."</a>");
