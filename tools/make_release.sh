@@ -106,7 +106,7 @@ rm -rf screenshots
 
 echo "Creating tarball"
 cd ..
-tar czf "yagp-$RELEASE.tar.tgz" yagp
+tar czf "$PLUGINNAME-$RELEASE.tar.tgz" $PLUGINNAME
 
 cd $INIT_PWD;
 
