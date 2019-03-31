@@ -11,7 +11,7 @@ function plugin_version_yagp() {
       'author'         => '<a href="https://tic.gal">TICgal</a>',
       'homepage'       => 'https://tic.gal',
       'license'        => 'GPLv3+',
-      'minGlpiVersion' => "9.3",
+      'minGlpiVersion' => PLUGIN_YAGP_MIN_GLPI,
       'requirements'   => [
          'glpi'   => [
             'min' => PLUGIN_YAGP_MIN_GLPI,
