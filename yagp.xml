@@ -1,0 +1,59 @@
+<root>
+   <name>YAGP</name>
+   <key>yagp</key>
+   <state>stable</state> <!-- stable | unstable | beta | alpha -->
+   <logo>https://raw.githubusercontent.com/ticgal/yagp/multimedia/yagp.png</logo>
+   <description>
+      <short>
+		<en>Yet Another GLPI Plugin</en>
+		<es>Yet Another GLPI Plugin</es>
+      </short>
+      <long>
+		<en>YAGP is meant to be a place where small GLPI tweaks that don't justify a full-fledged plugin.
+        It can enable this enhacements:
+        * Change ticket solved date to last task end time
+        * Auto renew tacit contracts
+        </en>
+		<es>YAGP es un "cajón de sastre" donde añadiremos todas las pequeñas mejoras de GLPI que no justifiquen un plugin específico.
+        Puede habilitar estas dos mejoras:
+        * Cambiar fecha de solución por la fecha de fin de la ultima tarea
+        * Auto renovación de contratos tácitos
+        </es>
+      </long>
+   </description>
+   <homepage>https://tic.gal/en/project/yagp-plugin-glpi/</homepage>
+   <download>https://github.com/ticgal/yagp/releases</download>
+   <issues>https://github.com/ticgal/yagp/issues</issues>
+   <readme>https://github.com/ticgal/yagp/blob/master/README.md</readme>
+   <authors>
+      <author>TICgal</author>
+   </authors>
+   <versions>
+      <version>
+        <num>1.0.1</num>
+        <compatibility>9.3</compatibility>
+        <compatibility>9.4</compatibility>
+      </version>
+   </versions>
+   <langs>
+      <lang>en_GB</lang>
+      <lang>gl_ES</lang>
+      <lang>es_ES</lang>
+   </langs>
+   <license>AGPL v3+</license>
+   <tags>
+      	<en>
+		<tag>Ticket</tag>
+    	<tag>Task</tag>
+		<tag>Contract</tag>
+	</en>
+	<es>
+		<tag>Peticiones</tag>
+        <tag>Tareas</tag>
+    	<tag>Contratos</tag>
+	</es>
+   </tags>
+   <screenshots>
+      <screenshot>https://raw.githubusercontent.com/ticgal/yagp/multimedia/YAGP-GLPI-Plugin-1.png</screenshot>
+   </screenshots>
+</root>
