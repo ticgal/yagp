@@ -2,7 +2,7 @@
 
 **Yet Another GLPI Plugin**
 
-<img src="https://raw.githubusercontent.com/ticgal/yagp/multimedia/yagp.png)" alt="YAGP Logo" height="250px" width="250px" class="js-lazy-loaded">
+<img src="https://raw.githubusercontent.com/ticgal/yagp/multimedia/yagp.png" alt="YAGP Logo" height="250px" width="250px" class="js-lazy-loaded">
 
 ## English
 YAGP is a plugin to enable some tweaks that might make your life easier as a GLPI admin.
