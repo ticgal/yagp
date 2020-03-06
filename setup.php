@@ -47,4 +47,12 @@ function plugin_init_yagp() {
       'PluginYagpConfig'  => 'plugin_yagp_updateitem'
    ];
 
+   $plugin=new Plugin();
+   if ($plugin->isActivated('yagp')) {
+      $config= PluginYagpConfig::getConfig();
+      if ($config->fields['fixedmenu']) {
+         $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
+      }
+   }
+
 }

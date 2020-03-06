@@ -94,6 +94,11 @@ class PluginYagpConfig extends CommonDBTM {
       Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
       echo "</td></tr>\n";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td >".__("Fixed Menu", "yagp")."</td><td >";
+      Dropdown::showYesNo("fixedmenu", $config->fields["fixedmenu"]);
+      echo "</td></tr>\n";
+
       $config->showFormButtons(['candel'=>false]);
 
       return false;
@@ -130,6 +135,7 @@ class PluginYagpConfig extends CommonDBTM {
 							`id` int(11) NOT NULL auto_increment,
                      `ticketsolveddate` tinyint(1) NOT NULL default '0',
                      `contractrenew` tinyint(1) NOT NULL default '0',
+                     `fixedmenu` tinyint(1) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
@@ -137,7 +143,10 @@ class PluginYagpConfig extends CommonDBTM {
                   'id'                          => 1,
                   'ticketsolveddate'            => 0,
                   'contractrenew'               => 0,
+                  'fixedmenu'                   => 0,
                ]);
+      }else{
+      	$migration->addField($table, 'fixedmenu', "tinyint(1) NOT NULL default '0'");
       }
    }
 }
