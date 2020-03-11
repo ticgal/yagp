@@ -53,6 +53,9 @@ function plugin_init_yagp() {
       if ($config->fields['fixedmenu']) {
          $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
       }
+      if ($config->fields['gototicket']) {
+         $PLUGIN_HOOKS['add_javascript']['yagp']='js/gototicket.js';
+      }
    }
 
 }
