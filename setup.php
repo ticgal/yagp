@@ -1,5 +1,5 @@
 <?php
-define ('PLUGIN_YAGP_VERSION', '1.0.1');
+define ('PLUGIN_YAGP_VERSION', '1.0.1.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "9.3.0");
 // Maximum GLPI version, exclusive
@@ -55,6 +55,9 @@ function plugin_init_yagp() {
       }
       if ($config->fields['gototicket']) {
          $PLUGIN_HOOKS['add_javascript']['yagp']='js/gototicket.js';
+      }
+      if ($config->fields['autosave']) {
+         $PLUGIN_HOOKS['post_item_form']['yagp']=['PluginYagpAutosave','postForm'];
       }
    }
 
