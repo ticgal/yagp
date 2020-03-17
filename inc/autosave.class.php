@@ -41,6 +41,11 @@ class PluginYagpAutosave extends CommonDBTM {
 								close: function(event, ui) {
 									localStorage.removeItem("{$itemtype}");
 									$(this).remove();
+								},
+								open: function(event, ui){
+									$("div.ui-dialog-buttonset").css({"width":"50%","margin": "0 auto","float":"initial"});
+									$(".ui-dialog-buttonpane button:first").css({"float":"left"});
+									$(".ui-dialog-buttonpane button:last").css({"float":"right"});
 								}
 							});
 
