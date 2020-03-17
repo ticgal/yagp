@@ -29,6 +29,13 @@ class PluginYagpAutosave extends CommonDBTM {
 			break;
 			case 'TicketTask':
 				if (!$item->getID()) {
+					$itemtype=$item->getType()."_".$_SESSION['glpiactive_entity']."_".$item->fields['tickets_id'];
+
+					self::addAutosave($itemtype);
+				}
+			break;
+			case 'ITILSolution':
+				if (!$item->getID()) {
 					$itemtype=$item->getType()."_".$_SESSION['glpiactive_entity']."_".$item->fields['items_id'];
 
 					self::addAutosave($itemtype);
