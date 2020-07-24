@@ -1,9 +1,9 @@
 <?php
 define ('PLUGIN_YAGP_VERSION', '1.0.1');
 // Minimal GLPI version, inclusive
-define("PLUGIN_YAGP_MIN_GLPI", "9.3.0");
+define("PLUGIN_YAGP_MIN_GLPI", "9.5.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_YAGP_MAX_GLPI", "9.5");
+define("PLUGIN_YAGP_MAX_GLPI", "9.6");
 
 function plugin_version_yagp() {
    return ['name'       => 'yagp',
@@ -18,13 +18,6 @@ function plugin_version_yagp() {
             'max' => PLUGIN_YAGP_MAX_GLPI,
          ]
       ]];
-}
-
-/**
- * Check plugin's prerequisites before installation
- */
-function plugin_yagp_check_prerequisites() {
-   return true;
 }
 
 /**

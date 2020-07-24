@@ -9,18 +9,19 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-03-07 16:57+0100\n"
+"POT-Creation-Date: 2020-07-24 12:06+0200\n"
 "PO-Revision-Date: 2020-04-08 15:47+0200\n"
+"Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: \n"
+"Language: hr_HR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 2.3\n"
-"Last-Translator: Milo Ivir <mail@milotype.de>\n"
-"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
-"Language: hr_HR\n"
+"Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
+"%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
-#: inc/config.class.php:45 inc/config.class.php:106
+#: inc/config.class.php:45 inc/config.class.php:116
 msgid "Yagp"
 msgstr "Yagp"
 
@@ -31,6 +32,15 @@ msgstr "Promijeni datum rješavanja naloga s vremenom završetka zadnjeg zadatka
 #: inc/config.class.php:93
 msgid "Auto renew tacit contracts"
 msgstr "Automatski obnovi implicitne ugovore"
+
+#: inc/config.class.php:98
+msgid "Fixed Menu"
+msgstr ""
+
+#: inc/config.class.php:103
+#, fuzzy
+msgid "Go to ticket"
+msgstr "Broj naloga"
 
 #: inc/contractrenew.class.php:5
 msgid "YagpContractRenew"
