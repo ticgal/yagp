@@ -8,7 +8,7 @@ msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-24 12:06+0200\n"
-"PO-Revision-Date: 2019-03-07 17:08+0100\n"
+"PO-Revision-Date: 2020-07-27 09:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: gl_ES\n"
@@ -34,12 +34,11 @@ msgstr "Renovación automática dos contratos tácitos"
 
 #: inc/config.class.php:98
 msgid "Fixed Menu"
-msgstr ""
+msgstr "Menú fixo"
 
 #: inc/config.class.php:103
-#, fuzzy
 msgid "Go to ticket"
-msgstr "Número de peticións"
+msgstr "Ir a peticion"
 
 #: inc/contractrenew.class.php:5
 msgid "YagpContractRenew"

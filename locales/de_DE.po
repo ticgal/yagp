@@ -10,14 +10,14 @@ msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-07-24 12:06+0200\n"
-"PO-Revision-Date: 2020-04-08 15:47+0200\n"
+"PO-Revision-Date: 2020-07-27 09:12+0200\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: \n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 2.3\n"
+"X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #: inc/config.class.php:45 inc/config.class.php:116
@@ -26,8 +26,7 @@ msgstr "Yagp"
 
 #: inc/config.class.php:88
 msgid "Change ticket solved date to last task end time"
-msgstr ""
-"Ändere das Schlussdatum des Tickets in die End-Zeit der letzten Aufgabe"
+msgstr "Ändere das Schlussdatum des Tickets in die End-Zeit der letzten Aufgabe"
 
 #: inc/config.class.php:93
 msgid "Auto renew tacit contracts"
@@ -38,9 +37,8 @@ msgid "Fixed Menu"
 msgstr ""
 
 #: inc/config.class.php:103
-#, fuzzy
 msgid "Go to ticket"
-msgstr "Anzahl Tickets"
+msgstr ""
 
 #: inc/contractrenew.class.php:5
 msgid "YagpContractRenew"
