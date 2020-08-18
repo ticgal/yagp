@@ -11,13 +11,17 @@
       <long>
 		<en>YAGP is meant to be a place where small GLPI tweaks that don't justify a full-fledged plugin.
         It can enable this enhacements:
-        * Change ticket solved date to last task end time
-        * Auto renew tacit contracts
+        *Change ticket solved date to last task end time
+        *Auto renew tacit contracts
+        *Fixed Menu
+	*Go to ticket		
         </en>
 		<es>YAGP es un "cajón de sastre" donde añadiremos todas las pequeñas mejoras de GLPI que no justifiquen un plugin específico.
         Puede habilitar estas dos mejoras:
         * Cambiar fecha de solución por la fecha de fin de la ultima tarea
         * Auto renovación de contratos tácitos
+	* Menú fijo
+	* Ir a ticket
         </es>
       </long>
    </description>
