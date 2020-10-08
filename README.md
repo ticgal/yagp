@@ -16,6 +16,10 @@ YAGP is a plugin to enable some tweaks that might make your life easier as a GLP
 
 - **Auto-renew tacit contracts**: When a contract is set as tacit, its Initial contract period will auto increment with renewal date.
 
+- **Fixed Menu**: GLPI menu becames sticky, and it will not slide up.
+
+- **Go to ticket**: Add a new search box on the top bar to access a ticket by number. It will change your current entity if it needs to.
+
   
 
 ## Galego
@@ -33,6 +37,8 @@ Podes atopar as seguintes funcións:
 
 - **Cambiar a data da resolución da petición á hora de finalización da derradeira tarefa**: alterará o tempo de resolución da peticiónpara que coincida exactamente coa data en que finalizou a última tarefa. Non máis problemas de SLA, porque un técnico esqueceu engadir unha solución
 - **Auto-anovación de contratos tácitos**: cando se establece un contrato como tácito, o seu período de contratación inicial aumentará automaticamente coa data de anovación.
+- **Menú fixo**: o menú GLPI faise pegajoso e non se desprazará cara arriba.
+- **Ir a ticket**: engade un novo cadro de busca na barra superior para acceder a un ticket por número. Cambiará a súa entidade actual se o precisa.
 
 ## Español
 Añade la posibilidad de registrar el tiempo real de ejecución de cada tarea en GLPI.
@@ -45,3 +51,5 @@ puedes encontrar las siguientes funcionalidades:
 
 - **Cambiar la fecha de resolución del ticket a la hora de finalización de la última tarea:** Alterará el tiempo de resolución de su ticket para que coincida exactamente con la fecha en que finalizó su última tarea de ticket. No más problemas de SLA, porque un técnico se olvidó de añadir una solución
 - **Auto renovación tácita de contratos:** Cuando un contrato se establece como tácito, su período de contrato inicial se incrementará automáticamente con la fecha de renovación.
+- **Menú fijo**: El menú GLPI se vuelve fijo y no se desliza hacia arriba.
+- **Ir a petición:**: Agregue un nuevo cuadro de búsqueda en la barra superior para acceder a una petición identificándola por su número. Cambiará su entidad actual si es necesario.
