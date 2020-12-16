@@ -9,7 +9,7 @@ function plugin_version_yagp() {
    return ['name'       => 'yagp',
       'version'        => PLUGIN_YAGP_VERSION,
       'author'         => '<a href="https://tic.gal">TICgal</a>',
-      'homepage'       => 'https://tic.gal',
+      'homepage'       => 'https://tic.gal/yagp',
       'license'        => 'GPLv3+',
       'minGlpiVersion' => PLUGIN_YAGP_MIN_GLPI,
       'requirements'   => [
