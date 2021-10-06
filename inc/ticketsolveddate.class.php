@@ -99,8 +99,9 @@ class PluginYagpTicketsolveddate extends CommonDBTM {
 	            GROUP BY tickets_id) AS taskstart
 	         ON ticket.id=taskstart.tickets_id
 	         WHERE ticket.status=5
-	         AND ticket.solvedate<>task.last_task_end
-	         AND ticket.is_deleted=0".$limit;
+	         AND DATE_FORMAT(ticket.solvedate, '%Y-%m-%d %H:%i')<>DATE_FORMAT(task.last_task_end, '%Y-%m-%d %H:%i')
+	         AND ticket.is_deleted=0
+		 AND ticket.date<task.last_task_end".$limit;
 
          foreach ($DB->request($query) as $id => $row) {
          	if (!is_null($row["first_task_begin"])){
