@@ -49,6 +49,10 @@ function plugin_init_yagp() {
       if ($config->fields['gototicket']) {
          $PLUGIN_HOOKS['add_javascript']['yagp']='js/gototicket.js';
       }
+
+      if ($config->fields['blockdate']) {
+         $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'postItemForm'];
+      }
    }
 
 }
