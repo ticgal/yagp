@@ -9,7 +9,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-24 12:06+0200\n"
+"POT-Creation-Date: 2021-10-07 11:13+0200\n"
 "PO-Revision-Date: 2020-07-27 09:11+0200\n"
 "Last-Translator: Milo Ivir <mail@milotype.de>\n"
 "Language-Team: \n"
@@ -21,7 +21,7 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=(n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
 "%10<=4 && (n%100<12 || n%100>14) ? 1 : 2);\n"
 
-#: inc/config.class.php:45 inc/config.class.php:116
+#: inc/config.class.php:45 inc/config.class.php:121
 msgid "Yagp"
 msgstr "Yagp"
 
@@ -39,6 +39,10 @@ msgstr ""
 
 #: inc/config.class.php:103
 msgid "Go to ticket"
+msgstr ""
+
+#: inc/config.class.php:108
+msgid "Block opening date"
 msgstr ""
 
 #: inc/contractrenew.class.php:5

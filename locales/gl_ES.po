@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-07-24 12:06+0200\n"
+"POT-Creation-Date: 2021-10-07 11:13+0200\n"
 "PO-Revision-Date: 2020-07-27 09:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -18,7 +18,7 @@ msgstr ""
 "X-Generator: Poedit 2.0.6\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
-#: inc/config.class.php:45 inc/config.class.php:116
+#: inc/config.class.php:45 inc/config.class.php:121
 msgid "Yagp"
 msgstr ""
 
@@ -39,6 +39,10 @@ msgstr "Menú fixo"
 #: inc/config.class.php:103
 msgid "Go to ticket"
 msgstr "Ir a peticion"
+
+#: inc/config.class.php:108
+msgid "Block opening date"
+msgstr ""
 
 #: inc/contractrenew.class.php:5
 msgid "YagpContractRenew"
