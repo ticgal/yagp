@@ -53,6 +53,12 @@ function plugin_init_yagp() {
       if ($config->fields['blockdate']) {
          $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'postItemForm'];
       }
+
+      if ($config->fields['findrequest']) {
+         if (!is_null($config->fields['requestlabel']) && $config->fields['requestlabel'] != "") {
+            $PLUGIN_HOOKS['pre_item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preAddTicket']];
+         }
+      }
    }
 
 }
