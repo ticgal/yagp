@@ -12,6 +12,9 @@ sed -i "s/SOME DESCRIPTIVE TITLE/YAGP Glpi Plugin/" yagp.pot
 sed -i "s/FIRST AUTHOR <EMAIL@ADDRESS>, YEAR./TICgal, $(date +%Y)/" yagp.pot
 sed -i "s/YEAR/$(date +%Y)/" yagp.pot
 
+localazy upload
+localazy download
+
 for a in $(ls *.po); do
 	msgmerge -U $a yagp.pot
 	msgfmt $a -o "${a%.*}.mo"

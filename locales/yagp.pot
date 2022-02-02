@@ -1,15 +1,15 @@
 # YAGP Glpi Plugin.
-# Copyright (C) 2021 TICgal
+# Copyright (C) 2022 TICgal
 # This file is distributed under the same license as the PACKAGE package.
-# TICgal, 2021
+# TICgal, 2022
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2021-10-07 11:13+0200\n"
-"PO-Revision-Date: 2021-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2022-02-02 17:39+0100\n"
+"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -17,7 +17,7 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:45 inc/config.class.php:121
+#: inc/config.class.php:45 inc/config.class.php:133
 msgid "Yagp"
 msgstr ""
 
@@ -39,6 +39,14 @@ msgstr ""
 
 #: inc/config.class.php:108
 msgid "Block opening date"
+msgstr ""
+
+#: inc/config.class.php:113
+msgid "Search for request in the mail"
+msgstr ""
+
+#: inc/config.class.php:119
+msgid "Tag to search"
 msgstr ""
 
 #: inc/contractrenew.class.php:5
