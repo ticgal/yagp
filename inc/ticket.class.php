@@ -20,4 +20,22 @@ JAVASCRIPT;
 			echo Html::scriptBlock($script);
 		}
 	}
+
+	public static function preAddTicket(Ticket $ticket) {
+		global $DB;
+
+      $config = PluginYagpConfig::getConfig();
+		$pattern = "/".$config->fields['requestlabel'].".*".$config->fields['requestlabel']."/i";
+
+		if (preg_match_all($pattern, $ticket->input['content'], $matches)) {
+			$string = $matches[0];
+			$useremail = str_replace($config->fields['requestlabel'], "", $string);
+			$user = new User();
+			if ($user->getFromDBbyEmail($useremail)) {
+				$ticket->input['_users_id_requester'] = $user->fields['id'];
+			}
+		}
+
+		return $ticket;
+	}
 }
