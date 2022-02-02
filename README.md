@@ -4,6 +4,12 @@
 
 <img src="https://raw.githubusercontent.com/ticgal/yagp/multimedia/yagp.png" alt="YAGP Logo" height="250px" width="250px" class="js-lazy-loaded">
 
+[![License](https://img.shields.io/badge/License-GNU%20AGPLv3-blue.svg?style=flat-square)](https://github.com/ticgal/yagp/blob/master/LICENSE)
+[![Twitter](https://img.shields.io/badge/Twitter-TICgal-blue.svg?style=flat-square)](https://twitter.com/ticgalcom)
+[![Web](https://img.shields.io/badge/Web-YAGP-blue.svg?style=flat-square)](https://tic.gal/en/project/yagp-yet-another-glpi-plugin/)
+[![Localazy](https://img.shields.io/badge/Translate-Localazy-cyan)](https://localazy.com/p/yagp#translations)
+
+
 ## English
 YAGP is a plugin to enable some tweaks that might make your life easier as a GLPI admin.
 ### Setup
