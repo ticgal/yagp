@@ -109,6 +109,18 @@ class PluginYagpConfig extends CommonDBTM {
       Dropdown::showYesNo("blockdate", $config->fields["blockdate"]);
       echo "</td></tr>\n";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td >".__("Search for request in the mail", "yagp")."</td><td >";
+      Dropdown::showYesNo("findrequest", $config->fields["findrequest"]);
+      echo "</td></tr>\n";
+
+      if ($config->fields['findrequest']) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<td >".__("Tag to search", "yagp")."</td><td >";
+         echo Html::input("requestlabel", ['value' => $config->fields["requestlabel"]]);
+         echo "</td></tr>\n";
+      }
+
       $config->showFormButtons(['candel'=>false]);
 
       return false;
@@ -148,6 +160,8 @@ class PluginYagpConfig extends CommonDBTM {
                      `fixedmenu` tinyint(1) NOT NULL default '0',
                      `gototicket` tinyint(1) NOT NULL default '0',
                      `blockdate` tinyint(1) NOT NULL default '0',
+                     `findrequest` tinyint(1) NOT NULL default '0',
+                     `requestlabel` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
@@ -158,11 +172,14 @@ class PluginYagpConfig extends CommonDBTM {
                   'fixedmenu'                   => 0,
                   'gototicket'                  => 0,
                   'blockdate'                   => 0,
+                  'findrequest'                 => 0,
                ]);
       }else{
       	$migration->addField($table, 'fixedmenu', 'boolean');
       	$migration->addField($table, 'gototicket', 'boolean');
          $migration->addField($table, 'blockdate', 'boolean');
+         $migration->addField($table, 'findrequest', 'boolean');
+         $migration->addField($table, 'requestlabel', 'string');
       	$migration->migrationOneTable($table);
       }
    }
