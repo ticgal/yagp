@@ -63,6 +63,19 @@ JAVASCRIPT;
 				$user = new User();
 				if ($user->getFromDBbyEmail($useremail)) {
 					$ticket->input['_users_id_requester'] = $user->fields['id'];
+
+					$mailgate = new MailCollector();
+					$mailgate->getFromDB($ticket->input['_mailgate']);
+					$rule_options['ticket']              = $ticket->input;
+         		$rule_options['headers']             = $mailgate->getHeaders($ticket->input['_message']);
+         		$rule_options['mailcollector']       = $ticket->input['_mailgate'];
+         		$rule_options['_users_id_requester'] = $ticket->input['_users_id_requester'];
+         		$rulecollection                      = new RuleMailCollectorCollection();
+         		$output                              = $rulecollection->processAllRules([], [],
+                                                                                 $rule_options);
+         		foreach ($output as $key => $value) {
+	               $ticket->input[$key] = $value;
+	            }
 				}
 			}
 		}
