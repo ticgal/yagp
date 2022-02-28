@@ -27,7 +27,7 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
-define ('PLUGIN_YAGP_VERSION', '1.3.0');
+define ('PLUGIN_YAGP_VERSION', '1.3.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "9.5.0");
 // Maximum GLPI version, exclusive
