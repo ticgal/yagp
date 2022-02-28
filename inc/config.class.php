@@ -138,7 +138,7 @@ class PluginYagpConfig extends CommonDBTM {
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Search for request in the mail", "yagp")."</td><td >";
+      echo "<td >".__("Replace ticket requester (mailcollector)", "yagp")."</td><td >";
       Dropdown::showYesNo("findrequest", $config->fields["findrequest"]);
       echo "</td></tr>\n";
 
