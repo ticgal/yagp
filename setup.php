@@ -87,6 +87,9 @@ function plugin_init_yagp() {
             $PLUGIN_HOOKS['pre_item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preAddTicket']];
          }
       }
+      if (isset($config->fields['df_min_validation'])){
+         $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab","preShowTab"];
+      }
    }
 
 }
