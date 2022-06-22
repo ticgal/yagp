@@ -38,12 +38,17 @@ if (!defined('GLPI_ROOT')) {
         $options = $params["options"];
         switch($options["itemtype"]){
             case "TicketValidation":
+                $ticket=new Ticket();
+                $ticket->getFromDB($options["id"]);
+                $validation_percent=$ticket->fields["validation_percent"];
                 $df_min_validation=$config->fields["df_min_validation"];
+                $string = __("Actual minimun validation","yagp");
+                
                 $script = <<<JAVASCRIPT
                     $(document).ready(function() {
                         $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
                         $("select[name='validation_percent'] option").text('{$df_min_validation}%');
-                        console.log($("select[name='validation_percent'] option"));
+                        $("tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
                     });
 JAVASCRIPT;
 			echo Html::scriptBlock($script);
