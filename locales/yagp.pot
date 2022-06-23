@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-02 17:39+0100\n"
+"POT-Creation-Date: 2022-06-23 15:23+0200\n"
 "PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,59 +17,71 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:45 inc/config.class.php:133
+#: inc/config.class.php:73 inc/config.class.php:177
 msgid "Yagp"
 msgstr ""
 
-#: inc/config.class.php:88
+#: inc/config.class.php:116
 msgid "Change ticket solved date to last task end time"
 msgstr ""
 
-#: inc/config.class.php:93
+#: inc/config.class.php:121
 msgid "Auto renew tacit contracts"
 msgstr ""
 
-#: inc/config.class.php:98
+#: inc/config.class.php:126
 msgid "Fixed Menu"
 msgstr ""
 
-#: inc/config.class.php:103
+#: inc/config.class.php:131
 msgid "Go to ticket"
 msgstr ""
 
-#: inc/config.class.php:108
+#: inc/config.class.php:136
 msgid "Block opening date"
 msgstr ""
 
-#: inc/config.class.php:113
-msgid "Search for request in the mail"
+#: inc/config.class.php:141
+msgid "Replace ticket requester (mailcollector)"
 msgstr ""
 
-#: inc/config.class.php:119
+#: inc/config.class.php:147
 msgid "Tag to search"
 msgstr ""
 
-#: inc/contractrenew.class.php:5
+#: inc/config.class.php:153
+msgid "Change default minimum validation required"
+msgstr ""
+
+#: inc/config.class.php:159
+msgid "Default minimum validation required"
+msgstr ""
+
+#: inc/contractrenew.class.php:33
 msgid "YagpContractRenew"
 msgstr ""
 
-#: inc/contractrenew.class.php:11
+#: inc/contractrenew.class.php:39
 msgid "Renews tacit contracts"
 msgstr ""
 
-#: inc/contractrenew.class.php:41
+#: inc/contractrenew.class.php:69
 #, php-format
 msgid "Renewed Contract id: %s"
 msgstr ""
 
-#: inc/ticketsolveddate.class.php:5
+#: inc/preshowtab.class.php:45
+msgid "Current minimum validation"
+msgstr ""
+
+#: inc/ticketsolveddate.class.php:33
 msgid "YagpTicketSolvedDate"
 msgstr ""
 
-#: inc/ticketsolveddate.class.php:11
+#: inc/ticketsolveddate.class.php:39
 msgid "Change date"
 msgstr ""
 
-#: inc/ticketsolveddate.class.php:12
+#: inc/ticketsolveddate.class.php:40
 msgid "Number of tickets"
 msgstr ""

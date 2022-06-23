@@ -27,7 +27,7 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
-define ('PLUGIN_YAGP_VERSION', '1.3.1');
+define ('PLUGIN_YAGP_VERSION', '1.4.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "9.5.0");
 // Maximum GLPI version, exclusive
@@ -86,6 +86,9 @@ function plugin_init_yagp() {
          if (!is_null($config->fields['requestlabel']) && $config->fields['requestlabel'] != "") {
             $PLUGIN_HOOKS['pre_item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preAddTicket']];
          }
+      }
+      if ($config->fields['change_df_min_val']){
+         $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab","preShowTab"];
       }
    }
 
