@@ -42,7 +42,7 @@ if (!defined('GLPI_ROOT')) {
                 $ticket->getFromDB($options["id"]);
                 $validation_percent=$ticket->fields["validation_percent"];
                 $df_min_validation=$config->fields["df_min_validation"];
-                $string = __("Actual minimun validation","yagp");
+                $string = __("Current minimum validation","yagp");
                 
                 $script = <<<JAVASCRIPT
                     $(document).ready(function() {

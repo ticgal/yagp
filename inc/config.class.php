@@ -150,13 +150,13 @@ class PluginYagpConfig extends CommonDBTM {
       }
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Change default minimal validation required", "yagp")."</td><td >";
+      echo "<td >".__("Change default minimum validation required", "yagp")."</td><td >";
       Dropdown::showYesNo("change_df_min_val", $config->fields["change_df_min_val"]);
       echo "</td></tr>\n";
 
       if ($config->fields['change_df_min_val']) {
          echo "<tr class='tab_bg_1'>";
-         echo "<td >".__("Default minimal validation required", "yagp")."</td><td >";
+         echo "<td >".__("Default minimum validation required", "yagp")."</td><td >";
          $possible_values = [];
          $possible_values[0]="0%";
          $possible_values[50]="50%";
