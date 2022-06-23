@@ -150,13 +150,20 @@ class PluginYagpConfig extends CommonDBTM {
       }
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Default minimal validation required", "yagp")."</td><td >";
-      $possible_values = [];
-      $possible_values[0]="0%";
-      $possible_values[50]="50%";
-      $possible_values[100]="100%";
-      Dropdown::showFromArray('df_min_validation', $possible_values,['value' => $config->fields["df_min_validation"]]);
+      echo "<td >".__("Change default minimal validation required", "yagp")."</td><td >";
+      Dropdown::showYesNo("change_df_min_val", $config->fields["change_df_min_val"]);
       echo "</td></tr>\n";
+
+      if ($config->fields['change_df_min_val']) {
+         echo "<tr class='tab_bg_1'>";
+         echo "<td >".__("Default minimal validation required", "yagp")."</td><td >";
+         $possible_values = [];
+         $possible_values[0]="0%";
+         $possible_values[50]="50%";
+         $possible_values[100]="100%";
+         Dropdown::showFromArray('df_min_validation', $possible_values,['value' => $config->fields["df_min_validation"]]);
+         echo "</td></tr>\n";
+      }
 
       $config->showFormButtons(['candel'=>false]);
 
@@ -199,6 +206,7 @@ class PluginYagpConfig extends CommonDBTM {
                      `blockdate` tinyint(1) NOT NULL default '0',
                      `findrequest` tinyint(1) NOT NULL default '0',
                      `requestlabel` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
+                     `change_df_min_val` tinyint(1) NOT NULL default '0',
                      `df_min_validation` int(11) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
@@ -211,6 +219,7 @@ class PluginYagpConfig extends CommonDBTM {
                   'gototicket'                  => 0,
                   'blockdate'                   => 0,
                   'findrequest'                 => 0,
+                  'change_df_min_val'           => 0,
                   'df_min_validation'           => 0,
                ]);
       }else{
@@ -219,6 +228,7 @@ class PluginYagpConfig extends CommonDBTM {
          $migration->addField($table, 'blockdate', 'boolean');
          $migration->addField($table, 'findrequest', 'boolean');
          $migration->addField($table, 'requestlabel', 'string');
+         $migration->addField($table, 'change_df_min_val', 'boolean');
          $migration->addField($table, 'df_min_validation', 'int');
       	$migration->migrationOneTable($table);
       }
