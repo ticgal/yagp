@@ -1,6 +1,6 @@
 $(document).ready(function(){
 	if ($(window).width()>700) {
-		$('#c_preference ul').append("<li><form id='yagp_form'><span><input id='goto' type='number' placeholder='id'><button type='submit'><i class='fas fa-external-link-alt'></i></button></span></form></li>");
+		$('header div div:first').before("<div class ='ms-lg-auto d-none d-lg-block flex-grow-1 flex-lg-grow-0'><form id='yagp_form' style='margin-right:1%;'><div class='input-group input-group-flat'><input id='goto' class='form-control' type='number' placeholder='id'><span class='input-group-text'><button type='submit' class='btn btn-link p-0 m-0'><span class='fas fa-external-link-alt' aria-hidden='true'></span></button></span></div></form></div>");
 		var color=$('#champRecherche input').css("color");
 		var background=$('#champRecherche input').css("background-color");
 		var border=$('#champRecherche input').css("border");
