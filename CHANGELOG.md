@@ -3,6 +3,15 @@
 ### Features
 - New Config option: Change default minimum validation required (TicketValidation) #10254
 
+## 1.3.1 - Unreleased
+### Bugfixes
+- Rerun mail rules
+
+## 1.3.0 - Unreleased
+### Features
+- New Config option: Replace ticket requester (mailcollector)
+- Localazy integration
+
 ## 1.2.0
 ### Features
 - New option to allow blocking the opening date field in the tickets
