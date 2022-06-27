@@ -48,7 +48,7 @@ if (!defined('GLPI_ROOT')) {
                     $(document).ready(function() {
                         $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
                         $("select[name='validation_percent'] option").text('{$df_min_validation}%');
-                        $("tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
+                        $(".tab_cadre_fixe tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
                     });
 JAVASCRIPT;
 			echo Html::scriptBlock($script);
