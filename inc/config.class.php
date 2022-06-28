@@ -122,11 +122,13 @@ class PluginYagpConfig extends CommonDBTM {
       Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
       echo "</td></tr>\n";
 
-      echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Fixed Menu", "yagp")."</td><td >";
-      Dropdown::showYesNo("fixedmenu", $config->fields["fixedmenu"]);
-      echo "</td></tr>\n";
-
+      /**** Deprecated
+       * echo "<tr class='tab_bg_1'>";
+       * echo "<td >".__("Fixed Menu", "yagp")."</td><td >";
+       * Dropdown::showYesNo("fixedmenu", $config->fields["fixedmenu"]);
+       * echo "</td></tr>\n";
+      ****/
+      
       echo "<tr class='tab_bg_1'>";
       echo "<td >".__("Go to ticket", "yagp")."</td><td >";
       Dropdown::showYesNo("gototicket", $config->fields["gototicket"]);
@@ -201,7 +203,6 @@ class PluginYagpConfig extends CommonDBTM {
 							`id` int(11) NOT NULL auto_increment,
                      `ticketsolveddate` tinyint(1) NOT NULL default '0',
                      `contractrenew` tinyint(1) NOT NULL default '0',
-                     `fixedmenu` tinyint(1) NOT NULL default '0',
                      `gototicket` tinyint(1) NOT NULL default '0',
                      `blockdate` tinyint(1) NOT NULL default '0',
                      `findrequest` tinyint(1) NOT NULL default '0',
@@ -215,7 +216,6 @@ class PluginYagpConfig extends CommonDBTM {
                   'id'                          => 1,
                   'ticketsolveddate'            => 0,
                   'contractrenew'               => 0,
-                  'fixedmenu'                   => 0,
                   'gototicket'                  => 0,
                   'blockdate'                   => 0,
                   'findrequest'                 => 0,
@@ -223,7 +223,6 @@ class PluginYagpConfig extends CommonDBTM {
                   'df_min_validation'           => 0,
                ]);
       }else{
-      	$migration->addField($table, 'fixedmenu', 'boolean');
       	$migration->addField($table, 'gototicket', 'boolean');
          $migration->addField($table, 'blockdate', 'boolean');
          $migration->addField($table, 'findrequest', 'boolean');
