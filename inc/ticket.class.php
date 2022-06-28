@@ -61,7 +61,7 @@ JAVASCRIPT;
 				$string = $matches[0];
 				$useremail = str_replace($config->fields['requestlabel'], "", $string);
 				$user = new User();
-				if ($user->getFromDBbyEmail($useremail)) {
+				if ($user->getFromDBbyEmail($useremail[0])) {
 					$ticket->input['_users_id_requester'] = $user->fields['id'];
 
 					$mailgate = new MailCollector();
