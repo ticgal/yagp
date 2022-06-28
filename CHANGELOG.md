@@ -1,4 +1,13 @@
 # YAGP GLPI Plugin CHANGELOG
+## 2.0.0
+### Features
+- GLPI 10 Compatibility #10285
+### Bugfixes
+- Change default minimum validation required option fixed #10285
+- Go to ticket option fixed (Different HTML structure) #10285
+- User mail returns array instead of string fixed #10285 
+- Fixed menu option deprecated #10285
+
 ## 1.4.0
 ### Features
 - New Config option: Change default minimum validation required (TicketValidation) #10254

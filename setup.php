@@ -71,9 +71,10 @@ function plugin_init_yagp() {
    $plugin=new Plugin();
    if ($plugin->isActivated('yagp')) {
       $config= PluginYagpConfig::getConfig();
-      if ($config->fields['fixedmenu']) {
-         $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
-      }
+      /**** Deprecated
+      *   if ($config->fields['fixedmenu']) {
+      *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
+      }****/
       if ($config->fields['gototicket']) {
          $PLUGIN_HOOKS['add_javascript']['yagp']='js/gototicket.js';
       }
