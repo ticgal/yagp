@@ -7,6 +7,7 @@
 - Go to ticket option fixed (Different HTML structure) #10285
 - User mail returns array instead of string fixed #10285 
 - Fixed menu option deprecated #10285
+- Only execute script when date is not null #10298
 
 ## 1.4.0
 ### Features
