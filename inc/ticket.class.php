@@ -45,7 +45,9 @@ class PluginYagpTicket extends CommonDBTM {
 				$("input[name='date']").parent().parent().html("{$date}");
 			});
 JAVASCRIPT;
-			echo Html::scriptBlock($script);
+			if ($date!=null){
+				echo Html::scriptBlock($script);
+			}
 		}
 	}
 
