@@ -167,6 +167,11 @@ class PluginYagpConfig extends CommonDBTM {
          echo "</td></tr>\n";
       }
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td >".__("Enable re-categorization tracking", "yagp")."</td><td >";
+      Dropdown::showYesNo("recategorization", $config->fields["recategorization"]);
+      echo "</td></tr>\n";
+
       $config->showFormButtons(['candel'=>false]);
 
       return false;
@@ -209,6 +214,7 @@ class PluginYagpConfig extends CommonDBTM {
                      `requestlabel` varchar(255) COLLATE utf8_unicode_ci DEFAULT NULL,
                      `change_df_min_val` tinyint(1) NOT NULL default '0',
                      `df_min_validation` int(11) NOT NULL default '0',
+                     `recategorization` tinyint(1) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
