@@ -84,4 +84,35 @@ JAVASCRIPT;
 
 		return $ticket;
 	}
+
+	public static function preUpdateTicket(Ticket $ticket) {
+		
+
+
+		
+	}
+
+	static function install(Migration $migration)
+	{
+		global $DB;
+
+		$default_charset = DBConnection::getDefaultCharset();
+		$default_collation = DBConnection::getDefaultCollation();
+		$default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
+		$table = self::getTable();
+		if (!$DB->tableExists($table)) {
+			$migration->displayMessage("Installing $table");
+			$query = "CREATE TABLE IF NOT EXISTS $table (
+				`id` int {$default_key_sign} NOT NULL auto_increment,
+				`tickets_id` INT {$default_key_sign} NOT NULL,
+				`itilcategories_id` INT {$default_key_sign} NOT NULL,
+				PRIMARY KEY (`id`),
+				UNIQUE KEY `unicity` (`itilcategories_id`,`tickets_id`),
+				KEY `tickets_id` (`tickets_id`)
+				) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+			$DB->query($query) or die($DB->error());
+		}
+	}
+
 }

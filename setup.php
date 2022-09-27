@@ -91,6 +91,10 @@ function plugin_init_yagp() {
       if ($config->fields['change_df_min_val']){
          $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab","preShowTab"];
       }
+
+      if ($config->fields['recategorization']){
+         $PLUGIN_HOOKS['item_update']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preUpdateTicket']];
+      }
    }
 
 }
