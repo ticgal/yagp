@@ -95,6 +95,7 @@ function plugin_init_yagp() {
       if ($config->fields['recategorization']){
          $PLUGIN_HOOKS['item_update']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'updateTicket']];
          $PLUGIN_HOOKS['item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'addTicket']];
+         $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_postItemForm'];
       }
    }
 
