@@ -85,10 +85,31 @@ JAVASCRIPT;
 		return $ticket;
 	}
 
-	public static function preUpdateTicket(Ticket $ticket) {
+	public static function updateTicket(Ticket $ticket) {
+
+		if(isset($ticket->oldvalues["itilcategories_id"])){
+			if ($ticket->oldvalues["itilcategories_id"]===0){
+				$ticket_cat=new self();
+				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
+				if(empty($ticket_cat->fields)){
+					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
+				}
+			}
+		}
 		
+	}
 
+	public static function addTicket(Ticket $ticket) {
 
+		if(isset($ticket->fields["itilcategories_id"])){
+			if ($ticket->fields["itilcategories_id"]!==0){
+				$ticket_cat=new self();
+				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
+				if(empty($ticket_cat->fields)){
+					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
+				}
+			}
+		}
 		
 	}
 
@@ -108,7 +129,7 @@ JAVASCRIPT;
 				`tickets_id` INT {$default_key_sign} NOT NULL,
 				`itilcategories_id` INT {$default_key_sign} NOT NULL,
 				PRIMARY KEY (`id`),
-				UNIQUE KEY `unicity` (`itilcategories_id`,`tickets_id`),
+				UNIQUE KEY `unicity` (`tickets_id`),
 				KEY `tickets_id` (`tickets_id`)
 				) ENGINE=InnoDB DEFAULT CHARSET={$default_charset} COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 			$DB->query($query) or die($DB->error());
