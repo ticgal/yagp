@@ -97,3 +97,29 @@ function plugin_yagp_updateitem(CommonDBTM $item) {
       }
    }
 }
+
+function plugin_yagp_getAddSearchOptions($itemtype){
+
+   $sopt=[];
+
+	switch ($itemtype){
+      case "Ticket":
+         $sopt['yagp']=['name'=>'YAGP'];
+
+         $sopt[9021321] = [
+				'table' => PluginYagpTicket::getTable(),
+				'field' => 'plugin_yagp_itilcategories_id',
+				'name' => __('Recategorized','yagp'),
+				'searchtype' => ['equals', 'notequals'],
+				'massiveaction' => false,
+				'datatype' => 'specific',
+				'searchequalsonfield' => true,
+				'joinparams' => [
+					'jointype' => 'child',
+               'linkfield'=>'tickets_id'
+				]
+			];
+   }
+
+   return $sopt;
+}

@@ -32,7 +32,38 @@ if (!defined('GLPI_ROOT')) {
 }
 
 class PluginYagpTicket extends CommonDBTM {
-	
+	public static $rightname = 'ticket';
+
+	static function getSpecificValueToDisplay($field, $values, array $options = []){
+
+		if (!is_array($values)) {
+			$values = [$field => $values];
+		}
+		
+		switch ($field) {
+			case 'plugin_yagp_itilcategories_id':
+				$ticket = new Ticket();
+				$ticket->getFromDB($options["raw_data"]["id"]);
+
+				if($ticket->fields["itilcategories_id"]!==$values["plugin_yagp_itilcategories_id"]){
+					$ticket_cat=new self();
+					$ticket_cat->getFromDBByCrit(["tickets_id"=>$options["raw_data"]["id"]]);
+					if(empty($ticket_cat->fields)){
+						return __("No");
+					}else{
+						return __("Yes");
+					}
+					
+				}else{
+					return __("No");
+				}
+				break;
+		}
+		
+		return parent::getSpecificValueToDisplay($field, $values, $options);
+	}
+
+
 	static function postItemForm($params = []) {
 		global $DB;
 
@@ -92,7 +123,7 @@ JAVASCRIPT;
 				$ticket_cat=new self();
 				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
 				if(empty($ticket_cat->fields)){
-					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
+					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
 				}
 			}
 		}
@@ -106,7 +137,7 @@ JAVASCRIPT;
 				$ticket_cat=new self();
 				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
 				if(empty($ticket_cat->fields)){
-					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
+					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
 				}
 			}
 		}
@@ -127,9 +158,9 @@ JAVASCRIPT;
 					$ticket_cat=new self();
 					$ticket_cat->getFromDBByCrit(["tickets_id"=>$id]);
 					if(!empty($ticket_cat->fields)){
-						if($ticket_cat->fields["itilcategories_id"]!==$ticket->fields["itilcategories_id"]){
+						if($ticket_cat->fields["plugin_yagp_itilcategories_id"]!==$ticket->fields["itilcategories_id"]){
 							$cat = new ITILCategory();
-							$cat->getFromDB($ticket_cat->fields["itilcategories_id"]);
+							$cat->getFromDB($ticket_cat->fields["plugin_yagp_itilcategories_id"]);
 							if(!empty($cat->fields)){
 								$cat_name=$cat->fields["name"];
 							$script=<<<JAVASCRIPT
@@ -170,7 +201,7 @@ JAVASCRIPT;
 			$query = "CREATE TABLE IF NOT EXISTS $table (
 				`id` int {$default_key_sign} NOT NULL auto_increment,
 				`tickets_id` INT {$default_key_sign} NOT NULL,
-				`itilcategories_id` INT {$default_key_sign} NOT NULL,
+				`plugin_yagp_itilcategories_id` INT {$default_key_sign} NOT NULL,
 				PRIMARY KEY (`id`),
 				UNIQUE KEY `unicity` (`tickets_id`),
 				KEY `tickets_id` (`tickets_id`)
