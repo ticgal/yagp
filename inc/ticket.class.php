@@ -125,24 +125,17 @@ JAVASCRIPT;
 				if(empty($ticket_cat->fields)){
 					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
 				}
-			}
-		}
-		
-	}
-
-	public static function addTicket(Ticket $ticket) {
-
-		if(isset($ticket->fields["itilcategories_id"])){
-			if ($ticket->fields["itilcategories_id"]!==0){
+			}else{
 				$ticket_cat=new self();
 				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
 				if(empty($ticket_cat->fields)){
-					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
+					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->oldvalues["itilcategories_id"]]);
 				}
 			}
 		}
 		
 	}
+
 
 	public static function plugin_yagp_postItemForm($params) {
 

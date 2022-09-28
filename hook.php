@@ -113,7 +113,6 @@ function plugin_yagp_getAddSearchOptions($itemtype){
 				'searchtype' => ['equals', 'notequals'],
 				'massiveaction' => false,
 				'datatype' => 'specific',
-				'searchequalsonfield' => true,
 				'joinparams' => [
 					'jointype' => 'child',
                'linkfield'=>'tickets_id'
