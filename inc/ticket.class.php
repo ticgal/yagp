@@ -241,6 +241,19 @@ JAVASCRIPT;
 
 	}
 
+	public static function plugin_yagp_preShowItem($params) {
+
+		$script = <<<JAVASCRIPT
+			$(document).ready(function() {
+				console.log($("a[data-bs-target^='#tab-Log']").get());
+				$("a[data-bs-target^='#tab-Log']").hide();
+			});
+JAVASCRIPT;
+
+			echo Html::scriptBlock($script);
+			
+	}
+
 	static function install(Migration $migration)
 	{
 		global $DB;
