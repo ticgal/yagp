@@ -108,10 +108,11 @@ function plugin_yagp_getAddSearchOptions($itemtype){
 
          $sopt[9021321] = [
 				'table' => PluginYagpTicket::getTable(),
-				'field' => 'tickets_id',
+				'field' => 'is_recategorized',
 				'name' => __('Recategorized','yagp'),
 				'searchtype' => ['equals', 'notequals'],
 				'massiveaction' => false,
+            'searchequalsonfield' => true,
 				'datatype' => 'specific',
 				'joinparams' => [
 					'jointype' => 'child',
@@ -125,6 +126,7 @@ function plugin_yagp_getAddSearchOptions($itemtype){
 				'name' => __('Initial category','yagp'),
 				'searchtype' => ['equals', 'notequals'],
 				'massiveaction' => false,
+            'searchequalsonfield' => true,
 				'datatype' => 'specific',
 				'joinparams' => [
 					'jointype' => 'child',

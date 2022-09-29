@@ -40,7 +40,7 @@ class PluginYagpTicket extends CommonDBTM {
 			$values = [$field => $values];
 		}
 		switch ($field) {
-			case 'tickets_id':
+			case 'is_recategorized':
 				$ticket = new Ticket();
 				$ticket->getFromDB($options["raw_data"]["id"]);
 				
@@ -87,7 +87,7 @@ class PluginYagpTicket extends CommonDBTM {
 		}
 
 		switch ($field) {
-			case 'tickets_id':
+			case 'is_recategorized':
 				$values = [
 					0=>__("No"),
 					1=>__("Yes")
@@ -111,6 +111,7 @@ class PluginYagpTicket extends CommonDBTM {
 						$values[$row["plugin_yagp_itilcategories_id"]]=$cat->fields["completename"];
 					}
 				 }
+				 $values[0]=__("without");
 				return Dropdown::showFromArray($name, $values, $options);
 				break;
 		}
@@ -244,6 +245,7 @@ JAVASCRIPT;
 				`id` int {$default_key_sign} NOT NULL auto_increment,
 				`tickets_id` INT {$default_key_sign} NOT NULL,
 				`plugin_yagp_itilcategories_id` INT {$default_key_sign} NOT NULL,
+				`is_recategorized` tinyint NOT NULL DEFAULT '1',
 				PRIMARY KEY (`id`),
 				UNIQUE KEY `unicity` (`tickets_id`),
 				KEY `tickets_id` (`tickets_id`)
