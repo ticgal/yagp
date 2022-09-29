@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-23 15:23+0200\n"
+"POT-Creation-Date: 2022-09-29 15:05+0200\n"
 "Language: gl_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,7 +10,15 @@ msgstr ""
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: inc/config.class.php:73 inc/config.class.php:177
+#: hook.php:112
+msgid "Recategorized"
+msgstr "Recategorizado"
+
+#: hook.php:126
+msgid "Initial category"
+msgstr "Categoría inicial"
+
+#: inc/config.class.php:73 inc/config.class.php:184
 msgid "Yagp"
 msgstr "YAGP"
 
@@ -24,33 +32,33 @@ msgstr ""
 msgid "Auto renew tacit contracts"
 msgstr "Renovación automática dos contratos tácitos"
 
-#: inc/config.class.php:126
-msgid "Fixed Menu"
-msgstr "Menú fixo"
-
-#: inc/config.class.php:131
+#: inc/config.class.php:133
 msgid "Go to ticket"
 msgstr "Ir a peticion"
 
-#: inc/config.class.php:136
+#: inc/config.class.php:138
 msgid "Block opening date"
 msgstr "Bloquear a data de apertura do ticket"
 
-#: inc/config.class.php:141
+#: inc/config.class.php:143
 msgid "Replace ticket requester (mailcollector)"
 msgstr "Substituír o solicitante do ticket (mailcollector)"
 
-#: inc/config.class.php:147
+#: inc/config.class.php:149
 msgid "Tag to search"
 msgstr "Etiqueta a procurar"
 
-#: inc/config.class.php:153
+#: inc/config.class.php:155
 msgid "Change default minimum validation required"
 msgstr "Cambiar a validación mínima requerida por defecto"
 
-#: inc/config.class.php:159
+#: inc/config.class.php:161
 msgid "Default minimum validation required"
 msgstr "Validación mínima requerida por defecto"
+
+#: inc/config.class.php:171
+msgid "Enable re-categorization tracking"
+msgstr "Activar o seguimento de recategorización"
 
 #: inc/contractrenew.class.php:33
 msgid "YagpContractRenew"
