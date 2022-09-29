@@ -27,7 +27,7 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
-define ('PLUGIN_YAGP_VERSION', '2.0.0');
+define ('PLUGIN_YAGP_VERSION', '2.1.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -90,6 +90,11 @@ function plugin_init_yagp() {
       }
       if ($config->fields['change_df_min_val']){
          $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab","preShowTab"];
+      }
+
+      if ($config->fields['recategorization']){
+         $PLUGIN_HOOKS['item_update']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'updateTicket']];
+         $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_postItemForm'];
       }
    }
 

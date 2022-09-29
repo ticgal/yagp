@@ -1,4 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
+
+## 2.1.0 - 2022-09-29
+### Features
+- New Config option: Enable re-categorization tracking) #11262
+
 ## 2.0.0
 ### Features
 - GLPI 10 Compatibility #10285
