@@ -39,28 +39,83 @@ class PluginYagpTicket extends CommonDBTM {
 		if (!is_array($values)) {
 			$values = [$field => $values];
 		}
-		
 		switch ($field) {
+			case 'tickets_id':
+				$ticket = new Ticket();
+				$ticket->getFromDB($options["raw_data"]["id"]);
+				
+				$ticket_cat=new self();
+				$ticket_cat->getFromDBByCrit(["tickets_id"=>$options["raw_data"]["id"]]);
+				if(empty($ticket_cat->fields)){
+					return __("No");
+				}else{
+					return __("Yes");
+				}
+					
+				
+				break;
 			case 'plugin_yagp_itilcategories_id':
 				$ticket = new Ticket();
 				$ticket->getFromDB($options["raw_data"]["id"]);
-
-				if($ticket->fields["itilcategories_id"]!==$values["plugin_yagp_itilcategories_id"]){
-					$ticket_cat=new self();
-					$ticket_cat->getFromDBByCrit(["tickets_id"=>$options["raw_data"]["id"]]);
-					if(empty($ticket_cat->fields)){
-						return __("No");
+				$ticket_cat=new self();
+				$ticket_cat->getFromDBByCrit(["tickets_id"=>$options["raw_data"]["id"]]);
+				if(!empty($ticket_cat->fields)){
+					if($ticket_cat->fields["plugin_yagp_itilcategories_id"]==0){
+						return " ";
 					}else{
-						return __("Yes");
+						$cat = new ITILCategory();
+						$cat->getFromDB($ticket_cat->fields["plugin_yagp_itilcategories_id"]);
+						if(!empty($ticket_cat->fields)){
+							return $cat->fields["completename"];
+						}
 					}
 					
-				}else{
-					return __("No");
 				}
+
 				break;
 		}
 		
 		return parent::getSpecificValueToDisplay($field, $values, $options);
+	}
+
+	static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = [])
+	{
+		global $DB;
+
+		if (!is_array($values)) {
+			$values = [$field => $values];
+		}
+
+		switch ($field) {
+			case 'tickets_id':
+				$values = [
+					0=>__("No"),
+					1=>__("Yes")
+				];
+
+				return  Dropdown::showFromArray($name, $values, $options);
+				break;
+			case 'plugin_yagp_itilcategories_id':
+				$query=[
+					"SELECT"=>"plugin_yagp_itilcategories_id",
+					"DISTINCT"=>true,
+					"FROM"=>PluginYagpTicket::getTable(),
+					"GROUPBY"=>'plugin_yagp_itilcategories_id'
+				];
+
+				$values=[];
+				foreach ($DB->request($query) as $row) {
+					$cat = new ITILCategory();
+					$cat->getFromDB($row["plugin_yagp_itilcategories_id"]);
+					if($row["plugin_yagp_itilcategories_id"]!==0){
+						$values[$row["plugin_yagp_itilcategories_id"]]=$cat->fields["completename"];
+					}
+				 }
+				return Dropdown::showFromArray($name, $values, $options);
+				break;
+		}
+		return parent::getSpecificValueToSelect($field, $name, $values, $options);
+		
 	}
 
 
@@ -119,19 +174,13 @@ JAVASCRIPT;
 	public static function updateTicket(Ticket $ticket) {
 
 		if(isset($ticket->oldvalues["itilcategories_id"])){
-			if ($ticket->oldvalues["itilcategories_id"]===0){
-				$ticket_cat=new self();
-				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
-				if(empty($ticket_cat->fields)){
-					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->fields["itilcategories_id"]]);
-				}
-			}else{
-				$ticket_cat=new self();
-				$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
-				if(empty($ticket_cat->fields)){
-					$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->oldvalues["itilcategories_id"]]);
-				}
+
+			$ticket_cat=new self();
+			$ticket_cat->getFromDBByCrit(["tickets_id"=>$ticket->fields["id"]]);
+			if(empty($ticket_cat->fields)){
+				$ticket_cat->add(["tickets_id"=>$ticket->fields["id"],"plugin_yagp_itilcategories_id"=>$ticket->oldvalues["itilcategories_id"]]);
 			}
+			
 		}
 		
 	}
