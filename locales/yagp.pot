@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-23 15:23+0200\n"
+"POT-Creation-Date: 2022-09-29 15:05+0200\n"
 "PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,7 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:73 inc/config.class.php:177
+#: hook.php:112
+msgid "Recategorized"
+msgstr ""
+
+#: hook.php:126
+msgid "Initial category"
+msgstr ""
+
+#: inc/config.class.php:73 inc/config.class.php:184
 msgid "Yagp"
 msgstr ""
 
@@ -29,32 +37,32 @@ msgstr ""
 msgid "Auto renew tacit contracts"
 msgstr ""
 
-#: inc/config.class.php:126
-msgid "Fixed Menu"
-msgstr ""
-
-#: inc/config.class.php:131
+#: inc/config.class.php:133
 msgid "Go to ticket"
 msgstr ""
 
-#: inc/config.class.php:136
+#: inc/config.class.php:138
 msgid "Block opening date"
 msgstr ""
 
-#: inc/config.class.php:141
+#: inc/config.class.php:143
 msgid "Replace ticket requester (mailcollector)"
 msgstr ""
 
-#: inc/config.class.php:147
+#: inc/config.class.php:149
 msgid "Tag to search"
 msgstr ""
 
-#: inc/config.class.php:153
+#: inc/config.class.php:155
 msgid "Change default minimum validation required"
 msgstr ""
 
-#: inc/config.class.php:159
+#: inc/config.class.php:161
 msgid "Default minimum validation required"
+msgstr ""
+
+#: inc/config.class.php:171
+msgid "Enable re-categorization tracking"
 msgstr ""
 
 #: inc/contractrenew.class.php:33

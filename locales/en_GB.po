@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-23 15:16+0200\n"
+"POT-Creation-Date: 2022-09-29 14:15+0200\n"
 "PO-Revision-Date: 2021-10-07 11:14+0200\n"
 "Last-Translator: Automatically generated\n"
 "Language-Team: none\n"
@@ -18,7 +18,15 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 "X-Generator: Poedit 2.3\n"
 
-#: inc/config.class.php:73 inc/config.class.php:177
+#: hook.php:112
+msgid "Recategorized"
+msgstr ""
+
+#: hook.php:126
+msgid "Initial category"
+msgstr ""
+
+#: inc/config.class.php:73 inc/config.class.php:184
 msgid "Yagp"
 msgstr "Yagp"
 
@@ -30,32 +38,32 @@ msgstr "Change ticket solved date to last task end time"
 msgid "Auto renew tacit contracts"
 msgstr "Auto renew tacit contracts"
 
-#: inc/config.class.php:126
-msgid "Fixed Menu"
-msgstr "Fixed Menu"
-
-#: inc/config.class.php:131
+#: inc/config.class.php:133
 msgid "Go to ticket"
 msgstr "Go to ticket"
 
-#: inc/config.class.php:136
+#: inc/config.class.php:138
 msgid "Block opening date"
 msgstr "Block opening date"
 
-#: inc/config.class.php:141
+#: inc/config.class.php:143
 msgid "Replace ticket requester (mailcollector)"
 msgstr ""
 
-#: inc/config.class.php:147
+#: inc/config.class.php:149
 msgid "Tag to search"
 msgstr ""
 
-#: inc/config.class.php:153
+#: inc/config.class.php:155
 msgid "Change default minimum validation required"
 msgstr ""
 
-#: inc/config.class.php:159
+#: inc/config.class.php:161
 msgid "Default minimum validation required"
+msgstr ""
+
+#: inc/config.class.php:171
+msgid "Enable re-categorization tracking"
 msgstr ""
 
 #: inc/contractrenew.class.php:33
@@ -86,6 +94,9 @@ msgstr "Change date"
 #: inc/ticketsolveddate.class.php:40
 msgid "Number of tickets"
 msgstr "Number of tickets"
+
+#~ msgid "Fixed Menu"
+#~ msgstr "Fixed Menu"
 
 #~ msgid "Test text"
 #~ msgstr "Test text"

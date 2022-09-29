@@ -215,6 +215,17 @@ JAVASCRIPT;
 							});
 JAVASCRIPT;
 							echo Html::scriptBlock($script);
+						}else{
+							$cat_name=__("without");
+							$script=<<<JAVASCRIPT
+							$(document).ready(function(){
+								if( $('#recategorized').length ==0)  {
+									$("span[id^='category_block_']").after("<div id='recategorized' class='form-field row col-12 d-flex align-items-center mb-2'><label class='col-form-label col-xxl-4 text-xxl-end'>" + __("Initial category","yagp") + "</label>"+'<div class="col-xxl-8  field-container"><span class="entity-badge" title="techs-tickets"><span class="text-nowrap">'+"{$cat_name}"+'</span></span></div>'+"</div>");
+								}
+								
+							});
+JAVASCRIPT;
+							echo Html::scriptBlock($script);
 						}
 
 						}
