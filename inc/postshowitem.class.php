@@ -38,7 +38,19 @@ if (!defined('GLPI_ROOT')) {
         if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
             switch (get_class($params['item'])) {
                case 'Ticket':
-                
+                $script = <<<JAVASCRIPT
+                $(document).ready(function() {
+                    $("span.is-private[data-bs-original-title='Private']").children("i").css("font-size","1.6em");
+                    $("span.is-private[data-bs-original-title='Private']").children("i").css("color","#d63939");
+                    $("span.is-private[data-bs-original-title='Private']").children("i").css("font-weight","500");
+                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-style","dashed");
+                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-color","#d63939");
+                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-width","0.143em");
+                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-radius","3px");
+                });
+JAVASCRIPT;
+
+                echo Html::scriptBlock($script);
             }
         }
 
