@@ -5,6 +5,9 @@
 - New Config option: Enable re-categorization tracking) #11262
 - Hide historical tab to post-only users #11328
 
+### Bugfixes
+- Fix "Go to ticket" field display at horizontal layout #11396
+
 ## 2.0.0
 ### Features
 - GLPI 10 Compatibility #10285
