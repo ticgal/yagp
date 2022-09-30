@@ -99,6 +99,7 @@ function plugin_init_yagp() {
       
       if ($config->fields['hide_historical']){
          $PLUGIN_HOOKS['pre_show_item']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_preShowItem'];
+         $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab","plugin_yagp_preShowTab"];
       }
    }
 

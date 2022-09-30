@@ -54,4 +54,23 @@ JAVASCRIPT;
 			echo Html::scriptBlock($script);
         }
     }
+	public static function plugin_yagp_preShowTab($params) {
+        if($_SESSION["glpiactiveprofile"]["interface"]=="helpdesk"){
+            $options = $params["options"];
+            switch($options["itemtype"]){
+                case "Log":
+                    $script = <<<JAVASCRIPT
+                    $(document).ready(function() {
+                        console.log($("a[data-bs-target^='#tab-Log']").get());
+                        $("div[id^='tab-Log']").css({display:"none"});
+                        $("div[id^='tab--'] div.table-responsive").css({display:"none"});
+                    });
+JAVASCRIPT;
+    
+                    echo Html::scriptBlock($script);
+
+            }
+
+        }
+	}
  }

@@ -242,16 +242,23 @@ JAVASCRIPT;
 	}
 
 	public static function plugin_yagp_preShowItem($params) {
-
-		$script = <<<JAVASCRIPT
-			$(document).ready(function() {
-				console.log($("a[data-bs-target^='#tab-Log']").get());
-				$("a[data-bs-target^='#tab-Log']").hide();
-			});
+		if($_SESSION["glpiactiveprofile"]["interface"]=="helpdesk"){
+			if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
+				switch (get_class($params['item'])) {
+				   case 'Ticket':
+					$script = <<<JAVASCRIPT
+					$(document).ready(function() {
+						console.log($("a[data-bs-target^='#tab-Log']").get());
+						$("a[data-bs-target^='#tab-Log']").css({display:"none"});
+					});
 JAVASCRIPT;
 
-			echo Html::scriptBlock($script);
+					echo Html::scriptBlock($script);
+				}
+			}
 			
+		}
+	
 	}
 
 	static function install(Migration $migration)
