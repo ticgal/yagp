@@ -101,6 +101,10 @@ function plugin_init_yagp() {
          $PLUGIN_HOOKS['pre_show_item']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_preShowItem'];
          $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab","plugin_yagp_preShowTab"];
       }
+
+      if ($config->fields['private_view']){
+         $PLUGIN_HOOKS['post_show_item']['yagp'] = ['PluginYagpPostshowitem', 'plugin_yagp_postShowItem'];
+      }
    }
 
 }

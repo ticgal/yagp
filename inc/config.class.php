@@ -177,6 +177,11 @@ class PluginYagpConfig extends CommonDBTM {
       Dropdown::showYesNo("hide_historical", $config->fields["hide_historical"]);
       echo "</td></tr>\n";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td >".__("Enhance Private task/followup view", "yagp")."</td><td >";
+      Dropdown::showYesNo("private_view", $config->fields["private_view"]);
+      echo "</td></tr>\n";
+
       $config->showFormButtons(['candel'=>false]);
 
       return false;
@@ -221,6 +226,7 @@ class PluginYagpConfig extends CommonDBTM {
                      `df_min_validation` int(11) NOT NULL default '0',
                      `recategorization` tinyint(1) NOT NULL default '0',
                      `hide_historical` tinyint(1) NOT NULL default '0',
+                     `private_view` tinyint(1) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
          $DB->query($query) or die ($DB->error());
