@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-29 15:05+0200\n"
+"POT-Creation-Date: 2022-09-30 11:16+0200\n"
 "PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,15 +17,15 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: hook.php:112
+#: hook.php:114
 msgid "Recategorized"
 msgstr ""
 
-#: hook.php:126
+#: hook.php:128
 msgid "Initial category"
 msgstr ""
 
-#: inc/config.class.php:73 inc/config.class.php:184
+#: inc/config.class.php:73 inc/config.class.php:189
 msgid "Yagp"
 msgstr ""
 
@@ -63,6 +63,10 @@ msgstr ""
 
 #: inc/config.class.php:171
 msgid "Enable re-categorization tracking"
+msgstr ""
+
+#: inc/config.class.php:176
+msgid "Hide historical tab to post-only users"
 msgstr ""
 
 #: inc/contractrenew.class.php:33

@@ -100,40 +100,42 @@ function plugin_yagp_updateitem(CommonDBTM $item) {
 
 function plugin_yagp_getAddSearchOptions($itemtype){
 
+   $config= PluginYagpConfig::getConfig();
+   
    $sopt=[];
+   if ($config->fields['recategorization']){
+      switch ($itemtype){
+         case "Ticket":
+            $sopt['yagp']=['name'=>'YAGP'];
 
-	switch ($itemtype){
-      case "Ticket":
-         $sopt['yagp']=['name'=>'YAGP'];
+            $sopt[9021321] = [
+               'table' => PluginYagpTicket::getTable(),
+               'field' => 'is_recategorized',
+               'name' => __('Recategorized','yagp'),
+               'searchtype' => ['equals', 'notequals'],
+               'massiveaction' => false,
+               'searchequalsonfield' => true,
+               'datatype' => 'specific',
+               'joinparams' => [
+                  'jointype' => 'child',
+                  'linkfield'=>'tickets_id'
+               ]
+            ];
 
-         $sopt[9021321] = [
-				'table' => PluginYagpTicket::getTable(),
-				'field' => 'is_recategorized',
-				'name' => __('Recategorized','yagp'),
-				'searchtype' => ['equals', 'notequals'],
-				'massiveaction' => false,
-            'searchequalsonfield' => true,
-				'datatype' => 'specific',
-				'joinparams' => [
-					'jointype' => 'child',
-               'linkfield'=>'tickets_id'
-				]
-			];
-
-         $sopt[9021322] = [
-				'table' => PluginYagpTicket::getTable(),
-				'field' => 'plugin_yagp_itilcategories_id',
-				'name' => __('Initial category','yagp'),
-				'searchtype' => ['equals', 'notequals'],
-				'massiveaction' => false,
-            'searchequalsonfield' => true,
-				'datatype' => 'specific',
-				'joinparams' => [
-					'jointype' => 'child',
-               'linkfield'=>'tickets_id'
-				]
-			];
+            $sopt[9021322] = [
+               'table' => PluginYagpTicket::getTable(),
+               'field' => 'plugin_yagp_itilcategories_id',
+               'name' => __('Initial category','yagp'),
+               'searchtype' => ['equals', 'notequals'],
+               'massiveaction' => false,
+               'searchequalsonfield' => true,
+               'datatype' => 'specific',
+               'joinparams' => [
+                  'jointype' => 'child',
+                  'linkfield'=>'tickets_id'
+               ]
+            ];
+      }
    }
-
    return $sopt;
 }

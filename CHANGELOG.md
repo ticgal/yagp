@@ -1,8 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 2.1.0 - 2022-09-29
+## 2.1.0 - 2022-09-30
 ### Features
 - New Config option: Enable re-categorization tracking) #11262
+- Hide historical tab to post-only users #11328
 
 ## 2.0.0
 ### Features

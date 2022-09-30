@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-09-29 15:05+0200\n"
+"POT-Creation-Date: 2022-09-30 11:16+0200\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,15 +10,15 @@ msgstr ""
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: hook.php:112
+#: hook.php:114
 msgid "Recategorized"
 msgstr "Recategorizado"
 
-#: hook.php:126
+#: hook.php:128
 msgid "Initial category"
 msgstr "Categoría inicial"
 
-#: inc/config.class.php:73 inc/config.class.php:184
+#: inc/config.class.php:73 inc/config.class.php:189
 msgid "Yagp"
 msgstr "YAGP"
 
@@ -57,6 +57,10 @@ msgstr "Validación mínima requerida por defecto"
 #: inc/config.class.php:171
 msgid "Enable re-categorization tracking"
 msgstr "Habilitar el seguimiento de recategorización"
+
+#: inc/config.class.php:176
+msgid "Hide historical tab to post-only users"
+msgstr "Ocultar la pestaña de histórico a los usuarios post-only"
 
 #: inc/contractrenew.class.php:33
 msgid "YagpContractRenew"
