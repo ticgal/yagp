@@ -3,7 +3,8 @@
 ## 2.1.0 - 2022-09-30
 ### Features
 - New Config option: Enable re-categorization tracking) #11262
-- Hide historical tab to post-only users #11328
+- New Config option: Hide historical tab to post-only users #11328
+- New Config option: Enhance Private task/followup view #11432
 
 ### Bugfixes
 - Fix "Go to ticket" field display at horizontal layout #11396
