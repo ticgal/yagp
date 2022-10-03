@@ -8,6 +8,7 @@
 
 ### Bugfixes
 - Fix "Go to ticket" field display at horizontal layout #11396
+- Change "Go to ticket" input size #11396
 
 ## 2.0.0
 ### Features
