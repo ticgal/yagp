@@ -239,6 +239,9 @@ class PluginYagpConfig extends CommonDBTM {
                   'findrequest'                 => 0,
                   'change_df_min_val'           => 0,
                   'df_min_validation'           => 0,
+                  'recategorization'           => 0,
+                  'hide_historical'           => 0,
+                  'private_view'           => 0,
                ]);
       }else{
       	$migration->addField($table, 'gototicket', 'boolean');
@@ -247,6 +250,9 @@ class PluginYagpConfig extends CommonDBTM {
          $migration->addField($table, 'requestlabel', 'string');
          $migration->addField($table, 'change_df_min_val', 'boolean');
          $migration->addField($table, 'df_min_validation', 'int');
+         $migration->addField($table, 'recategorization', 'boolean');
+         $migration->addField($table, 'hide_historical', 'boolean');
+         $migration->addField($table, 'private_view', 'boolean');
       	$migration->migrationOneTable($table);
       }
    }
