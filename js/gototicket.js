@@ -1,9 +1,10 @@
+
 $(document).ready(function(){
 	if ($(window).width()>700) {
 		if($("body").hasClass("vertical-layout")){
-				$('header div div:first').before("<div class ='ms-lg-auto d-none d-lg-block flex-grow-1 flex-lg-grow-0'><form id='yagp_form' style='margin-right:1%;'><div class='input-group input-group-flat'><input id='goto' class='form-control' type='number' placeholder='id'><span class='input-group-text'><button type='submit' class='btn btn-link p-0 m-0'><span class='fas fa-external-link-alt' aria-hidden='true'></span></button></span></div></form></div>");
+				$('header div div:first').before("<div class ='ms-lg-auto d-none d-lg-block flex-grow-1 flex-lg-grow-0'><form id='yagp_form' style='margin-right:1%;width:140px;'><div class='input-group input-group-flat'><input id='goto' class='form-control' type='number' placeholder='id'><span class='input-group-text'><button type='submit' class='btn btn-link p-0 m-0'><span class='fas fa-external-link-alt' aria-hidden='true'></span></button></span></div></form></div>");
 		}else{
-			$('div.navbar div form[role="search"]').parent().before("<div class ='ms-lg-auto d-none d-lg-block flex-grow-1 flex-lg-grow-0'><form id='yagp_form' style='margin-right:1%;'><div class='input-group input-group-flat'><input id='goto' class='form-control' type='number' placeholder='id'><span class='input-group-text'><button type='submit' class='btn btn-link p-0 m-0'><span class='fas fa-external-link-alt' aria-hidden='true'></span></button></span></div></form></div>");
+			$('div.navbar div form[role="search"]').parent().before("<div class ='ms-lg-auto d-none d-lg-block flex-grow-1 flex-lg-grow-0'><form id='yagp_form' style='margin-right:1%;width:140px;'><div class='input-group input-group-flat'><input id='goto' class='form-control' type='number' placeholder='id'><span class='input-group-text'><button type='submit' class='btn btn-link p-0 m-0'><span class='fas fa-external-link-alt' aria-hidden='true'></span></button></span></div></form></div>");
 		}
 
 		var color=$('#champRecherche input').css("color");
