@@ -34,7 +34,6 @@ if (!defined('GLPI_ROOT')) {
  class PluginYagpPostshowitem extends CommonDBTM {
 
     public static function plugin_yagp_postShowItem($params) {
-        Toolbox::logInFile("POSTSHOW",print_r($params,true));
         if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
             switch (get_class($params['item'])) {
                case 'Ticket':
