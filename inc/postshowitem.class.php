@@ -39,13 +39,8 @@ if (!defined('GLPI_ROOT')) {
                case 'Ticket':
                 $script = <<<JAVASCRIPT
                 $(document).ready(function() {
-                    $("span.is-private[data-bs-original-title='Private']").children("i").css("font-size","1.6em");
-                    $("span.is-private[data-bs-original-title='Private']").children("i").css("color","#d63939");
-                    $("span.is-private[data-bs-original-title='Private']").children("i").css("font-weight","500");
-                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-style","dashed");
-                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-color","#d63939");
-                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-width","0.143em");
-                    $("span.is-private[data-bs-original-title='Private']").parent().parent().parent().css("border-radius","3px");
+                    $("span.is-private").children("i").css({"font-size":"1.6em","color":"#d63939","font-weight":"500"});
+                    $("span.is-private").parent().parent().parent().css({"border-style":"dashed","border-color":"black","border-width":"0.143em","border-radius":"3px"});
                 });
 JAVASCRIPT;
 
