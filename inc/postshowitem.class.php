@@ -29,24 +29,25 @@
 */
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
- }
+}
 
- class PluginYagpPostshowitem extends CommonDBTM {
+class PluginYagpPostshowitem extends CommonDBTM
+{
 
-    public static function plugin_yagp_postShowItem($params) {
+    public static function plugin_yagp_postShowItem($params)
+    {
         if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
             switch (get_class($params['item'])) {
-               case 'Ticket':
-                $script = <<<JAVASCRIPT
+                case 'Ticket':
+                    $script = <<<JAVASCRIPT
                 $(document).ready(function() {
                     $("span.is-private").children("i").css({"font-size":"1.6em","color":"#d63939","font-weight":"500"});
                     $("span.is-private").parent().parent().parent().css({"border-style":"dashed","border-color":"black","border-width":"0.143em","border-radius":"3px"});
                 });
 JAVASCRIPT;
 
-                echo Html::scriptBlock($script);
+                    echo Html::scriptBlock($script);
             }
         }
-
     }
- }
+}

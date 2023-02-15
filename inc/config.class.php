@@ -31,53 +31,60 @@ if (!defined('GLPI_ROOT')) {
    die("Sorry. You can't access this file directly");
 }
 
-class PluginYagpConfig extends CommonDBTM {
+class PluginYagpConfig extends CommonDBTM
+{
    static private $_instance = null;
 
-   public function __construct() {
+   public function __construct()
+   {
       global $DB;
       if ($DB->tableExists(self::getTable())) {
          $this->getFromDB(1);
       }
    }
    /**
-   * Summary of canCreate
-   * @return boolean
-   */
-   static function canCreate() {
+    * Summary of canCreate
+    * @return boolean
+    */
+   static function canCreate()
+   {
       return Session::haveRight('config', UPDATE);
    }
 
    /**
-   * Summary of canView
-   * @return boolean
-   */
-   static function canView() {
+    * Summary of canView
+    * @return boolean
+    */
+   static function canView()
+   {
       return Session::haveRight('config', READ);
    }
 
    /**
-   * Summary of canUpdate
-   * @return boolean
-   */
-   static function canUpdate() {
+    * Summary of canUpdate
+    * @return boolean
+    */
+   static function canUpdate()
+   {
       return Session::haveRight('config', UPDATE);
    }
 
    /**
-   * Summary of getTypeName
-   * @param mixed $nb plural
-   * @return mixed
-   */
-   static function getTypeName($nb = 0) {
+    * Summary of getTypeName
+    * @param mixed $nb plural
+    * @return mixed
+    */
+   static function getTypeName($nb = 0)
+   {
       return __("Yagp", "yagp");
    }
 
    /**
-   * Summary of getInstance
-   * @return PluginProcessmakerConfig
-   */
-   static function getInstance() {
+    * Summary of getInstance
+    * @return PluginProcessmakerConfig
+    */
+   static function getInstance()
+   {
 
       if (!isset(self::$_instance)) {
          self::$_instance = new self();
@@ -88,7 +95,8 @@ class PluginYagpConfig extends CommonDBTM {
       return self::$_instance;
    }
 
-   public static function getConfig($update = false) {
+   public static function getConfig($update = false)
+   {
       static $config = null;
       if (is_null($config)) {
          $config = new self();
@@ -100,11 +108,12 @@ class PluginYagpConfig extends CommonDBTM {
    }
 
    /**
-   * Summary of showConfigForm
-   * @param mixed $item is the config
-   * @return boolean
-   */
-   static function showConfigForm() {
+    * Summary of showConfigForm
+    * @param mixed $item is the config
+    * @return boolean
+    */
+   static function showConfigForm()
+   {
       global $CFG_GLPI;
 
       $config = new self();
@@ -113,12 +122,12 @@ class PluginYagpConfig extends CommonDBTM {
       $config->showFormHeader(['colspan' => 4]);
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Change ticket solved date to last task end time", "yagp")."</td><td >";
+      echo "<td >" . __("Change ticket solved date to last task end time", "yagp") . "</td><td >";
       Dropdown::showYesNo("ticketsolveddate", $config->fields["ticketsolveddate"]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Auto renew tacit contracts", "yagp")."</td><td >";
+      echo "<td >" . __("Auto renew tacit contracts", "yagp") . "</td><td >";
       Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
       echo "</td></tr>\n";
 
@@ -127,84 +136,87 @@ class PluginYagpConfig extends CommonDBTM {
        * echo "<td >".__("Fixed Menu", "yagp")."</td><td >";
        * Dropdown::showYesNo("fixedmenu", $config->fields["fixedmenu"]);
        * echo "</td></tr>\n";
-      ****/
-      
+       ****/
+
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Go to ticket", "yagp")."</td><td >";
+      echo "<td >" . __("Go to ticket", "yagp") . "</td><td >";
       Dropdown::showYesNo("gototicket", $config->fields["gototicket"]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Block opening date", "yagp")."</td><td >";
+      echo "<td >" . __("Block opening date", "yagp") . "</td><td >";
       Dropdown::showYesNo("blockdate", $config->fields["blockdate"]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Replace ticket requester (mailcollector)", "yagp")."</td><td >";
+      echo "<td >" . __("Replace ticket requester (mailcollector)", "yagp") . "</td><td >";
       Dropdown::showYesNo("findrequest", $config->fields["findrequest"]);
       echo "</td></tr>\n";
 
       if ($config->fields['findrequest']) {
          echo "<tr class='tab_bg_1'>";
-         echo "<td >".__("Tag to search", "yagp")."</td><td >";
+         echo "<td >" . __("Tag to search", "yagp") . "</td><td >";
          echo Html::input("requestlabel", ['value' => $config->fields["requestlabel"]]);
          echo "</td></tr>\n";
       }
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Change default minimum validation required", "yagp")."</td><td >";
+      echo "<td >" . __("Change default minimum validation required", "yagp") . "</td><td >";
       Dropdown::showYesNo("change_df_min_val", $config->fields["change_df_min_val"]);
       echo "</td></tr>\n";
 
       if ($config->fields['change_df_min_val']) {
          echo "<tr class='tab_bg_1'>";
-         echo "<td >".__("Default minimum validation required", "yagp")."</td><td >";
+         echo "<td >" . __("Default minimum validation required", "yagp") . "</td><td >";
          $possible_values = [];
-         $possible_values[0]="0%";
-         $possible_values[50]="50%";
-         $possible_values[100]="100%";
-         Dropdown::showFromArray('df_min_validation', $possible_values,['value' => $config->fields["df_min_validation"]]);
+         $possible_values[0] = "0%";
+         $possible_values[50] = "50%";
+         $possible_values[100] = "100%";
+         Dropdown::showFromArray('df_min_validation', $possible_values, ['value' => $config->fields["df_min_validation"]]);
          echo "</td></tr>\n";
       }
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Enable re-categorization tracking", "yagp")."</td><td >";
+      echo "<td >" . __("Enable re-categorization tracking", "yagp") . "</td><td >";
       Dropdown::showYesNo("recategorization", $config->fields["recategorization"]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Hide historical tab to post-only users", "yagp")."</td><td >";
+      echo "<td >" . __("Hide historical tab to post-only users", "yagp") . "</td><td >";
       Dropdown::showYesNo("hide_historical", $config->fields["hide_historical"]);
       echo "</td></tr>\n";
 
       echo "<tr class='tab_bg_1'>";
-      echo "<td >".__("Enhance Private task/followup view", "yagp")."</td><td >";
+      echo "<td >" . __("Enhance Private task/followup view", "yagp") . "</td><td >";
       Dropdown::showYesNo("private_view", $config->fields["private_view"]);
       echo "</td></tr>\n";
 
-      $config->showFormButtons(['candel'=>false]);
+      $config->showFormButtons(['candel' => false]);
 
       return false;
    }
 
-   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0) {
+   function getTabNameForItem(CommonGLPI $item, $withtemplate = 0)
+   {
       global $LANG;
 
-      if ($item->getType()=='Config') {
+      if ($item->getType() == 'Config') {
          return __("Yagp", "yagp");
       }
       return '';
    }
 
-   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0) {
+   static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0)
+   {
 
-      if ($item->getType()=='Config') {
+      if ($item->getType() == 'Config') {
          self::showConfigForm($item);
       }
       return true;
    }
 
-   public static function install(Migration $migration) {
+   public static function install(Migration $migration)
+   {
       global $DB;
 
       $table  = self::getTable();
@@ -229,22 +241,22 @@ class PluginYagpConfig extends CommonDBTM {
                      `private_view` tinyint(1) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
-         $DB->query($query) or die ($DB->error());
+         $DB->query($query) or die($DB->error());
          $config->add([
-                  'id'                          => 1,
-                  'ticketsolveddate'            => 0,
-                  'contractrenew'               => 0,
-                  'gototicket'                  => 0,
-                  'blockdate'                   => 0,
-                  'findrequest'                 => 0,
-                  'change_df_min_val'           => 0,
-                  'df_min_validation'           => 0,
-                  'recategorization'           => 0,
-                  'hide_historical'           => 0,
-                  'private_view'           => 0,
-               ]);
-      }else{
-      	$migration->addField($table, 'gototicket', 'boolean');
+            'id'                     => 1,
+            'ticketsolveddate'       => 0,
+            'contractrenew'          => 0,
+            'gototicket'             => 0,
+            'blockdate'              => 0,
+            'findrequest'            => 0,
+            'change_df_min_val'      => 0,
+            'df_min_validation'      => 0,
+            'recategorization'       => 0,
+            'hide_historical'        => 0,
+            'private_view'           => 0,
+         ]);
+      } else {
+         $migration->addField($table, 'gototicket', 'boolean');
          $migration->addField($table, 'blockdate', 'boolean');
          $migration->addField($table, 'findrequest', 'boolean');
          $migration->addField($table, 'requestlabel', 'string');
@@ -253,7 +265,7 @@ class PluginYagpConfig extends CommonDBTM {
          $migration->addField($table, 'recategorization', 'boolean');
          $migration->addField($table, 'hide_historical', 'boolean');
          $migration->addField($table, 'private_view', 'boolean');
-      	$migration->migrationOneTable($table);
+         $migration->migrationOneTable($table);
       }
    }
 }

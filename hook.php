@@ -27,17 +27,19 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
+
 /**
  * Install all necessary elements for the plugin
  *
  * @return boolean True if success
  */
-function plugin_yagp_install() {
+function plugin_yagp_install()
+{
 
    $migration = new Migration(PLUGIN_YAGP_VERSION);
 
    // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
+   foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
       // Load *.class.php files and get the class name
       if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
          $classname = 'PluginYagp' . ucfirst($matches[1]);
@@ -56,12 +58,13 @@ function plugin_yagp_install() {
  *
  * @return boolean True if success
  */
-function plugin_yagp_uninstall() {
+function plugin_yagp_uninstall()
+{
 
    $migration = new Migration(PLUGIN_YAGP_VERSION);
 
    // Parse inc directory
-   foreach (glob(dirname(__FILE__).'/inc/*') as $filepath) {
+   foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
       // Load *.class.php files and get the class name
       if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
          $classname = 'PluginYagp' . ucfirst($matches[1]);
@@ -76,63 +79,65 @@ function plugin_yagp_uninstall() {
    return true;
 }
 
-function plugin_yagp_updateitem(CommonDBTM $item) {
-   if ($item::getType()=="PluginYagpConfig") {
-      $input=$item->input;
-      if ($input["ticketsolveddate"]==1) {
+function plugin_yagp_updateitem(CommonDBTM $item)
+{
+   if ($item::getType() == "PluginYagpConfig") {
+      $input = $item->input;
+      if ($input["ticketsolveddate"] == 1) {
          Crontask::Register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
-            'state'=>1,
+            'state' => 1,
             'mode'  => CronTask::MODE_EXTERNAL
          ]);
-      } else if ($input["ticketsolveddate"]==0) {
+      } else if ($input["ticketsolveddate"] == 0) {
          Crontask::Unregister("YagpTicketsolveddate");
       }
-      if ($input["contractrenew"]==1) {
+      if ($input["contractrenew"] == 1) {
          Crontask::Register("PluginYagpContractrenew", 'renewContract', DAY_TIMESTAMP, [
-            'state'=>1,
+            'state' => 1,
             'mode'  => CronTask::MODE_EXTERNAL
          ]);
-      } else if ($input["contractrenew"]==0) {
+      } else if ($input["contractrenew"] == 0) {
          Crontask::Unregister("YagpContractrenew");
       }
    }
 }
 
-function plugin_yagp_getAddSearchOptions($itemtype){
+function plugin_yagp_getAddSearchOptions($itemtype)
+{
 
-   $config= PluginYagpConfig::getConfig();
-   
-   $sopt=[];
-   if ($config->fields['recategorization']){
-      switch ($itemtype){
+   $config = PluginYagpConfig::getConfig();
+
+   $sopt = [];
+   if ($config->fields['recategorization']) {
+      switch ($itemtype) {
          case "Ticket":
-            $sopt['yagp']=['name'=>'YAGP'];
+            $sopt['yagp'] = ['name' => 'YAGP'];
 
             $sopt[9021321] = [
                'table' => PluginYagpTicket::getTable(),
                'field' => 'is_recategorized',
-               'name' => __('Recategorized','yagp'),
+               'name' => __('Recategorized', 'yagp'),
                'searchtype' => ['equals', 'notequals'],
                'massiveaction' => false,
                'searchequalsonfield' => true,
                'datatype' => 'specific',
                'joinparams' => [
                   'jointype' => 'child',
-                  'linkfield'=>'tickets_id'
+                  'linkfield' => 'tickets_id'
                ]
             ];
 
             $sopt[9021322] = [
                'table' => PluginYagpTicket::getTable(),
                'field' => 'plugin_yagp_itilcategories_id',
-               'name' => __('Initial category','yagp'),
+               'name' => __('Initial category', 'yagp'),
                'searchtype' => ['equals', 'notequals'],
                'massiveaction' => false,
                'searchequalsonfield' => true,
                'datatype' => 'specific',
                'joinparams' => [
                   'jointype' => 'child',
-                  'linkfield'=>'tickets_id'
+                  'linkfield' => 'tickets_id'
                ]
             ];
       }

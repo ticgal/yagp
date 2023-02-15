@@ -28,31 +28,37 @@
  ----------------------------------------------------------------------
 */
 
-class PluginYagpTicketsolveddate extends CommonDBTM {
-   static function getTypeName($nb = 0) {
+class PluginYagpTicketsolveddate extends CommonDBTM
+{
+   static function getTypeName($nb = 0)
+   {
       return __('YagpTicketSolvedDate', 'yagp');
    }
 
-   static function cronInfo($name) {
+   static function cronInfo($name)
+   {
       switch ($name) {
          case 'changeDate':
-            return ['description' => __('Change date', 'yagp'),
-                       'parameter'=>__('Number of tickets', 'yagp')];
+            return [
+               'description' => __('Change date', 'yagp'),
+               'parameter' => __('Number of tickets', 'yagp')
+            ];
       }
       return [];
    }
 
-   public static function cronChangeDate($task) {
+   public static function cronChangeDate($task)
+   {
       global $DB;
 
-      $config= PluginYagpConfig::getConfig();
+      $config = PluginYagpConfig::getConfig();
       if ($config->fields['ticketsolveddate']) {
-         $message="";
-         $ticket=new Ticket();
-         if ($task->fields['param']>0) {
-            $limit=" LIMIT ".$task->fields['param'];
+         $message = "";
+         $ticket = new Ticket();
+         if ($task->fields['param'] > 0) {
+            $limit = " LIMIT " . $task->fields['param'];
          } else {
-            $limit="";
+            $limit = "";
          }
 
          /*$sub_task=new QuerySubQuery([
@@ -110,7 +116,7 @@ class PluginYagpTicketsolveddate extends CommonDBTM {
                'solvedate'=>['!=','last_task_end']
             ]
          ];*/
-         $query="SELECT id,date,solvedate,taskstart.first_task_begin,task.last_task_end 
+         $query = "SELECT id,date,solvedate,taskstart.first_task_begin,task.last_task_end 
          	FROM glpi_tickets as ticket
 	         INNER JOIN (
 	         	select tickets_id,CASE 
@@ -129,21 +135,21 @@ class PluginYagpTicketsolveddate extends CommonDBTM {
 	         WHERE ticket.status=5
 	         AND DATE_FORMAT(ticket.solvedate, '%Y-%m-%d %H:%i')<>DATE_FORMAT(task.last_task_end, '%Y-%m-%d %H:%i')
 	         AND ticket.is_deleted=0
-		 AND ticket.date<task.last_task_end".$limit;
+		 AND ticket.date<task.last_task_end" . $limit;
 
          foreach ($DB->request($query) as $id => $row) {
-         	if (!is_null($row["first_task_begin"])){
-	            if ($row["date"]>$row["first_task_begin"]) {
-	               $newdate = strtotime ( '-1 hour', strtotime ( $row["first_task_begin"] ) );
-	               $newdate = date ( 'Y-m-d H:i', $newdate );
-	               $ticket->update(['id' => $row["id"],'date' => $newdate]);
-	               $task->addVolume(1);
-	               $task->log("Updated Ticket open date id: ".$row["id"]);
-	            }
-         	}
-            $ticket->update(['id' => $row["id"],'solvedate' => $row["last_task_end"]]);
+            if (!is_null($row["first_task_begin"])) {
+               if ($row["date"] > $row["first_task_begin"]) {
+                  $newdate = strtotime('-1 hour', strtotime($row["first_task_begin"]));
+                  $newdate = date('Y-m-d H:i', $newdate);
+                  $ticket->update(['id' => $row["id"], 'date' => $newdate]);
+                  $task->addVolume(1);
+                  $task->log("Updated Ticket open date id: " . $row["id"]);
+               }
+            }
+            $ticket->update(['id' => $row["id"], 'solvedate' => $row["last_task_end"]]);
             $task->addVolume(1);
-            $task->log("<a href='".Ticket::getFormURLWithID($row["id"])."'>Updated Ticket id: ".$row["id"]."</a>");
+            $task->log("<a href='" . Ticket::getFormURLWithID($row["id"]) . "'>Updated Ticket id: " . $row["id"] . "</a>");
          }
          return true;
       } else {

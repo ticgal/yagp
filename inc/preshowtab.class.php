@@ -29,21 +29,23 @@
 */
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
- }
+}
 
- class PluginYagpPreshowtab extends CommonDBTM {
+class PluginYagpPreshowtab extends CommonDBTM
+{
 
-    static function preShowTab($params = []) {
-        $config= PluginYagpConfig::getConfig();
+    static function preShowTab($params = [])
+    {
+        $config = PluginYagpConfig::getConfig();
         $options = $params["options"];
-        switch($options["itemtype"]){
+        switch ($options["itemtype"]) {
             case "TicketValidation":
-                $ticket=new Ticket();
+                $ticket = new Ticket();
                 $ticket->getFromDB($options["id"]);
-                $validation_percent=$ticket->fields["validation_percent"];
-                $df_min_validation=$config->fields["df_min_validation"];
-                $string = __("Current minimum validation","yagp");
-                
+                $validation_percent = $ticket->fields["validation_percent"];
+                $df_min_validation = $config->fields["df_min_validation"];
+                $string = __("Current minimum validation", "yagp");
+
                 $script = <<<JAVASCRIPT
                     $(document).ready(function() {
                         $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
@@ -51,13 +53,14 @@ if (!defined('GLPI_ROOT')) {
                         $(".tab_cadre_fixe tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
                     });
 JAVASCRIPT;
-			echo Html::scriptBlock($script);
+                echo Html::scriptBlock($script);
         }
     }
-	public static function plugin_yagp_preShowTab($params) {
-        if($_SESSION["glpiactiveprofile"]["interface"]=="helpdesk"){
+    public static function plugin_yagp_preShowTab($params)
+    {
+        if ($_SESSION["glpiactiveprofile"]["interface"] == "helpdesk") {
             $options = $params["options"];
-            switch($options["itemtype"]){
+            switch ($options["itemtype"]) {
                 case "Log":
                     $script = <<<JAVASCRIPT
                     $(document).ready(function() {
@@ -66,11 +69,9 @@ JAVASCRIPT;
                         $("div[id^='tab--'] div.table-responsive").css({display:"none"});
                     });
 JAVASCRIPT;
-    
+
                     echo Html::scriptBlock($script);
-
             }
-
         }
-	}
- }
+    }
+}

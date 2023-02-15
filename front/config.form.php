@@ -27,7 +27,7 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
-include ( "../../../inc/includes.php");
+include("../../../inc/includes.php");
 
 $config = new PluginYagpConfig();
 if (isset($_POST["update"])) {
@@ -38,10 +38,9 @@ if (isset($_POST["update"])) {
 
 
    Html::back();
-
 } else if (isset($_POST["refresh"])) {
    $config->refresh($_POST); // used to refresh process list, task category list
    Html::back();
 }
 
-Html::redirect($CFG_GLPI["root_doc"]."/front/config.form.php?forcetab=".urlencode('PluginYagpConfig$1'));
+Html::redirect($CFG_GLPI["root_doc"] . "/front/config.form.php?forcetab=" . urlencode('PluginYagpConfig$1'));
