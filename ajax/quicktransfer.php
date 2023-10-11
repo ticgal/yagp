@@ -31,9 +31,7 @@
 
 include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
-
-// To charge css
-Html::header('yagp');
+Html::header_nocache();
 
 $plugin = new Plugin();
 if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
@@ -42,10 +40,28 @@ if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
 
 Session::checkLoginUser();
 
+$_REQUEST['_in_modal'] = 1;
+Html::header('yagp');
+
+$transfer = new PluginYagpTransfer();
+if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
+    $transfer->showForm(
+        $_POST["id"],
+        ['target' => Plugin::getWebDir('yagp') . "/front/transfer.form.php"]
+    );
+}
+
 if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
-    echo "<div class='d-flex w-100 vh-100 justify-content-center align-items-center'>";
-    echo $_GET['itemtype'];
-    echo "<br>";
-    echo $_GET['items_id'];
-    echo "</div>";
+    $itemtype = $_GET['itemtype'];
+    $id = $_GET['items_id'];
+
+    if (!isset($_SESSION['glpitransfer_list'])) {
+        $_SESSION['glpitransfer_list'] = [];
+    }
+    if (!isset($_SESSION['glpitransfer_list'][$itemtype])) {
+        $_SESSION['glpitransfer_list'][$itemtype] = [];
+    }
+    $_SESSION['glpitransfer_list'][$itemtype][$id] = $id;
+
+    $transfer->showTransferList();
 }

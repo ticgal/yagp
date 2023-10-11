@@ -75,6 +75,8 @@ function plugin_init_yagp()
 
    $plugin = new Plugin();
    if ($plugin->isActivated('yagp')) {
+      Plugin::registerClass(PluginYagpTransfer::class);
+
       $config = PluginYagpConfig::getConfig();
       /**** Deprecated
        *   if ($config->fields['fixedmenu']) {

@@ -92,9 +92,10 @@ JAVASCRIPT;
                         $ajax_id,
                         $ajax_url,
                         [
-                            'title'     => $ajax_title,
-                            'width'     => '500',
-                            'height'    => '250',
+                            'title'         => $ajax_title,
+                            'width'         => '500',
+                            'height'        => '500',
+                            'reloadonclose' => true
                         ]
                     );
                     echo Html::scriptBlock($script);
