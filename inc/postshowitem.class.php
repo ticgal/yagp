@@ -50,4 +50,58 @@ JAVASCRIPT;
             }
         }
     }
+
+    /**
+     * plugin_yagp_quickTransfer
+     *
+     * @param  mixed $params
+     * @return bool
+     */
+    public static function plugin_yagp_quickTransfer($params): bool
+    {
+        $item = $params['item'];
+        if (!is_object($item)) {
+            return false;
+        }
+
+        switch ($item->getType()) {
+            case Ticket::class:
+                if (
+                    Session::haveRight('transfer', READ)
+                    && Session::isMultiEntitiesMode()
+                ) {
+                    $ajax_id = 'ajax_playground';
+                    $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
+                    $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
+                    $ajax_title = __('Yagp Quick Transfer', 'yagp');
+                    $icon = "<i class='fa-fw fas fa-level-up-alt'></i>";
+                    $btn_attrs = "class='btn col-auto col-xxl-12' data-bs-toggle='modal'";
+
+                    $append = "<label class='col-form-label col-xxl-5 text-xxl-end'></label>";
+                    $append .= "<div class='col-xxl-7 row m-0 field-container'>";
+                    $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}' href='#'>";
+                    $append .= $icon . "<span class='text-truncate'>$ajax_title</span>";
+                    $append .= "</a>";
+                    $append .= "</div>";
+
+                    $script = <<<JAVASCRIPT
+                    $('div#item-main .form-field').first().append("{$append}");
+                    JAVASCRIPT;
+
+                    Ajax::createIframeModalWindow(
+                        $ajax_id,
+                        $ajax_url,
+                        [
+                            'title'     => $ajax_title,
+                            'width'     => '500',
+                            'height'    => '250',
+                        ]
+                    );
+                    echo Html::scriptBlock($script);
+                }
+                break;
+        }
+
+        return true;
+    }
 }

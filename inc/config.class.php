@@ -191,6 +191,11 @@ class PluginYagpConfig extends CommonDBTM
       Dropdown::showYesNo("private_view", $config->fields["private_view"]);
       echo "</td></tr>\n";
 
+      echo "<tr class='tab_bg_1'>";
+      echo "<td >" . __("Enable quick transfer for tickets", "yagp") . "</td><td >";
+      Dropdown::showYesNo("quick_transfer", $config->fields["quick_transfer"]);
+      echo "</td></tr>\n";
+
       $config->showFormButtons(['candel' => false]);
 
       return false;
@@ -239,6 +244,7 @@ class PluginYagpConfig extends CommonDBTM
                      `recategorization` tinyint(1) NOT NULL default '0',
                      `hide_historical` tinyint(1) NOT NULL default '0',
                      `private_view` tinyint(1) NOT NULL default '0',
+                     `quick_transfer` tinyint(1) NOT NULL default '0',
                      PRIMARY KEY  (`id`)
                   ) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;";
          $DB->query($query) or die($DB->error());
@@ -265,6 +271,7 @@ class PluginYagpConfig extends CommonDBTM
          $migration->addField($table, 'recategorization', 'boolean');
          $migration->addField($table, 'hide_historical', 'boolean');
          $migration->addField($table, 'private_view', 'boolean');
+         $migration->addField($table, 'quick_transfer', 'boolean');
          $migration->migrationOneTable($table);
       }
    }
