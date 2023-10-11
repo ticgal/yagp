@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.2.0 - 2023-10-11
+### Features
+- Quick ticket transfer #17808
+
 ## 2.1.1 - 2022-12-01
 ### Bugfixes
 - Remove logs #12492
