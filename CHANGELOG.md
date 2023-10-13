@@ -3,6 +3,8 @@
 ## 2.2.0 - 2023-10-11
 ### Features
 - Quick ticket transfer #17808
+- Autoclose tickets with refused solutions #17833
+- Reopen autoclosed tickets
 
 ## 2.1.1 - 2022-12-01
 ### Bugfixes

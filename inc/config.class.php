@@ -255,7 +255,8 @@ class PluginYagpConfig extends CommonDBTM
     /**
      * install
      *
-     * @param  mixed $migration
+     * @param  mixed $migratio
+remote: Resolving deltas: 100% (5/5), completed with 5 local objects.n
      * @return void
      */
     public static function install(Migration $migration): void
