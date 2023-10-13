@@ -29,7 +29,6 @@
  ----------------------------------------------------------------------
 */
 
-use Glpi\Api\Deprecated\TicketFollowup;
 use Glpi\Plugin\Hooks;
 
 define('PLUGIN_YAGP_VERSION', '2.2.0');
