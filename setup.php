@@ -29,6 +29,7 @@
  ----------------------------------------------------------------------
 */
 
+use Glpi\Api\Deprecated\TicketFollowup;
 use Glpi\Plugin\Hooks;
 
 define('PLUGIN_YAGP_VERSION', '2.2.0');
@@ -84,8 +85,8 @@ function plugin_init_yagp(): void
         $PLUGIN_HOOKS['config_page']['yagp'] = 'front/config.form.php';
     }
 
-    $PLUGIN_HOOKS['pre_item_update']['yagp'] = [
-        'PluginYagpConfig'  => 'plugin_yagp_updateitem'
+    $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['yagp'] = [
+        PluginYagpConfig::class  => 'plugin_yagp_updateitem'
     ];
 
     $plugin = new Plugin();
@@ -98,34 +99,66 @@ function plugin_init_yagp(): void
         *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
         }****/
         if ($config->fields['gototicket']) {
-            $PLUGIN_HOOKS['add_javascript']['yagp'] = 'js/gototicket.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'] = 'js/gototicket.js';
         }
 
         if ($config->fields['blockdate']) {
-            $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'postItemForm'];
+            $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['yagp'] = [
+                PluginYagpTicket::class, 'postItemForm'
+            ];
         }
 
         if ($config->fields['findrequest']) {
-            if (!is_null($config->fields['requestlabel']) && $config->fields['requestlabel'] != "") {
-                $PLUGIN_HOOKS['pre_item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preAddTicket']];
+            if (
+                !is_null($config->fields['requestlabel'])
+                && $config->fields['requestlabel'] != ""
+            ) {
+                $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'] = [
+                    Ticket::class => [
+                        PluginYagpTicket::class, 'preAddTicket'
+                    ]
+                ];
             }
         }
+
         if ($config->fields['change_df_min_val']) {
-            $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab", "preShowTab"];
+            $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = [
+                PluginYagpPreshowtab::class, "preShowTab"
+            ];
         }
 
-        if ($config->fields['recategorization']) {
-            $PLUGIN_HOOKS['item_update']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'updateTicket']];
-            $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_postItemForm'];
+        if ($config->fields['recategorization'] || $config->fields['autoclose_rejected_tickets']) {
+            $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['yagp'] = [
+                Ticket::class => [
+                    PluginYagpTicket::class, 'pluginYagpItemUpdate'
+                ],
+            ];
+            $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['yagp'] = [
+                PluginYagpTicket::class, 'plugin_yagp_postItemForm'
+            ];
         }
 
         if ($config->fields['hide_historical']) {
-            $PLUGIN_HOOKS['pre_show_item']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_preShowItem'];
-            $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab", "plugin_yagp_preShowTab"];
+            $PLUGIN_HOOKS[Hooks::PRE_SHOW_ITEM]['yagp'] = [
+                PluginYagpTicket::class, 'plugin_yagp_preShowItem'
+            ];
+            $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = [
+                PluginYagpPreshowtab::class, "plugin_yagp_preShowTab"
+            ];
         }
 
         if ($config->fields['private_view'] || $config->fields['quick_transfer']) {
-            $PLUGIN_HOOKS[Hooks::POST_SHOW_ITEM]['yagp'] = ['PluginYagpPostshowitem', 'pluginYagpPostShowItem'];
+            $PLUGIN_HOOKS[Hooks::POST_SHOW_ITEM]['yagp'] = [
+                PluginYagpPostshowitem::class, 'pluginYagpPostShowItem'
+            ];
+        }
+
+        if ($config->fields['autoclose_rejected_tickets']) {
+            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'] = [
+                ITILFollowup::class => [
+                    PluginYagpTicket::class, 'pluginYagpItemAdd'
+                ]
+            ];
         }
     }
 }

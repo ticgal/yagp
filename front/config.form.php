@@ -33,24 +33,6 @@ include("../../../inc/includes.php");
 
 $config = new PluginYagpConfig();
 if (isset($_POST["update"])) {
-    if (
-        isset($_POST['autoclose_rejected_tickets'])
-        && $_POST['autoclose_rejected_tickets'] == 1
-    ) {
-        $solutiontype = new SolutionType();
-        $solutionname = "Auto-close rejected tickets";
-        if (!$solutiontype->getFromDBByCrit(['name' => $solutionname])) {
-            $newID = $solutiontype->add([
-                'name'      => $solutionname,
-                'comment'   => __('Solution type for rejected tickets'),
-            ]);
-            if ($newID) {
-                $msg = __("A solution type has been created for rejected tickets", "yagp");
-                Session::addMessageAfterRedirect($msg, false, INFO);
-                $_POST['solutiontypes_id_rejected'] = $newID;
-            }
-        }
-    }
     $config->check($_POST['id'], UPDATE);
     // save
     $config->update($_POST);

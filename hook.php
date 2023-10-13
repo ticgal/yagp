@@ -34,7 +34,7 @@
  *
  * @return boolean True if success
  */
-function plugin_yagp_install(Migration $migration): bool
+function plugin_yagp_install(): bool
 {
     $migration = new Migration(PLUGIN_YAGP_VERSION);
 
@@ -59,9 +59,8 @@ function plugin_yagp_install(Migration $migration): bool
  *
  * @return boolean True if success
  */
-function plugin_yagp_uninstall(Migration $migration): bool
+function plugin_yagp_uninstall(): bool
 {
-
     $migration = new Migration(PLUGIN_YAGP_VERSION);
 
    // Parse inc directory

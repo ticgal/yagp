@@ -43,7 +43,7 @@ class PluginYagpPostshowitem extends CommonDBTM
      */
     public static function pluginYagpPostShowItem($params): bool
     {
-        $item = $params['item'];
+        $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
         }
@@ -99,7 +99,7 @@ class PluginYagpPostshowitem extends CommonDBTM
      */
     public static function quickTransfer(array $params): bool
     {
-        $item = $params['item'];
+        $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
         }

@@ -214,24 +214,6 @@ class PluginYagpConfig extends CommonDBTM
         Dropdown::showYesNo("autoclose_rejected_tickets", $config->fields["autoclose_rejected_tickets"]);
         echo "</td></tr>\n";
 
-        if (
-            $config->fields['autoclose_rejected_tickets'] == 1
-            && $config->fields['solutiontypes_id_rejected'] > 0
-        ) {
-            $iterator = $DB->request([
-                'FROM'  => SolutionTemplate::getTable(),
-                'WHERE' => ['solutiontypes_id' => $config->fields['solutiontypes_id_rejected']]
-            ]);
-            if (count($iterator) == 0) {
-                echo "<tr class='tab_bg_1'>";
-                echo "<td colspan='2'><span class='text-warning'>";
-                echo __("There are no templates for resolving rejected tickets.", "yagp");
-                echo "</span><a href='/front/solutiontemplate.php' class='ms-2'>";
-                echo __("Go to configuration", "yagp");
-                echo "</a></td></tr>\n";
-            }
-        }
-
         $config->showFormButtons(['candel' => false]);
 
         return false;
@@ -306,6 +288,7 @@ class PluginYagpConfig extends CommonDBTM
                 `quick_transfer` TINYINT(1) NOT NULL DEFAULT '0',
                 `autoclose_rejected_tickets` TINYINT(1) NOT NULL DEFAULT '0',
                 `solutiontypes_id_rejected` INT {$default_key_sign} NOT NULL DEFAULT '0',
+                `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
@@ -326,7 +309,32 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'quick_transfer', 'boolean', ['value' => 0]);
             $migration->addField($table, 'autoclose_rejected_tickets', 'boolean', ['value' => 0]);
             $migration->addField($table, 'solutiontypes_id_rejected', 'int', ['value' => 0]);
+            $migration->addField($table, 'requesttypes_id_reopen', 'int', ['value' => 0]);
             $migration->migrationOneTable($table);
         }
+
+        $solutiontype = new SolutionType();
+        $solutionname = "Auto-close rejected tickets";
+        if (!$solutiontype->getFromDBByCrit(['name' => $solutionname])) {
+            $solution_id = $solutiontype->add([
+                'name'      => $solutionname,
+                'comment'   => __('Solution type for rejected tickets'),
+            ]);
+        } else {
+            $solution_id = $solutiontype->fields['id'];
+        }
+        $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
+
+        $requesttype = new RequestType();
+        $requestname = "Reopen ticket";
+        if (!$requesttype->getFromDBByCrit(['name' => $requestname])) {
+            $request_id = $requesttype->add([
+                'name'      => $requestname,
+                'comment'   => __('Request type for reopening autoclosed tickets'),
+            ]);
+        } else {
+            $request_id = $requesttype->fields['id'];
+        }
+        $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
     }
 }
