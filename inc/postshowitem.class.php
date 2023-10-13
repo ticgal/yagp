@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  YAGP plugin for GLPI
@@ -27,37 +28,76 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
 
 class PluginYagpPostshowitem extends CommonDBTM
 {
-
-    public static function plugin_yagp_postShowItem($params)
-    {
-        if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
-            switch (get_class($params['item'])) {
-                case 'Ticket':
-                    $script = <<<JAVASCRIPT
-                $(document).ready(function() {
-                    $("span.is-private").children("i").css({"font-size":"1.6em","color":"#d63939","font-weight":"500"});
-                    $("span.is-private").parent().parent().parent().css({"border-style":"dashed","border-color":"black","border-width":"0.143em","border-radius":"3px"});
-                });
-JAVASCRIPT;
-
-                    echo Html::scriptBlock($script);
-            }
-        }
-    }
-
     /**
-     * plugin_yagp_quickTransfer
+     * pluginYagpPostShowItem
      *
      * @param  mixed $params
      * @return bool
      */
-    public static function plugin_yagp_quickTransfer($params): bool
+    public static function pluginYagpPostShowItem($params): bool
+    {
+        $item = $params['item'];
+        if (!is_object($item)) {
+            return false;
+        }
+
+        $config = PluginYagpConfig::getInstance();
+        switch (get_class($params['item'])) {
+            case 'Ticket':
+                if ($config->fields['private_view'] == 1) {
+                    self::enhancePrivateView();
+                }
+
+                if ($config->fields['quick_transfer'] == 1) {
+                    self::quickTransfer($params);
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * enhancePrivateView
+     *
+     * @param  mixed
+     * @return void
+     */
+    public static function enhancePrivateView(): void
+    {
+        $script = <<<JAVASCRIPT
+        $(document).ready(function() {
+            $("span.is-private").children("i").css({
+                "font-size":"1.6em",
+                "color":"#d63939",
+                "font-weight":"500"
+            });
+            $("span.is-private").parent().parent().parent().css({
+                "border-style":"dashed",
+                "border-color":"black",
+                "border-width":"0.143em",
+                "border-radius":"3px"
+            });
+        });
+        JAVASCRIPT;
+
+        echo Html::scriptBlock($script);
+    }
+
+    /**
+     * quickTransfer
+     *
+     * @param  array $params
+     * @return bool
+     */
+    public static function quickTransfer(array $params): bool
     {
         $item = $params['item'];
         if (!is_object($item)) {

@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  YAGP plugin for GLPI
@@ -27,96 +28,104 @@
  @since     2019-2022
  ----------------------------------------------------------------------
 */
+
+use Glpi\Plugin\Hooks;
+
 define('PLUGIN_YAGP_VERSION', '2.2.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
 define("PLUGIN_YAGP_MAX_GLPI", "11.0");
 
-function plugin_version_yagp()
+/**
+ * plugin_version_yagp
+ *
+ * @return array
+ */
+function plugin_version_yagp(): array
 {
-   return [
-      'name'       => 'yagp',
-      'version'        => PLUGIN_YAGP_VERSION,
-      'author'         => '<a href="https://tic.gal">TICgal</a>',
-      'homepage'       => 'https://tic.gal/yagp',
-      'license'        => 'GPLv3+',
-      'minGlpiVersion' => PLUGIN_YAGP_MIN_GLPI,
-      'requirements'   => [
-         'glpi'   => [
-            'min' => PLUGIN_YAGP_MIN_GLPI,
-            'max' => PLUGIN_YAGP_MAX_GLPI,
-         ]
-      ]
-   ];
+    return [
+        'name'              => 'Yagp',
+        'version'           => PLUGIN_YAGP_VERSION,
+        'author'            => '<a href="https://tic.gal">TICgal</a>',
+        'homepage'          => 'https://tic.gal/yagp',
+        'license'           => 'GPLv3+',
+        'minGlpiVersion'    => PLUGIN_YAGP_MIN_GLPI,
+        'requirements'      => [
+            'glpi'   => [
+                'min' => PLUGIN_YAGP_MIN_GLPI,
+                'max' => PLUGIN_YAGP_MAX_GLPI,
+            ]
+        ]
+    ];
 }
 
 /**
  * Check plugin's config before activation
  */
-function plugin_yagp_check_config($verbose = false)
+function plugin_yagp_check_config($verbose = false): bool
 {
-   return true;
+    return true;
 }
 
-function plugin_init_yagp()
+/**
+ * plugin_init_yagp
+ *
+ * @return void
+ */
+function plugin_init_yagp(): void
 {
-   global $PLUGIN_HOOKS;
+    global $PLUGIN_HOOKS;
 
-   if (Session::haveRightsOr("config", [READ, UPDATE])) {
-      Plugin::registerClass('PluginYagpConfig', ['addtabon' => 'Config']);
-      $PLUGIN_HOOKS['config_page']['yagp'] = 'front/config.form.php';
-   }
-   $PLUGIN_HOOKS['csrf_compliant']['yagp'] = true;
+    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['yagp'] = true;
 
-   $PLUGIN_HOOKS['pre_item_update']['yagp'] = [
-      'PluginYagpConfig'  => 'plugin_yagp_updateitem'
-   ];
+    if (Session::haveRightsOr("config", [READ, UPDATE])) {
+        Plugin::registerClass('PluginYagpConfig', ['addtabon' => 'Config']);
+        $PLUGIN_HOOKS['config_page']['yagp'] = 'front/config.form.php';
+    }
 
-   $plugin = new Plugin();
-   if ($plugin->isActivated('yagp')) {
-      Plugin::registerClass(PluginYagpTransfer::class);
+    $PLUGIN_HOOKS['pre_item_update']['yagp'] = [
+        'PluginYagpConfig'  => 'plugin_yagp_updateitem'
+    ];
 
-      $config = PluginYagpConfig::getConfig();
-      /**** Deprecated
-       *   if ($config->fields['fixedmenu']) {
-       *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
-      }****/
-      if ($config->fields['gototicket']) {
-         $PLUGIN_HOOKS['add_javascript']['yagp'] = 'js/gototicket.js';
-      }
+    $plugin = new Plugin();
+    if ($plugin->isActivated('yagp')) {
+        Plugin::registerClass(PluginYagpTransfer::class);
 
-      if ($config->fields['blockdate']) {
-         $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'postItemForm'];
-      }
+        $config = PluginYagpConfig::getConfig();
+        /**** Deprecated
+        *   if ($config->fields['fixedmenu']) {
+        *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
+        }****/
+        if ($config->fields['gototicket']) {
+            $PLUGIN_HOOKS['add_javascript']['yagp'] = 'js/gototicket.js';
+        }
 
-      if ($config->fields['findrequest']) {
-         if (!is_null($config->fields['requestlabel']) && $config->fields['requestlabel'] != "") {
-            $PLUGIN_HOOKS['pre_item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preAddTicket']];
-         }
-      }
-      if ($config->fields['change_df_min_val']) {
-         $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab", "preShowTab"];
-      }
+        if ($config->fields['blockdate']) {
+            $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'postItemForm'];
+        }
 
-      if ($config->fields['recategorization']) {
-         $PLUGIN_HOOKS['item_update']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'updateTicket']];
-         $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_postItemForm'];
-      }
+        if ($config->fields['findrequest']) {
+            if (!is_null($config->fields['requestlabel']) && $config->fields['requestlabel'] != "") {
+                $PLUGIN_HOOKS['pre_item_add']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'preAddTicket']];
+            }
+        }
+        if ($config->fields['change_df_min_val']) {
+            $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab", "preShowTab"];
+        }
 
-      if ($config->fields['hide_historical']) {
-         $PLUGIN_HOOKS['pre_show_item']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_preShowItem'];
-         $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab", "plugin_yagp_preShowTab"];
-      }
+        if ($config->fields['recategorization']) {
+            $PLUGIN_HOOKS['item_update']['yagp'] = ['Ticket' => ['PluginYagpTicket', 'updateTicket']];
+            $PLUGIN_HOOKS['post_item_form']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_postItemForm'];
+        }
 
-      if ($config->fields['private_view']) {
-         $PLUGIN_HOOKS['post_show_item']['yagp'] = ['PluginYagpPostshowitem', 'plugin_yagp_postShowItem'];
-      }
+        if ($config->fields['hide_historical']) {
+            $PLUGIN_HOOKS['pre_show_item']['yagp'] = ['PluginYagpTicket', 'plugin_yagp_preShowItem'];
+            $PLUGIN_HOOKS['pre_show_tab']['yagp'] = ["PluginYagpPreshowtab", "plugin_yagp_preShowTab"];
+        }
 
-      if ($config->fields['quick_transfer']) {
-         $PLUGIN_HOOKS['post_show_item']['yagp'] = [
-            'PluginYagpPostshowitem', 'plugin_yagp_quickTransfer'
-         ];
-      }
-   }
+        if ($config->fields['private_view'] || $config->fields['quick_transfer']) {
+            $PLUGIN_HOOKS[Hooks::POST_SHOW_ITEM]['yagp'] = ['PluginYagpPostshowitem', 'pluginYagpPostShowItem'];
+        }
+    }
 }

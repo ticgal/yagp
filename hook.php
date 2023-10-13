@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  YAGP plugin for GLPI
@@ -33,114 +34,125 @@
  *
  * @return boolean True if success
  */
-function plugin_yagp_install()
+function plugin_yagp_install(Migration $migration): bool
 {
-
-   $migration = new Migration(PLUGIN_YAGP_VERSION);
+    $migration = new Migration(PLUGIN_YAGP_VERSION);
 
    // Parse inc directory
-   foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-         $classname = 'PluginYagp' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'install')) {
-            $classname::install($migration);
-         }
-      }
-   }
+    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
+       // Load *.class.php files and get the class name
+        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
+            $classname = 'PluginYagp' . ucfirst($matches[1]);
+            include_once($filepath);
+           // If the install method exists, load it
+            if (method_exists($classname, 'install')) {
+                $classname::install($migration);
+            }
+        }
+    }
 
-   return true;
+    return true;
 }
+
 /**
  * Uninstall previously installed elements of the plugin
  *
  * @return boolean True if success
  */
-function plugin_yagp_uninstall()
+function plugin_yagp_uninstall(Migration $migration): bool
 {
 
-   $migration = new Migration(PLUGIN_YAGP_VERSION);
+    $migration = new Migration(PLUGIN_YAGP_VERSION);
 
    // Parse inc directory
-   foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-      // Load *.class.php files and get the class name
-      if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-         $classname = 'PluginYagp' . ucfirst($matches[1]);
-         include_once($filepath);
-         // If the install method exists, load it
-         if (method_exists($classname, 'uninstall')) {
-            $classname::uninstall($migration);
-         }
-      }
-   }
+    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
+       // Load *.class.php files and get the class name
+        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
+            $classname = 'PluginYagp' . ucfirst($matches[1]);
+            include_once($filepath);
+           // If the install method exists, load it
+            if (method_exists($classname, 'uninstall')) {
+                $classname::uninstall($migration);
+            }
+        }
+    }
 
-   return true;
+    return true;
 }
 
-function plugin_yagp_updateitem(CommonDBTM $item)
+/**
+ * plugin_yagp_updateitem
+ *
+ * @param  mixed $item
+ * @return void
+ */
+function plugin_yagp_updateitem(CommonDBTM $item): void
 {
-   if ($item::getType() == "PluginYagpConfig") {
-      $input = $item->input;
-      if ($input["ticketsolveddate"] == 1) {
-         Crontask::Register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
+    if ($item::getType() == "PluginYagpConfig") {
+        $input = $item->input;
+        if ($input["ticketsolveddate"] == 1) {
+            Crontask::Register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
             'state' => 1,
             'mode'  => CronTask::MODE_EXTERNAL
-         ]);
-      } else if ($input["ticketsolveddate"] == 0) {
-         Crontask::Unregister("YagpTicketsolveddate");
-      }
-      if ($input["contractrenew"] == 1) {
-         Crontask::Register("PluginYagpContractrenew", 'renewContract', DAY_TIMESTAMP, [
+            ]);
+        } elseif ($input["ticketsolveddate"] == 0) {
+            Crontask::Unregister("YagpTicketsolveddate");
+        }
+        if ($input["contractrenew"] == 1) {
+            Crontask::Register("PluginYagpContractrenew", 'renewContract', DAY_TIMESTAMP, [
             'state' => 1,
             'mode'  => CronTask::MODE_EXTERNAL
-         ]);
-      } else if ($input["contractrenew"] == 0) {
-         Crontask::Unregister("YagpContractrenew");
-      }
-   }
+            ]);
+        } elseif ($input["contractrenew"] == 0) {
+            Crontask::Unregister("YagpContractrenew");
+        }
+    }
 }
 
-function plugin_yagp_getAddSearchOptions($itemtype)
+/**
+ * plugin_yagp_getAddSearchOptions
+ *
+ * @param  mixed $itemtype
+ * @return array
+ */
+function plugin_yagp_getAddSearchOptions($itemtype): array
 {
+    $config = PluginYagpConfig::getConfig();
 
-   $config = PluginYagpConfig::getConfig();
+    $sopt = [];
+    if ($config->fields['recategorization']) {
+        switch ($itemtype) {
+            case "Ticket":
+                $sopt['yagp'] = ['name' => 'YAGP'];
 
-   $sopt = [];
-   if ($config->fields['recategorization']) {
-      switch ($itemtype) {
-         case "Ticket":
-            $sopt['yagp'] = ['name' => 'YAGP'];
+                $sopt[9021321] = [
+                    'table'                 => PluginYagpTicket::getTable(),
+                    'field'                 => 'is_recategorized',
+                    'name'                  => __('Recategorized', 'yagp'),
+                    'searchtype'            => ['equals', 'notequals'],
+                    'massiveaction'         => false,
+                    'searchequalsonfield'   => true,
+                    'datatype'              => 'specific',
+                    'joinparams' => [
+                        'jointype'          => 'child',
+                        'linkfield'         => 'tickets_id'
+                    ]
+                ];
 
-            $sopt[9021321] = [
-               'table' => PluginYagpTicket::getTable(),
-               'field' => 'is_recategorized',
-               'name' => __('Recategorized', 'yagp'),
-               'searchtype' => ['equals', 'notequals'],
-               'massiveaction' => false,
-               'searchequalsonfield' => true,
-               'datatype' => 'specific',
-               'joinparams' => [
-                  'jointype' => 'child',
-                  'linkfield' => 'tickets_id'
-               ]
-            ];
-
-            $sopt[9021322] = [
-               'table' => PluginYagpTicket::getTable(),
-               'field' => 'plugin_yagp_itilcategories_id',
-               'name' => __('Initial category', 'yagp'),
-               'searchtype' => ['equals', 'notequals'],
-               'massiveaction' => false,
-               'searchequalsonfield' => true,
-               'datatype' => 'specific',
-               'joinparams' => [
-                  'jointype' => 'child',
-                  'linkfield' => 'tickets_id'
-               ]
-            ];
-      }
-   }
-   return $sopt;
+                $sopt[9021322] = [
+                    'table'                 => PluginYagpTicket::getTable(),
+                    'field'                 => 'plugin_yagp_itilcategories_id',
+                    'name'                  => __('Initial category', 'yagp'),
+                    'searchtype'            => ['equals', 'notequals'],
+                    'massiveaction'         => false,
+                    'searchequalsonfield'   => true,
+                    'datatype'              => 'specific',
+                    'joinparams' => [
+                        'jointype'          => 'child',
+                        'linkfield'         => 'tickets_id'
+                    ]
+                ];
+        }
+    }
+    return $sopt;
 }
