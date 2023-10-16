@@ -5,6 +5,7 @@
 - Quick ticket transfer #17808
 - Autoclose tickets with refused solutions #17833
 - Reopen autoclosed tickets
+- Deprecated automatic action for contracts #17878
 
 ## 2.1.1 - 2022-12-01
 ### Bugfixes

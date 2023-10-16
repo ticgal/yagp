@@ -29,8 +29,6 @@
  ----------------------------------------------------------------------
 */
 
-use Glpi\Api\Deprecated\TicketFollowup;
-
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
@@ -315,6 +313,7 @@ JAVASCRIPT;
                             }
                         }
                     }
+                    break;
             }
         }
     }

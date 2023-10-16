@@ -84,7 +84,7 @@ class PluginYagpConfig extends CommonDBTM
     */
     public static function getTypeName($nb = 0): string
     {
-        return "Yagp";
+        return "YAGP";
     }
 
     /**
@@ -139,10 +139,13 @@ class PluginYagpConfig extends CommonDBTM
         Dropdown::showYesNo("ticketsolveddate", $config->fields["ticketsolveddate"]);
         echo "</td></tr>\n";
 
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Auto renew tacit contracts", "yagp") . "</td><td >";
-        Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
-        echo "</td></tr>\n";
+        /**
+         * Deprecated
+         * echo "<tr class='tab_bg_1'>";
+         * echo "<td >" . __("Auto renew tacit contracts", "yagp") . "</td><td >";
+         * Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
+         * echo "</td></tr>\n";
+         */
 
         /**** Deprecated
         * echo "<tr class='tab_bg_1'>";
@@ -231,7 +234,7 @@ class PluginYagpConfig extends CommonDBTM
         global $LANG;
 
         if ($item->getType() == 'Config') {
-            return "Yagp";
+            return "YAGP";
         }
         return '';
     }
@@ -253,10 +256,61 @@ class PluginYagpConfig extends CommonDBTM
     }
 
     /**
+     * addSolutionType
+     *
+     * @param  mixed $config
+     * @return void
+     */
+    private static function addSolutionType($config): void
+    {
+        $solutiontype = new SolutionType();
+        $solutionname = "Auto-close rejected tickets";
+        if (!$solutiontype->getFromDBByCrit(['name' => $solutionname])) {
+            $solution_id = $solutiontype->add([
+                'name'      => $solutionname,
+                'comment'   => __('Solution type for rejected tickets'),
+            ]);
+        } else {
+            $solution_id = $solutiontype->fields['id'];
+        }
+        $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
+    }
+
+    /**
+     * addRequestType
+     *
+     * @param  mixed $config
+     * @return void
+     */
+    private static function addRequestType($config): void
+    {
+        $requesttype = new RequestType();
+        $requestname = "Reopen ticket";
+        if (!$requesttype->getFromDBByCrit(['name' => $requestname])) {
+            $request_id = $requesttype->add([
+                'name'      => $requestname,
+                'comment'   => __('Request type for reopening autoclosed tickets'),
+            ]);
+        } else {
+            $request_id = $requesttype->fields['id'];
+        }
+        $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
+    }
+
+    /**
+     * disableCronTask
+     *
+     * @return void
+     */
+    private static function disableCronTask(): void
+    {
+        Crontask::Unregister("YagpContractrenew");
+    }
+
+    /**
      * install
      *
      * @param  mixed $migratio
-remote: Resolving deltas: 100% (5/5), completed with 5 local objects.n
      * @return void
      */
     public static function install(Migration $migration): void
@@ -276,7 +330,6 @@ remote: Resolving deltas: 100% (5/5), completed with 5 local objects.n
             $query = "CREATE TABLE `$table` (
 				`id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
                 `ticketsolveddate` TINYINT(1) NOT NULL DEFAULT '0',
-                `contractrenew` TINYINT(1) NOT NULL DEFAULT '0',
                 `gototicket` TINYINT(1) NOT NULL DEFAULT '0',
                 `blockdate` TINYINT(1) NOT NULL DEFAULT '0',
                 `findrequest` TINYINT(1) NOT NULL DEFAULT '0',
@@ -294,6 +347,11 @@ remote: Resolving deltas: 100% (5/5), completed with 5 local objects.n
 			) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
 
+            /**
+             * Deprecated
+             * `contractrenew` TINYINT(1) NOT NULL DEFAULT '0',
+             */
+
             $DB->query($query) or die($DB->error());
             $config->add(['id' => 1]);
         } else {
@@ -306,36 +364,18 @@ remote: Resolving deltas: 100% (5/5), completed with 5 local objects.n
             $migration->addField($table, 'recategorization', 'boolean');
             $migration->addField($table, 'hide_historical', 'boolean');
             $migration->addField($table, 'private_view', 'boolean');
-           // * 2.2.0
+            // * 2.2.0
             $migration->addField($table, 'quick_transfer', 'boolean', ['value' => 0]);
             $migration->addField($table, 'autoclose_rejected_tickets', 'boolean', ['value' => 0]);
             $migration->addField($table, 'solutiontypes_id_rejected', 'int', ['value' => 0]);
             $migration->addField($table, 'requesttypes_id_reopen', 'int', ['value' => 0]);
+
             $migration->migrationOneTable($table);
         }
 
-        $solutiontype = new SolutionType();
-        $solutionname = "Auto-close rejected tickets";
-        if (!$solutiontype->getFromDBByCrit(['name' => $solutionname])) {
-            $solution_id = $solutiontype->add([
-                'name'      => $solutionname,
-                'comment'   => __('Solution type for rejected tickets'),
-            ]);
-        } else {
-            $solution_id = $solutiontype->fields['id'];
-        }
-        $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
-
-        $requesttype = new RequestType();
-        $requestname = "Reopen ticket";
-        if (!$requesttype->getFromDBByCrit(['name' => $requestname])) {
-            $request_id = $requesttype->add([
-                'name'      => $requestname,
-                'comment'   => __('Request type for reopening autoclosed tickets'),
-            ]);
-        } else {
-            $request_id = $requesttype->fields['id'];
-        }
-        $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
+        // * 2.2.0
+        self::addSolutionType($config);
+        self::addRequestType($config);
+        self::disableCronTask();
     }
 }

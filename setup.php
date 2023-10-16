@@ -45,7 +45,7 @@ define("PLUGIN_YAGP_MAX_GLPI", "11.0");
 function plugin_version_yagp(): array
 {
     return [
-        'name'              => 'Yagp',
+        'name'              => 'YAGP',
         'version'           => PLUGIN_YAGP_VERSION,
         'author'            => '<a href="https://tic.gal">TICgal</a>',
         'homepage'          => 'https://tic.gal/yagp',

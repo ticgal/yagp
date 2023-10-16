@@ -1,4 +1,5 @@
 <?php
+
 /*
  -------------------------------------------------------------------------
  YAGP plugin for GLPI
@@ -33,8 +34,7 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginYagpPreshowtab extends CommonDBTM
 {
-
-    static function preShowTab($params = [])
+    public static function preShowTab($params = [])
     {
         $config = PluginYagpConfig::getConfig();
         $options = $params["options"];
@@ -56,6 +56,7 @@ JAVASCRIPT;
                 echo Html::scriptBlock($script);
         }
     }
+
     public static function plugin_yagp_preShowTab($params)
     {
         if ($_SESSION["glpiactiveprofile"]["interface"] == "helpdesk") {
@@ -68,7 +69,7 @@ JAVASCRIPT;
                         $("div[id^='tab-Log']").css({display:"none"});
                         $("div[id^='tab--'] div.table-responsive").css({display:"none"});
                     });
-JAVASCRIPT;
+                    JAVASCRIPT;
 
                     echo Html::scriptBlock($script);
             }

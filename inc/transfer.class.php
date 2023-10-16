@@ -64,7 +64,7 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<div class='center'>";
             Entity::dropdown(['name' => 'to_entity']);
             echo "&nbsp;<input type='submit' name='transfer' value=\"" . __s('Execute') . "\"
-                      class='btn btn-primary'></div>";
+                    class='btn btn-primary'></div>";
             echo "</td></tr>";
         }
 
@@ -75,7 +75,7 @@ class PluginYagpTransfer extends CommonDBTM
             echo "</td>";
             echo "<td rowspan='3' class='middle right'>" . __('Comments') . "</td>";
             echo "<td class='center middle' rowspan='3'>
-               <textarea class='form-control' name='comment' >" . $transfer->fields["comment"] . "</textarea>";
+                <textarea class='form-control' name='comment' >" . $transfer->fields["comment"] . "</textarea>";
             echo "</td></tr>";
 
             echo "<tr class='tab_bg_1'>";
