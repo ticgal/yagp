@@ -52,6 +52,12 @@ if (isset($_POST['transfer'])) {
         if (!Session::haveAccessToEntity($_POST['to_entity'])) {
             Html::displayRightError();
         }
+
+        $default = PluginYagpTransfer::getCompleteTransferOptions();
+        foreach ($default as $k => $v) {
+            $_POST[$k] = isset($_POST[$k]) ? $_POST[$k] : $v;
+        }
+
         $transfer->moveItems($_SESSION['glpitransfer_list'], $_POST['to_entity'], $_POST);
         unset($_SESSION['glpitransfer_list']);
 

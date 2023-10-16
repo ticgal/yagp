@@ -77,6 +77,7 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
             $config->fields['transfer_entity'],
             PluginYagpTransfer::getCompleteTransferOptions()
         );
+        unset($_SESSION['glpitransfer_list']);
 
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(

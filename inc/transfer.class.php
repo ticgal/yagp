@@ -310,7 +310,7 @@ class PluginYagpTransfer extends CommonDBTM
      * Original from GLPI, adapted to modal frames
      * @return void
      */
-    public function showTransferList()
+    public function showTransferList($items = [])
     {
         global $DB, $CFG_GLPI;
 
@@ -340,7 +340,7 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<tbody>";
             echo "<tr><td class=''>";
             /** @var class-string<CommonDBTM> $itemtype */
-            foreach ($_SESSION['glpitransfer_list'] as $itemtype => $tab) {
+            foreach ($items as $itemtype => $tab) {
                 if (count($tab)) {
                     if (!($item = getItemForItemtype($itemtype))) {
                         continue;
@@ -408,11 +408,13 @@ class PluginYagpTransfer extends CommonDBTM
                     'display'   => false
                 ]
             );
+            /*
             Html::showSimpleForm(
                 Plugin::getWebDir('yagp') . "/front/transfer.form.php",
                 'clear',
                 __('To empty the list of elements to be transferred')
             );
+            */
             echo "</div>";
             echo '</td></tr>';
 
