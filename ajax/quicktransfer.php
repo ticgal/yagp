@@ -63,5 +63,31 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     }
     $_SESSION['glpitransfer_list'][$itemtype][$id] = $id;
 
-    $transfer->showTransferList();
+    $config = PluginYagpConfig::getInstance();
+    if (
+        isset($config->fields['transfer_entity'])
+        && $config->fields['transfer_entity'] > 0
+    ) {
+        $glpitransfer = new Transfer();
+        $glpitransfer->moveItems(
+            $_SESSION['glpitransfer_list'],
+            $config->fields['transfer_entity'],
+            PluginYagpTransfer::getCompleteTransferOptions()
+        );
+
+        $msg = __("Ticket transferred to %s", 'yagp');
+        $sprintf = sprintf(
+            $msg,
+            Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity'])
+        );
+
+        echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
+        echo "<div class='alert alert-info mt-4'>";
+        echo "<h3>" . $sprintf . "</h3>";
+        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
+        echo "</div>";
+        echo "</div>";
+    } else {
+        $transfer->showTransferList();
+    }
 }

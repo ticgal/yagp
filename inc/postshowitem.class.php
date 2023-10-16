@@ -106,9 +106,12 @@ class PluginYagpPostshowitem extends CommonDBTM
 
         switch ($item->getType()) {
             case Ticket::class:
+                $config = PluginYagpConfig::getInstance();
                 if (
                     Session::haveRight('transfer', READ)
                     && Session::isMultiEntitiesMode()
+                    && isset($item->fields['entities_id'])
+                    && $item->fields['entities_id'] != $config->fields['transfer_entity']
                 ) {
                     $ajax_id = 'ajax_playground';
                     $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';

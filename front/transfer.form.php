@@ -66,7 +66,7 @@ if (isset($_POST['transfer'])) {
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
         echo "<div class='alert alert-info mt-4'>";
         echo "<h3>" . $sprintf . "</h3>";
-        echo "<span class='text-muted'>" . __('You can close this window') . "</span>";
+        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
         echo "</div>";
         echo "</div>";
 
@@ -78,7 +78,7 @@ if (isset($_POST['transfer'])) {
     echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
     echo "<div class='alert alert-info mt-4'>";
     echo "<h3>" . __('Transfer list has been cleaned', 'yapg') . "</h3>";
-    echo "<span class='text-muted'>" . __('You can close this window') . "</span>";
+    echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
     echo "</div>";
     echo "</div>";
 

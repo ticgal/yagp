@@ -413,4 +413,47 @@ class PluginYagpTransfer extends CommonDBTM
         }
         echo "</div>";
     }
+
+    /**
+     * getCompleteTransferOptions
+     *
+     * @return array
+     */
+    public static function getCompleteTransferOptions(): array
+    {
+        $params = [
+            'keep_ticket'           => 2,
+            'keep_networklink'      => 2,
+            'keep_reservation'      => 1,
+            'keep_device'           => 1,
+            'keep_history'          => 1,
+            'keep_infocom'          => 1,
+            'keep_dc_monitor'       => 1,
+            'clean_dc_monitor'      => 1,
+            'keep_dc_phone'         => 1,
+            'clean_dc_phone'        => 1,
+            'keep_dc_peripheral'    => 1,
+            'clean_dc_peripheral'   => 1,
+            'keep_dc_printer'       => 1,
+            'clean_dc_printer'      => 1,
+            'keep_contact'          => 1,
+            'clean_contact'         => 1,
+            'keep_contract'         => 1,
+            'clean_contract'        => 1,
+            'keep_software'         => 1,
+            'clean_software'        => 1,
+            'keep_document'         => 1,
+            'clean_document'        => 1,
+            'keep_cartidgeitem'     => 1,
+            'clean_cartidgeitem'    => 1,
+            'keep_cartidge'         => 1,
+            'keep_consumable'       => 1,
+            'keep_disk'             => 1,
+            'keep_certificate'      => 1,
+            'clean_certificate'     => 1,
+            'lock_updated_fields'   => 0,
+        ];
+
+        return $params;
+    }
 }
