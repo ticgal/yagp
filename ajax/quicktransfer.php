@@ -64,9 +64,12 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     $_SESSION['glpitransfer_list'][$itemtype][$id] = $id;
 
     $config = PluginYagpConfig::getInstance();
+    $item = new $itemtype();
+    $item->getFromDB($id);
     if (
-        isset($config->fields['transfer_entity'])
-        && $config->fields['transfer_entity'] > 0
+        isset($config->fields['autotransfer'])
+        && $config->fields['autotransfer'] == 1
+        && $item->fields['entities_id'] != $config->fields['transfer_entity']
     ) {
         $glpitransfer = new Transfer();
         $glpitransfer->moveItems(

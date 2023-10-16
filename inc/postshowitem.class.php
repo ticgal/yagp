@@ -111,12 +111,11 @@ class PluginYagpPostshowitem extends CommonDBTM
                     Session::haveRight('transfer', READ)
                     && Session::isMultiEntitiesMode()
                     && isset($item->fields['entities_id'])
-                    && $item->fields['entities_id'] != $config->fields['transfer_entity']
                 ) {
                     $ajax_id = 'ajax_playground';
                     $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
-                    $ajax_title = __('YAGP Quick Transfer', 'yagp');
+                    $ajax_title = __('Transfer to', 'yagp');
                     $icon = "<i class='fa-fw fas fa-level-up-alt'></i>";
                     $btn_attrs = "class='btn col-auto col-xxl-12' data-bs-toggle='modal'";
 

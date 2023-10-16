@@ -208,15 +208,19 @@ class PluginYagpConfig extends CommonDBTM
         echo "</td></tr>\n";
 
         echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Enable quick transfer for tickets", "yagp") . "</td><td class='d-flex'>";
+        echo "<td >" . __("Enable quick transfer for tickets", "yagp") . "</td><td >";
         Dropdown::showYesNo("quick_transfer", $config->fields["quick_transfer"]);
-        if ($config->fields['quick_transfer'] == 1) {
+        echo "</td></tr>\n";
+
+        echo "<tr class='tab_bg_1'>";
+        echo "<td >" . __("Automatic transfer", "yagp") . "</td><td class='d-flex'>";
+        Dropdown::showYesNo("autotransfer", $config->fields["autotransfer"]);
+        if ($config->fields['autotransfer'] == 1) {
             echo "<div class='ms-2'>";
             Entity::dropdown(['name' => 'transfer_entity', 'value' => $config->fields["transfer_entity"]]);
             echo "</div>";
         }
         echo "</td></tr>\n";
-
 
         echo "<tr class='tab_bg_1'>";
         echo "<td >" . __("Auto-closing of rejected tickets", "yagp") . "</td><td >";
@@ -346,6 +350,7 @@ class PluginYagpConfig extends CommonDBTM
                 `hide_historical` TINYINT(1) NOT NULL DEFAULT '0',
                 `private_view` TINYINT(1) NOT NULL DEFAULT '0',
                 `quick_transfer` TINYINT(1) NOT NULL DEFAULT '0',
+                `autotransfer` TINYINT(1) NOT NULL DEFAULT '0',
                 `transfer_entity` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `autoclose_rejected_tickets` TINYINT(1) NOT NULL DEFAULT '0',
                 `solutiontypes_id_rejected` INT {$default_key_sign} NOT NULL DEFAULT '0',
@@ -373,6 +378,7 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'private_view', 'boolean');
             // * 2.2.0
             $migration->addField($table, 'quick_transfer', 'boolean', ['value' => 0]);
+            $migration->addField($table, 'autotransfer', 'int', ['value' => 0]);
             $migration->addField($table, 'transfer_entity', 'int', ['value' => 0]);
             $migration->addField($table, 'autoclose_rejected_tickets', 'boolean', ['value' => 0]);
             $migration->addField($table, 'solutiontypes_id_rejected', 'int', ['value' => 0]);

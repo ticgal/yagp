@@ -85,216 +85,217 @@ class PluginYagpTransfer extends CommonDBTM
             echo "</td></tr>";
         }
 
-        $keep  = [0 => _x('button', 'Delete permanently'),
-            1 => __('Preserve')
-        ];
-
-        $clean = [0 => __('Preserve'),
-            1 => _x('button', 'Put in trashbin'),
-            2 => _x('button', 'Delete permanently')
-        ];
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Historical') . "</td><td>";
-        $params['value'] = $transfer->fields['keep_history'];
-        Dropdown::showFromArray('keep_history', $keep, $params);
-        echo "</td>";
-        if (!$edit_form) {
-            echo "<td colspan='2'>&nbsp;</td>";
-        }
-        echo "</tr>";
-
-        // Clean glpi 10.0.10 doesn't have this field in Transfer table
-        if (isset($transfer->fields['keep_location'])) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>" . _n('Location', 'Locations', 1) . "</td><td>";
-            $location_option  = [
-                0 => __("Empty the location"),
+        if (isset($options['display']) && $options['display'] == true) {
+            $keep  = [0 => _x('button', 'Delete permanently'),
                 1 => __('Preserve')
             ];
-            $params['value'] = $transfer->fields['keep_location'];
-            Dropdown::showFromArray('keep_location', $location_option, $params);
+
+            $clean = [0 => __('Preserve'),
+                1 => _x('button', 'Put in trashbin'),
+                2 => _x('button', 'Delete permanently')
+            ];
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Historical') . "</td><td>";
+            $params['value'] = $transfer->fields['keep_history'];
+            Dropdown::showFromArray('keep_history', $keep, $params);
             echo "</td>";
             if (!$edit_form) {
                 echo "<td colspan='2'>&nbsp;</td>";
             }
             echo "</tr>";
+
+            // Clean glpi 10.0.10 doesn't have this field in Transfer table
+            if (isset($transfer->fields['keep_location'])) {
+                echo "<tr class='tab_bg_1'>";
+                echo "<td>" . _n('Location', 'Locations', 1) . "</td><td>";
+                $location_option  = [
+                    0 => __("Empty the location"),
+                    1 => __('Preserve')
+                ];
+                $params['value'] = $transfer->fields['keep_location'];
+                Dropdown::showFromArray('keep_location', $location_option, $params);
+                echo "</td>";
+                if (!$edit_form) {
+                    echo "<td colspan='2'>&nbsp;</td>";
+                }
+                echo "</tr>";
+            }
+
+            echo "<tr class='tab_bg_2'>";
+            echo "<td colspan='4' class='center b'>" . _n('Asset', 'Assets', Session::getPluralNumber()) . "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Network port', 'Network ports', Session::getPluralNumber()) . "</td><td>";
+            $options = [0 => _x('button', 'Delete permanently'),
+                1 => _x('button', 'Disconnect') ,
+                2 => __('Keep')
+            ];
+            $params['value'] = $transfer->fields['keep_networklink'];
+            Dropdown::showFromArray('keep_networklink', $options, $params);
+            echo "</td>";
+            echo "<td>" . _n('Ticket', 'Tickets', Session::getPluralNumber()) . "</td><td>";
+            $options = [0 => _x('button', 'Delete permanently'),
+                1 => _x('button', 'Disconnect') ,
+                2 => __('Keep')
+            ];
+            $params['value'] = $transfer->fields['keep_ticket'];
+            Dropdown::showFromArray('keep_ticket', $options, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Software of items') . "</td><td>";
+            $params['value'] = $transfer->fields['keep_software'];
+            Dropdown::showFromArray('keep_software', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If software are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_software'];
+            Dropdown::showFromArray('clean_software', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Reservation', 'Reservations', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_reservation'];
+            Dropdown::showFromArray('keep_reservation', $keep, $params);
+            echo "</td>";
+            echo "<td>" . _n('Component', 'Components', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_device'];
+            Dropdown::showFromArray('keep_device', $keep, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Links between printers and cartridge types and cartridges');
+            echo "</td><td>";
+            $params['value'] = $transfer->fields['keep_cartridgeitem'];
+            Dropdown::showFromArray('keep_cartridgeitem', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If the cartridge types are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_cartridgeitem'];
+            Dropdown::showFromArray('clean_cartridgeitem', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Links between cartridge types and cartridges') . "</td><td>";
+            $params['value'] = $transfer->fields['keep_cartridge'];
+            Dropdown::showFromArray('keep_cartridge', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('Financial and administrative information') . "</td><td>";
+            $params['value'] = $transfer->fields['keep_infocom'];
+            Dropdown::showFromArray('keep_infocom', $keep, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Links between consumable types and consumables') . "</td><td>";
+            $params['value'] = $transfer->fields['keep_consumable'];
+            Dropdown::showFromArray('keep_consumable', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('Links between computers and volumes') . "</td><td>";
+            $params['value'] = $transfer->fields['keep_disk'];
+            Dropdown::showFromArray('keep_disk', $keep, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Lock fields updated during transfer') . "</td><td>";
+            Dropdown::showYesNo('lock_updated_fields', $transfer->fields['lock_updated_fields']);
+            echo "</td>";
+            echo "<td></td></tr>";
+
+            echo "<tr class='tab_bg_2'>";
+            echo "<td colspan='4' class='center b'>" . __('Direct connections') . "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Monitor', 'Monitors', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_dc_monitor'];
+            Dropdown::showFromArray('keep_dc_monitor', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If monitors are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_dc_monitor'];
+            Dropdown::showFromArray('clean_dc_monitor', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Printer', 'Printers', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_dc_printer'];
+            Dropdown::showFromArray('keep_dc_printer', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If printers are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_dc_printer'];
+            Dropdown::showFromArray('clean_dc_printer', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . Peripheral::getTypeName(Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_dc_peripheral'];
+            Dropdown::showFromArray('keep_dc_peripheral', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If devices are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_dc_peripheral'];
+            Dropdown::showFromArray('clean_dc_peripheral', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Phone', 'Phones', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_dc_phone'];
+            Dropdown::showFromArray('keep_dc_phone', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If phones are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_dc_phone'];
+            Dropdown::showFromArray('clean_dc_phone', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_2'>";
+            echo "<td colspan='4' class='center b'>" . __('Management') . "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Supplier', 'Suppliers', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_supplier'];
+            Dropdown::showFromArray('keep_supplier', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If suppliers are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_supplier'];
+            Dropdown::showFromArray('clean_supplier', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . __('Links between suppliers and contacts') . "&nbsp;:</td><td>";
+            $params['value'] = $transfer->fields['keep_contact'];
+            Dropdown::showFromArray('keep_contact', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If contacts are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_contact'];
+            Dropdown::showFromArray('clean_contact', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . Document::getTypeName(Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_document'];
+            Dropdown::showFromArray('keep_document', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If documents are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_document'];
+            Dropdown::showFromArray('clean_document', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Contract', 'Contracts', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_contract'];
+            Dropdown::showFromArray('keep_contract', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If contracts are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_contract'];
+            Dropdown::showFromArray('clean_contract', $clean, $params);
+            echo "</td></tr>";
+
+            echo "<tr class='tab_bg_1'>";
+            echo "<td>" . _n('Certificate', 'Certificates', Session::getPluralNumber()) . "</td><td>";
+            $params['value'] = $transfer->fields['keep_certificate'];
+            Dropdown::showFromArray('keep_certificate', $keep, $params);
+            echo "</td>";
+            echo "<td>" . __('If certificates are no longer used') . "</td><td>";
+            $params['value'] = $transfer->fields['clean_certificate'];
+            Dropdown::showFromArray('clean_certificate', $clean, $params);
+            echo "</td></tr>";
         }
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td colspan='4' class='center b'>" . _n('Asset', 'Assets', Session::getPluralNumber()) . "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Network port', 'Network ports', Session::getPluralNumber()) . "</td><td>";
-        $options = [0 => _x('button', 'Delete permanently'),
-            1 => _x('button', 'Disconnect') ,
-            2 => __('Keep')
-        ];
-        $params['value'] = $transfer->fields['keep_networklink'];
-        Dropdown::showFromArray('keep_networklink', $options, $params);
-        echo "</td>";
-        echo "<td>" . _n('Ticket', 'Tickets', Session::getPluralNumber()) . "</td><td>";
-        $options = [0 => _x('button', 'Delete permanently'),
-            1 => _x('button', 'Disconnect') ,
-            2 => __('Keep')
-        ];
-        $params['value'] = $transfer->fields['keep_ticket'];
-        Dropdown::showFromArray('keep_ticket', $options, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Software of items') . "</td><td>";
-        $params['value'] = $transfer->fields['keep_software'];
-        Dropdown::showFromArray('keep_software', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If software are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_software'];
-        Dropdown::showFromArray('clean_software', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Reservation', 'Reservations', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_reservation'];
-        Dropdown::showFromArray('keep_reservation', $keep, $params);
-        echo "</td>";
-        echo "<td>" . _n('Component', 'Components', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_device'];
-        Dropdown::showFromArray('keep_device', $keep, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Links between printers and cartridge types and cartridges');
-        echo "</td><td>";
-        $params['value'] = $transfer->fields['keep_cartridgeitem'];
-        Dropdown::showFromArray('keep_cartridgeitem', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If the cartridge types are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_cartridgeitem'];
-        Dropdown::showFromArray('clean_cartridgeitem', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Links between cartridge types and cartridges') . "</td><td>";
-        $params['value'] = $transfer->fields['keep_cartridge'];
-        Dropdown::showFromArray('keep_cartridge', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('Financial and administrative information') . "</td><td>";
-        $params['value'] = $transfer->fields['keep_infocom'];
-        Dropdown::showFromArray('keep_infocom', $keep, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Links between consumable types and consumables') . "</td><td>";
-        $params['value'] = $transfer->fields['keep_consumable'];
-        Dropdown::showFromArray('keep_consumable', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('Links between computers and volumes') . "</td><td>";
-        $params['value'] = $transfer->fields['keep_disk'];
-        Dropdown::showFromArray('keep_disk', $keep, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Lock fields updated during transfer') . "</td><td>";
-        Dropdown::showYesNo('lock_updated_fields', $transfer->fields['lock_updated_fields']);
-        echo "</td>";
-        echo "<td></td></tr>";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td colspan='4' class='center b'>" . __('Direct connections') . "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Monitor', 'Monitors', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_dc_monitor'];
-        Dropdown::showFromArray('keep_dc_monitor', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If monitors are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_dc_monitor'];
-        Dropdown::showFromArray('clean_dc_monitor', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Printer', 'Printers', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_dc_printer'];
-        Dropdown::showFromArray('keep_dc_printer', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If printers are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_dc_printer'];
-        Dropdown::showFromArray('clean_dc_printer', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . Peripheral::getTypeName(Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_dc_peripheral'];
-        Dropdown::showFromArray('keep_dc_peripheral', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If devices are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_dc_peripheral'];
-        Dropdown::showFromArray('clean_dc_peripheral', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Phone', 'Phones', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_dc_phone'];
-        Dropdown::showFromArray('keep_dc_phone', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If phones are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_dc_phone'];
-        Dropdown::showFromArray('clean_dc_phone', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_2'>";
-        echo "<td colspan='4' class='center b'>" . __('Management') . "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Supplier', 'Suppliers', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_supplier'];
-        Dropdown::showFromArray('keep_supplier', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If suppliers are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_supplier'];
-        Dropdown::showFromArray('clean_supplier', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . __('Links between suppliers and contacts') . "&nbsp;:</td><td>";
-        $params['value'] = $transfer->fields['keep_contact'];
-        Dropdown::showFromArray('keep_contact', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If contacts are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_contact'];
-        Dropdown::showFromArray('clean_contact', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . Document::getTypeName(Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_document'];
-        Dropdown::showFromArray('keep_document', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If documents are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_document'];
-        Dropdown::showFromArray('clean_document', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Contract', 'Contracts', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_contract'];
-        Dropdown::showFromArray('keep_contract', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If contracts are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_contract'];
-        Dropdown::showFromArray('clean_contract', $clean, $params);
-        echo "</td></tr>";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td>" . _n('Certificate', 'Certificates', Session::getPluralNumber()) . "</td><td>";
-        $params['value'] = $transfer->fields['keep_certificate'];
-        Dropdown::showFromArray('keep_certificate', $keep, $params);
-        echo "</td>";
-        echo "<td>" . __('If certificates are no longer used') . "</td><td>";
-        $params['value'] = $transfer->fields['clean_certificate'];
-        Dropdown::showFromArray('clean_certificate', $clean, $params);
-        echo "</td></tr>";
-
         if ($edit_form) {
             $transfer->showFormButtons($options);
         } else {
@@ -323,9 +324,10 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<thead>";
             echo '<tr><th>' . __('Items to transfer') . '</th><th>' . __('Transfer mode') . "&nbsp;";
             $rand = Transfer::dropdown([
-                'name'     => 'id',
-                'comments' => false,
-                'toupdate' => [
+                'name'      => 'id',
+                'comments'  => false,
+                'value'     => 1,
+                'toupdate'  => [
                     'value_fieldname'   => 'id',
                     'to_update'         => "transfer_form",
                     //'url'               => $CFG_GLPI["root_doc"] . "/ajax/transfers.php"
@@ -396,6 +398,15 @@ class PluginYagpTransfer extends CommonDBTM
                     $params
                 );
             }
+
+            $transfer = new self();
+            $transfer->showForm(
+                1,
+                [
+                    'target'    => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
+                    'display'   => false
+                ]
+            );
 
             echo "<div class='center' id='transfer_form'><br>";
             Html::showSimpleForm(
