@@ -98,7 +98,7 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
             Crontask::Unregister("YagpTicketsolveddate");
         }
 
-        /** Deprecated */
+        /* Deprecated
         if ($input["contractrenew"] == 1) {
             Crontask::Register("PluginYagpContractrenew", 'renewContract', DAY_TIMESTAMP, [
             'state' => 0,
@@ -107,6 +107,7 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
         } elseif ($input["contractrenew"] == 0) {
             Crontask::Unregister("YagpContractrenew");
         }
+        */
     }
 }
 
