@@ -399,6 +399,7 @@ class PluginYagpTransfer extends CommonDBTM
                 );
             }
 
+            echo "<div class='center' id='transfer_form'><br>";
             $transfer = new self();
             $transfer->showForm(
                 1,
@@ -407,8 +408,6 @@ class PluginYagpTransfer extends CommonDBTM
                     'display'   => false
                 ]
             );
-
-            echo "<div class='center' id='transfer_form'><br>";
             Html::showSimpleForm(
                 Plugin::getWebDir('yagp') . "/front/transfer.form.php",
                 'clear',
