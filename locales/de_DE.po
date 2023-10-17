@@ -1,90 +1,44 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: YAGP\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-10-17 14:02+0200\n"
+"Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
-"Project-Id-Version: YAGP\n"
-"Language: de_DE\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
-
-#: inc/config.class.php:226
-msgid "Auto-closing of rejected tickets"
-msgstr "Auto-closing of rejected tickets"
-
-#: inc/config.class.php:216
-msgid "Automatic transfer"
-msgstr "Automatic transfer"
-
-#: inc/config.class.php:163
-msgid "Block opening date"
-msgstr "Eröffnungsdatum sperren"
-
-#: inc/ticketsolveddate.class.php:56
-msgid "Change date"
-msgstr "Datum ändern"
-
-#: inc/config.class.php:180
-msgid "Change default minimum validation required"
-msgstr "Ändern der standardmäßigen Mindestvalidierung erforderlich"
-
-#: inc/config.class.php:138
-msgid "Change ticket solved date to last task end time"
-msgstr "Ändere das Schlussdatum des Tickets in die End-Zeit der letzten Aufgabe"
-
-#: inc/preshowtab.class.php:47
-msgid "Current minimum validation"
-msgstr "Aktuelle Validierung des Minimums"
-
-#: inc/config.class.php:186
-msgid "Default minimum validation required"
-msgstr "Standardmindestvalidierung erforderlich"
-
-#: inc/config.class.php:211
-msgid "Enable quick transfer for tickets"
-msgstr "Enable quick transfer for tickets"
-
-#: inc/config.class.php:196
-msgid "Enable re-categorization tracking"
-msgstr "Nachverfolgung der Neukategorisierung aktivieren"
-
-#: inc/config.class.php:206
-msgid "Enhance Private task/followup view"
-msgstr "Enhance Private task/followup view"
-
-#: inc/config.class.php:158
-msgid "Go to ticket"
-msgstr "Zum Ticket"
-
-#: inc/config.class.php:201
-msgid "Hide historical tab to post-only users"
-msgstr "Ausblenden der Registerkarte \"Verlauf\" für \"Post-Only\"-Benutzer"
-
-#: hook.php:147
-msgid "Initial category"
-msgstr "Anfängliche Kategorie"
-
-#: front/transfer.form.php:68
-#, php-format
-msgid "Items have been transferred to %s"
-msgstr "Items have been transferred to %s"
-
-#: inc/ticketsolveddate.class.php:57
-msgid "Number of tickets"
-msgstr "Anzahl Tickets"
 
 #: hook.php:133
 msgid "Recategorized"
 msgstr "Neu kategorisiert"
 
-#: inc/contractrenew.class.php:81
-#, php-format
-msgid "Renewed Contract id: %s"
-msgstr "ID des erneuerten Vertrages: %s"
+#: hook.php:147
+msgid "Initial category"
+msgstr "Anfängliche Kategorie"
 
-#: inc/contractrenew.class.php:47
-msgid "Renews tacit contracts"
-msgstr "Erneuert stillschweigende Veträge"
+#: ajax/quicktransfer.php:76 front/transfer.form.php:70
+#, php-format
+msgid "Ticket transferred to %s"
+msgstr "Ticket transferred to %s"
+
+#: ajax/quicktransfer.php:85 front/transfer.form.php:79
+msgid "You can close this window"
+msgstr "You can close this window"
+
+#: inc/config.class.php:138
+msgid "Change ticket solved date to last task end time"
+msgstr ""
+"Ändere das Schlussdatum des Tickets in die End-Zeit der letzten Aufgabe"
+
+#: inc/config.class.php:158
+msgid "Go to ticket"
+msgstr "Zum Ticket"
+
+#: inc/config.class.php:163
+msgid "Block opening date"
+msgstr "Eröffnungsdatum sperren"
 
 #: inc/config.class.php:168
 msgid "Replace ticket requester (mailcollector)"
@@ -94,16 +48,55 @@ msgstr "Ticketanforderer ersetzen (mailcollector)"
 msgid "Tag to search"
 msgstr "Zu suchendes Tag"
 
-#: ajax/quicktransfer.php:82
+#: inc/config.class.php:180
+msgid "Change default minimum validation required"
+msgstr "Ändern der standardmäßigen Mindestvalidierung erforderlich"
+
+#: inc/config.class.php:186
+msgid "Default minimum validation required"
+msgstr "Standardmindestvalidierung erforderlich"
+
+#: inc/config.class.php:196
+msgid "Enable re-categorization tracking"
+msgstr "Nachverfolgung der Neukategorisierung aktivieren"
+
+#: inc/config.class.php:201
+msgid "Hide historical tab to post-only users"
+msgstr "Ausblenden der Registerkarte \"Verlauf\" für \"Post-Only\"-Benutzer"
+
+#: inc/config.class.php:206
+msgid "Enhance Private task/followup view"
+msgstr "Enhance Private task/followup view"
+
+#: inc/config.class.php:211
+msgid "Enable quick transfer for tickets"
+msgstr "Enable quick transfer for tickets"
+
+#: inc/config.class.php:216
+msgid "Automatic transfer"
+msgstr "Automatic transfer"
+
+#: inc/config.class.php:226
+msgid "Auto-closing of rejected tickets"
+msgstr "Auto-closing of rejected tickets"
+
+#: inc/contractrenew.class.php:47
+msgid "Renews tacit contracts"
+msgstr "Erneuert stillschweigende Veträge"
+
+#: inc/contractrenew.class.php:81
 #, php-format
-msgid "Ticket transferred to %s"
-msgstr "Ticket transferred to %s"
+msgid "Renewed Contract id: %s"
+msgstr "ID des erneuerten Vertrages: %s"
 
-#: front/transfer.form.php:86
-msgid "Transfer list has been cleaned"
-msgstr "Transfer list has been cleaned"
+#: inc/preshowtab.class.php:47
+msgid "Current minimum validation"
+msgstr "Aktuelle Validierung des Minimums"
 
-#: ajax/quicktransfer.php:91 front/transfer.form.php:75
-#: front/transfer.form.php:87
-msgid "You can close this window"
-msgstr "You can close this window"
+#: inc/ticketsolveddate.class.php:56
+msgid "Change date"
+msgstr "Datum ändern"
+
+#: inc/ticketsolveddate.class.php:57
+msgid "Number of tickets"
+msgstr "Anzahl Tickets"

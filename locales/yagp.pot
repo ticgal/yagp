@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-17 08:36+0200\n"
+"POT-Creation-Date: 2023-10-17 14:02+0200\n"
 "PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -25,23 +25,13 @@ msgstr ""
 msgid "Initial category"
 msgstr ""
 
-#: ajax/quicktransfer.php:82
+#: ajax/quicktransfer.php:76 front/transfer.form.php:70
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr ""
 
-#: ajax/quicktransfer.php:91 front/transfer.form.php:75
-#: front/transfer.form.php:87
+#: ajax/quicktransfer.php:85 front/transfer.form.php:79
 msgid "You can close this window"
-msgstr ""
-
-#: front/transfer.form.php:68
-#, php-format
-msgid "Items have been transferred to %s"
-msgstr ""
-
-#: front/transfer.form.php:86
-msgid "Transfer list has been cleaned"
 msgstr ""
 
 #: inc/config.class.php:138
