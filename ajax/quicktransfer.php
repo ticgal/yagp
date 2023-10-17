@@ -55,13 +55,8 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     $itemtype = $_GET['itemtype'];
     $id = $_GET['items_id'];
 
-    if (!isset($_SESSION['glpitransfer_list'])) {
-        $_SESSION['glpitransfer_list'] = [];
-    }
-    if (!isset($_SESSION['glpitransfer_list'][$itemtype])) {
-        $_SESSION['glpitransfer_list'][$itemtype] = [];
-    }
-    $_SESSION['glpitransfer_list'][$itemtype][$id] = $id;
+    $transferlist = [];
+    $transferlist[$itemtype][$id] = $id;
 
     $config = PluginYagpConfig::getInstance();
     $item = new $itemtype();
@@ -73,11 +68,10 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     ) {
         $glpitransfer = new Transfer();
         $glpitransfer->moveItems(
-            $_SESSION['glpitransfer_list'],
+            $transferlist,
             $config->fields['transfer_entity'],
             PluginYagpTransfer::getCompleteTransferOptions()
         );
-        unset($_SESSION['glpitransfer_list']);
 
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
@@ -92,6 +86,6 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         echo "</div>";
         echo "</div>";
     } else {
-        $transfer->showTransferList();
+        $transfer->showTransferList($transferlist);
     }
 }

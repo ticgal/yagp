@@ -62,6 +62,7 @@ class PluginYagpTransfer extends CommonDBTM
 
             echo "<tr><td class='tab_bg_2 top' colspan='4'>";
             echo "<div class='center'>";
+            echo "<input type='hidden' name='transferlist' value='" . json_encode($options['transferlist']) . "'>";
             Entity::dropdown(['name' => 'to_entity']);
             echo "&nbsp;<input type='submit' name='transfer' value=\"" . __s('Execute') . "\"
                     class='btn btn-primary'></div>";
@@ -310,12 +311,12 @@ class PluginYagpTransfer extends CommonDBTM
      * Original from GLPI, adapted to modal frames
      * @return void
      */
-    public function showTransferList()
+    public function showTransferList($transferlist = [])
     {
         global $DB, $CFG_GLPI;
 
         echo "<div class='d-flex w-100 flex-column'>";
-        if (isset($_SESSION['glpitransfer_list']) && count($_SESSION['glpitransfer_list'])) {
+        if (isset($transferlist) && count($transferlist)) {
             echo "<div class='my-2 text-center'>";
             echo "<span>" . __('Think of making a backup before transferring items.') . "</span>";
             echo "</div>";
@@ -340,7 +341,7 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<tbody>";
             echo "<tr><td class=''>";
             /** @var class-string<CommonDBTM> $itemtype */
-            foreach ($_SESSION['glpitransfer_list'] as $itemtype => $tab) {
+            foreach ($transferlist as $itemtype => $tab) {
                 if (count($tab)) {
                     if (!($item = getItemForItemtype($itemtype))) {
                         continue;
@@ -406,8 +407,9 @@ class PluginYagpTransfer extends CommonDBTM
             $transfer->showForm(
                 1,
                 [
-                    'target'    => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
-                    'display'   => $display
+                    'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
+                    'display'       => $display,
+                    'transferlist'  => $transferlist
                 ]
             );
             /*

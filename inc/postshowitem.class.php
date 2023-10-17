@@ -116,6 +116,16 @@ class PluginYagpPostshowitem extends CommonDBTM
                     $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
                     $ajax_title = __('Transfer to', 'yagp');
+                    if (
+                        $config->fields['autotransfer'] == 1
+                        && $config->fields['transfer_entity'] != $item->fields['entities_id']
+                    ) {
+                        $entity_name = Dropdown::getDropdownName(
+                            'glpi_entities',
+                            $config->fields['transfer_entity']
+                        );
+                        $ajax_title .= " $entity_name";
+                    }
                     $icon = "<i class='fa-fw fas fa-level-up-alt'></i>";
                     $btn_attrs = "class='btn col-auto col-xxl-12' data-bs-toggle='modal'";
 

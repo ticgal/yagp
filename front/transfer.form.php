@@ -48,7 +48,7 @@ $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
 if (isset($_POST['transfer'])) {
-    if (isset($_SESSION['glpitransfer_list'])) {
+    if (isset($_POST['transferlist'])) {
         if (!Session::haveAccessToEntity($_POST['to_entity'])) {
             Html::displayRightError();
         }
@@ -58,15 +58,19 @@ if (isset($_POST['transfer'])) {
             $_POST[$k] = isset($_POST[$k]) ? $_POST[$k] : $v;
         }
 
-        $transfer->moveItems($_SESSION['glpitransfer_list'], $_POST['to_entity'], $_POST);
-        unset($_SESSION['glpitransfer_list']);
+        $transfer->moveItems(
+            json_decode(stripslashes($_POST['transferlist']), true),
+            $_POST['to_entity'],
+            $_POST
+        );
 
         $entity = new Entity();
         $entity->getFromDB($_POST['to_entity']);
 
+        $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
-            __('Items have been transferred to %s', 'yapg'),
-            $entity->fields['completename']
+            $msg,
+            Dropdown::getDropdownName('glpi_entities', $_POST['to_entity'])
         );
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
@@ -78,15 +82,4 @@ if (isset($_POST['transfer'])) {
 
         exit();
     }
-} elseif (isset($_POST['clear'])) {
-    unset($_SESSION['glpitransfer_list']);
-
-    echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
-    echo "<div class='alert alert-info mt-4'>";
-    echo "<h3>" . __('Transfer list has been cleaned', 'yapg') . "</h3>";
-    echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
-    echo "</div>";
-    echo "</div>";
-
-    exit();
 }
