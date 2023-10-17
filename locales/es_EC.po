@@ -5,8 +5,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
 "Project-Id-Version: YAGP\n"
-"Language: hr_HR\n"
-"Plural-Forms: nplurals=3; plural=((n%10==1) && (n%100!=11)) ? 0 : ((n%10>=2 && n%10<=4) && ((n%100<12 || n%100>14))) ? 1 : 2;\n"
+"Language: es_EC\n"
+"Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
 #: inc/config.class.php:226
 msgid "Auto-closing of rejected tickets"
@@ -18,27 +18,27 @@ msgstr "Automatic transfer"
 
 #: inc/config.class.php:163
 msgid "Block opening date"
-msgstr "Block opening date"
+msgstr "Fecha de apertura del bloque"
 
 #: inc/ticketsolveddate.class.php:56
 msgid "Change date"
-msgstr "Promijeni datum"
+msgstr "Cambiar fecha"
 
 #: inc/config.class.php:180
 msgid "Change default minimum validation required"
-msgstr "Change default minimum validation required"
+msgstr "Cambiar la validación mínima requerida predeterminada"
 
 #: inc/config.class.php:138
 msgid "Change ticket solved date to last task end time"
-msgstr "Promijeni datum rješavanja naloga s vremenom završetka zadnjeg zadatka"
+msgstr "Cambiar la fecha de resolución del ticket a la hora de finalización de la última tarea"
 
 #: inc/preshowtab.class.php:47
 msgid "Current minimum validation"
-msgstr "Current minimum validation"
+msgstr "Validación mínima actual"
 
 #: inc/config.class.php:186
 msgid "Default minimum validation required"
-msgstr "Default minimum validation required"
+msgstr "Validación mínima predeterminada requerida"
 
 #: inc/config.class.php:211
 msgid "Enable quick transfer for tickets"
@@ -46,7 +46,7 @@ msgstr "Enable quick transfer for tickets"
 
 #: inc/config.class.php:196
 msgid "Enable re-categorization tracking"
-msgstr "Enable re-categorization tracking"
+msgstr "Habilitar seguimiento de recategorización"
 
 #: inc/config.class.php:206
 msgid "Enhance Private task/followup view"
@@ -54,15 +54,15 @@ msgstr "Enhance Private task/followup view"
 
 #: inc/config.class.php:158
 msgid "Go to ticket"
-msgstr "Go to ticket"
+msgstr "Ir al ticket"
 
 #: inc/config.class.php:201
 msgid "Hide historical tab to post-only users"
-msgstr "Hide historical tab to post-only users"
+msgstr "Ocultar la pestaña de histórico a los usuarios que sólo publican."
 
 #: hook.php:147
 msgid "Initial category"
-msgstr "Initial category"
+msgstr "Categoría inicial"
 
 #: front/transfer.form.php:68
 #, php-format
@@ -71,28 +71,28 @@ msgstr "Items have been transferred to %s"
 
 #: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
-msgstr "Broj naloga"
+msgstr "Número de tickets"
 
 #: hook.php:133
 msgid "Recategorized"
-msgstr "Recategorized"
+msgstr "Recategorizado"
 
 #: inc/contractrenew.class.php:81
 #, php-format
 msgid "Renewed Contract id: %s"
-msgstr "ID obnovljenog ugovora: %s"
+msgstr "Id de contrato renovado: %s"
 
 #: inc/contractrenew.class.php:47
 msgid "Renews tacit contracts"
-msgstr "Obnavlja implicitne ugovore"
+msgstr "Renueva los contratos tácitos"
 
 #: inc/config.class.php:168
 msgid "Replace ticket requester (mailcollector)"
-msgstr "Replace ticket requester (mailcollector)"
+msgstr "Reemplazar solicitante de tickets (mailcollector)"
 
 #: inc/config.class.php:174
 msgid "Tag to search"
-msgstr "Tag to search"
+msgstr "Etiqueta para buscar"
 
 #: ajax/quicktransfer.php:82
 #, php-format

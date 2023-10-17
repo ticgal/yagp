@@ -5,8 +5,8 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
 "Project-Id-Version: YAGP\n"
-"Language: hr_HR\n"
-"Plural-Forms: nplurals=3; plural=((n%10==1) && (n%100!=11)) ? 0 : ((n%10>=2 && n%10<=4) && ((n%100<12 || n%100>14))) ? 1 : 2;\n"
+"Language: ja_JP\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
 
 #: inc/config.class.php:226
 msgid "Auto-closing of rejected tickets"
@@ -18,27 +18,27 @@ msgstr "Automatic transfer"
 
 #: inc/config.class.php:163
 msgid "Block opening date"
-msgstr "Block opening date"
+msgstr "開始日編集のブロック"
 
 #: inc/ticketsolveddate.class.php:56
 msgid "Change date"
-msgstr "Promijeni datum"
+msgstr "日付を変更"
 
 #: inc/config.class.php:180
 msgid "Change default minimum validation required"
-msgstr "Change default minimum validation required"
+msgstr "必要検証承認率の既定値を変更"
 
 #: inc/config.class.php:138
 msgid "Change ticket solved date to last task end time"
-msgstr "Promijeni datum rješavanja naloga s vremenom završetka zadnjeg zadatka"
+msgstr "チケットの解決日を最後のタスクの終了日時に変更"
 
 #: inc/preshowtab.class.php:47
 msgid "Current minimum validation"
-msgstr "Current minimum validation"
+msgstr "現在の必要検証承認率"
 
 #: inc/config.class.php:186
 msgid "Default minimum validation required"
-msgstr "Default minimum validation required"
+msgstr "必要検証承認率の既定値"
 
 #: inc/config.class.php:211
 msgid "Enable quick transfer for tickets"
@@ -46,7 +46,7 @@ msgstr "Enable quick transfer for tickets"
 
 #: inc/config.class.php:196
 msgid "Enable re-categorization tracking"
-msgstr "Enable re-categorization tracking"
+msgstr "カテゴリー変更の記録を有効にする"
 
 #: inc/config.class.php:206
 msgid "Enhance Private task/followup view"
@@ -54,15 +54,15 @@ msgstr "Enhance Private task/followup view"
 
 #: inc/config.class.php:158
 msgid "Go to ticket"
-msgstr "Go to ticket"
+msgstr "チケットへのリンク"
 
 #: inc/config.class.php:201
 msgid "Hide historical tab to post-only users"
-msgstr "Hide historical tab to post-only users"
+msgstr "投稿専用ユーザーに対して履歴タブを非表示に"
 
 #: hook.php:147
 msgid "Initial category"
-msgstr "Initial category"
+msgstr "初期カテゴリー"
 
 #: front/transfer.form.php:68
 #, php-format
@@ -71,28 +71,28 @@ msgstr "Items have been transferred to %s"
 
 #: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
-msgstr "Broj naloga"
+msgstr "チケット数"
 
 #: hook.php:133
 msgid "Recategorized"
-msgstr "Recategorized"
+msgstr "カテゴリー変更済み"
 
 #: inc/contractrenew.class.php:81
 #, php-format
 msgid "Renewed Contract id: %s"
-msgstr "ID obnovljenog ugovora: %s"
+msgstr "更新した契約 ID : %s"
 
 #: inc/contractrenew.class.php:47
 msgid "Renews tacit contracts"
-msgstr "Obnavlja implicitne ugovore"
+msgstr "自動更新契約の内容を補正"
 
 #: inc/config.class.php:168
 msgid "Replace ticket requester (mailcollector)"
-msgstr "Replace ticket requester (mailcollector)"
+msgstr "チケットの要求者を置き換え (メールコレクター)"
 
 #: inc/config.class.php:174
 msgid "Tag to search"
-msgstr "Tag to search"
+msgstr "検索するタグ"
 
 #: ajax/quicktransfer.php:82
 #, php-format
