@@ -321,9 +321,12 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<span>" . __('Think of making a backup before transferring items.') . "</span>";
             echo "</div>";
 
-            echo "<table class='mx-2' >";
+            echo "<table class='mx-2 text-center' >";
             echo "<thead>";
-            echo '<tr><th>' . __('Items to transfer') . '</th><th>' . __('Transfer mode') . "&nbsp;";
+            echo '<tr><th>' . __('Items to transfer') . '</th>';
+
+            /*
+            echo '<th>' . __('Transfer mode') . "&nbsp;";
             $rand = Transfer::dropdown([
                 'name'      => 'id',
                 'comments'  => false,
@@ -336,6 +339,7 @@ class PluginYagpTransfer extends CommonDBTM
                 ]
             ]);
             echo '</th></tr>';
+            */
             echo "</thead>";
 
             echo "<tbody>";
@@ -370,17 +374,16 @@ class PluginYagpTransfer extends CommonDBTM
                     $entID = -1;
 
                     if (count($iterator)) {
-                            echo '<h3>' . $item->getTypeName() . '</h3>';
+                        echo '<div class="d-flex justify-content-around py-2">';
                         foreach ($iterator as $data) {
+                                echo '<span>' . $item->getTypeName() . '</span>';
                             if ($entID != $data['entID']) {
-                                if ($entID != -1) {
-                                    echo '<br>';
-                                }
                                 $entID = $data['entID'];
-                                echo "<span class='b spaced'>" . $data['locname'] . "</span><br>";
+                                echo "<span>" . $data['locname'] . "</span>";
                             }
-                                echo ($data['name'] ? $data['name'] : "(" . $data['id'] . ")") . "<br>";
+                                echo "<span>" . ($data['name'] ? $data['name'] : "(" . $data['id'] . ")") . "</span>";
                         }
+                        echo '</div>';
                     }
                 }
             }
@@ -391,6 +394,7 @@ class PluginYagpTransfer extends CommonDBTM
             if (countElementsInTable('glpi_transfers') == 0) {
                 echo __('No item found');
             } else {
+                /*
                 $params = ['id' => '__VALUE__'];
                 Ajax::updateItemOnSelectEvent(
                     "dropdown_id$rand",
@@ -399,6 +403,7 @@ class PluginYagpTransfer extends CommonDBTM
                     Plugin::getWebDir('yagp') . "/ajax/quicktransfer.php",
                     $params
                 );
+                */
                 //$display = true;
             }
 

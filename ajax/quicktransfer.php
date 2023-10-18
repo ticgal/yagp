@@ -46,8 +46,12 @@ Html::header('yagp');
 $transfer = new PluginYagpTransfer();
 if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
     $transfer->showForm(
-        $_POST["id"],
-        ['target' => Plugin::getWebDir('yagp') . "/front/transfer.form.php"]
+        1,
+        [
+            'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
+            'display'       => false,
+            'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions()
+        ]
     );
 }
 

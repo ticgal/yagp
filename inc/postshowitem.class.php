@@ -112,6 +112,7 @@ class PluginYagpPostshowitem extends CommonDBTM
                     && Session::isMultiEntitiesMode()
                     && isset($item->fields['entities_id'])
                 ) {
+                    $entity_name = __('Select an entity to transfer', 'yagp');
                     $ajax_id = 'ajax_playground';
                     $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
@@ -131,7 +132,8 @@ class PluginYagpPostshowitem extends CommonDBTM
 
                     $append = "<label class='col-form-label col-xxl-5 text-xxl-end'></label>";
                     $append .= "<div class='col-xxl-7 row m-0 field-container'>";
-                    $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}' href='#'>";
+                    $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}'";
+                    $append .= "data-toggle='tooltip' title='{$entity_name}' href='#'>";
                     $append .= $icon . "<span class='text-truncate'>$ajax_title</span>";
                     $append .= "</a>";
                     $append .= "</div>";
@@ -146,7 +148,7 @@ class PluginYagpPostshowitem extends CommonDBTM
                         [
                             'title'         => $ajax_title,
                             'width'         => '500',
-                            'height'        => '500',
+                            'height'        => '250',
                             'reloadonclose' => true
                         ]
                     );
