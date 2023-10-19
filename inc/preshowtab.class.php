@@ -69,7 +69,7 @@ JAVASCRIPT;
                         $("div[id^='tab-Log']").css({display:"none"});
                         $("div[id^='tab--'] div.table-responsive").css({display:"none"});
                     });
-                    JAVASCRIPT;
+JAVASCRIPT;
 
                     echo Html::scriptBlock($script);
             }

@@ -86,7 +86,7 @@ class PluginYagpPostshowitem extends CommonDBTM
                 "border-radius":"3px"
             });
         });
-        JAVASCRIPT;
+JAVASCRIPT;
 
         echo Html::scriptBlock($script);
     }
@@ -112,11 +112,11 @@ class PluginYagpPostshowitem extends CommonDBTM
                     && Session::isMultiEntitiesMode()
                     && isset($item->fields['entities_id'])
                 ) {
-                    $entity_name = __('Select an entity to transfer', 'yagp');
+                    $entity_name = __("Select an entity to transfer", "yagp");
                     $ajax_id = 'ajax_playground';
                     $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
-                    $ajax_title = __('Transfer to', 'yagp');
+                    $ajax_title = __("Transfer to", "yagp");
                     if (
                         $config->fields['autotransfer'] == 1
                         && $config->fields['transfer_entity'] != $item->fields['entities_id']
@@ -140,7 +140,7 @@ class PluginYagpPostshowitem extends CommonDBTM
 
                     $script = <<<JAVASCRIPT
                     $('div#item-main .form-field').first().append("{$append}");
-                    JAVASCRIPT;
+JAVASCRIPT;
 
                     Ajax::createIframeModalWindow(
                         $ajax_id,
