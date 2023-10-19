@@ -2,7 +2,8 @@
 
 ## 2.2.1 - 2023-10-18
 ### Bugfixes
-- Fix transfer option
+- Fix transfer option ajax form
+- Fix locales
 
 ## 2.2.0 - 2023-10-11
 ### Features
