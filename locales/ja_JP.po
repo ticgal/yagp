@@ -1,101 +1,107 @@
 msgid ""
 msgstr ""
-"Project-Id-Version: YAGP\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-19 09:35+0200\n"
-"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
+"Project-Id-Version: YAGP\n"
+"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
-
-#: hook.php:133
-msgid "Recategorized"
-msgstr "カテゴリー変更済み"
-
-#: hook.php:147
-msgid "Initial category"
-msgstr "初期カテゴリー"
-
-#: ajax/quicktransfer.php:80 front/transfer.form.php:70
-#, php-format
-msgid "Ticket transferred to %s"
-msgstr "Ticket transferred to %s"
-
-#: ajax/quicktransfer.php:89 front/transfer.form.php:79
-msgid "You can close this window"
-msgstr "You can close this window"
-
-#: inc/config.class.php:138
-msgid "Change ticket solved date to last task end time"
-msgstr "チケットの解決日を最後のタスクの終了日時に変更"
-
-#: inc/config.class.php:158
-msgid "Go to ticket"
-msgstr "チケットへのリンク"
-
-#: inc/config.class.php:163
-msgid "Block opening date"
-msgstr "開始日編集のブロック"
-
-#: inc/config.class.php:168
-msgid "Replace ticket requester (mailcollector)"
-msgstr "チケットの要求者を置き換え (メールコレクター)"
-
-#: inc/config.class.php:174
-msgid "Tag to search"
-msgstr "検索するタグ"
-
-#: inc/config.class.php:180
-msgid "Change default minimum validation required"
-msgstr "必要検証承認率の既定値を変更"
-
-#: inc/config.class.php:186
-msgid "Default minimum validation required"
-msgstr "必要検証承認率の既定値"
-
-#: inc/config.class.php:196
-msgid "Enable re-categorization tracking"
-msgstr "カテゴリー変更の記録を有効にする"
-
-#: inc/config.class.php:201
-msgid "Hide historical tab to post-only users"
-msgstr "投稿専用ユーザーに対して履歴タブを非表示に"
-
-#: inc/config.class.php:206
-msgid "Enhance Private task/followup view"
-msgstr "Enhance Private task/followup view"
-
-#: inc/config.class.php:211
-msgid "Enable quick transfer for tickets"
-msgstr "Enable quick transfer for tickets"
-
-#: inc/config.class.php:216
-msgid "Automatic transfer"
-msgstr "Automatic transfer"
 
 #: inc/config.class.php:226
 msgid "Auto-closing of rejected tickets"
 msgstr "Auto-closing of rejected tickets"
 
-#: inc/contractrenew.class.php:47
-msgid "Renews tacit contracts"
-msgstr "自動更新契約の内容を補正"
+#: inc/config.class.php:216
+msgid "Automatic transfer"
+msgstr "Automatic transfer"
+
+#: inc/config.class.php:163
+msgid "Block opening date"
+msgstr "開始日編集のブロック"
+
+#: inc/ticketsolveddate.class.php:56
+msgid "Change date"
+msgstr "日付を変更"
+
+#: inc/config.class.php:180
+msgid "Change default minimum validation required"
+msgstr "必要検証承認率の既定値を変更"
+
+#: inc/config.class.php:138
+msgid "Change ticket solved date to last task end time"
+msgstr "チケットの解決日を最後のタスクの終了日時に変更"
+
+#: inc/preshowtab.class.php:47
+msgid "Current minimum validation"
+msgstr "現在の必要検証承認率"
+
+#: inc/config.class.php:186
+msgid "Default minimum validation required"
+msgstr "必要検証承認率の既定値"
+
+#: inc/config.class.php:211
+msgid "Enable quick transfer for tickets"
+msgstr "Enable quick transfer for tickets"
+
+#: inc/config.class.php:196
+msgid "Enable re-categorization tracking"
+msgstr "カテゴリー変更の記録を有効にする"
+
+#: inc/config.class.php:206
+msgid "Enhance Private task/followup view"
+msgstr "Enhance Private task/followup view"
+
+#: inc/config.class.php:158
+msgid "Go to ticket"
+msgstr "チケットへのリンク"
+
+#: inc/config.class.php:201
+msgid "Hide historical tab to post-only users"
+msgstr "投稿専用ユーザーに対して履歴タブを非表示に"
+
+#: hook.php:147
+msgid "Initial category"
+msgstr "初期カテゴリー"
+
+#: inc/ticketsolveddate.class.php:57
+msgid "Number of tickets"
+msgstr "チケット数"
+
+#: hook.php:133
+msgid "Recategorized"
+msgstr "カテゴリー変更済み"
 
 #: inc/contractrenew.class.php:81
 #, php-format
 msgid "Renewed Contract id: %s"
 msgstr "更新した契約 ID : %s"
 
-#: inc/preshowtab.class.php:47
-msgid "Current minimum validation"
-msgstr "現在の必要検証承認率"
+#: inc/contractrenew.class.php:47
+msgid "Renews tacit contracts"
+msgstr "自動更新契約の内容を補正"
 
-#: inc/ticketsolveddate.class.php:56
-msgid "Change date"
-msgstr "日付を変更"
+#: inc/config.class.php:168
+msgid "Replace ticket requester (mailcollector)"
+msgstr "チケットの要求者を置き換え (メールコレクター)"
 
-#: inc/ticketsolveddate.class.php:57
-msgid "Number of tickets"
-msgstr "チケット数"
+#: inc/postshowitem.class.php:115
+msgid "Select an entity to transfer"
+msgstr "Select an entity to transfer"
+
+#: inc/config.class.php:174
+msgid "Tag to search"
+msgstr "検索するタグ"
+
+#: ajax/quicktransfer.php:80 front/transfer.form.php:70
+#, php-format
+msgid "Ticket transferred to %s"
+msgstr "Ticket transferred to %s"
+
+#: inc/postshowitem.class.php:119
+msgid "Transfer to"
+msgstr "Transfer to"
+
+#: ajax/quicktransfer.php:89 front/transfer.form.php:79
+msgid "You can close this window"
+msgstr "You can close this window"

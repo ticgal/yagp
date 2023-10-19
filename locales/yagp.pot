@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-19 09:35+0200\n"
+"POT-Creation-Date: 2023-10-19 16:44+0200\n"
 "PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,6 +93,14 @@ msgstr ""
 #: inc/contractrenew.class.php:81
 #, php-format
 msgid "Renewed Contract id: %s"
+msgstr ""
+
+#: inc/postshowitem.class.php:115
+msgid "Select an entity to transfer"
+msgstr ""
+
+#: inc/postshowitem.class.php:119
+msgid "Transfer to"
 msgstr ""
 
 #: inc/preshowtab.class.php:47
