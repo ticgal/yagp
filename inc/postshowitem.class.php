@@ -148,7 +148,7 @@ JAVASCRIPT;
                         [
                             'title'         => $ajax_title,
                             'width'         => '500',
-                            'height'        => '250',
+                            'height'        => '500',
                             'reloadonclose' => true
                         ]
                     );
