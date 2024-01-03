@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.2.2 - 2024-01-03
+### Bugfixes
+- Fix requester replacement for mailcollector #19272
+
 ## 2.2.1 - 2023-10-18
 ### Bugfixes
 - Fix transfer option ajax form
