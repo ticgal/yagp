@@ -130,8 +130,8 @@ JAVASCRIPT;
                     $icon = "<i class='fa-fw fas fa-level-up-alt'></i>";
                     $btn_attrs = "class='btn col-auto col-xxl-12' data-bs-toggle='modal'";
 
-                    $append = "<label class='col-form-label col-xxl-5 text-xxl-end'></label>";
-                    $append .= "<div class='col-xxl-7 row m-0 field-container'>";
+                    $append = "<label class='col-form-label col-xxl-4 text-xxl-end'></label>";
+                    $append .= "<div class='col-xxl-8 row m-0 field-container'>";
                     $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}'";
                     $append .= "data-toggle='tooltip' title='{$entity_name}' href='#'>";
                     $append .= $icon . "<span class='text-truncate'>$ajax_title</span>";
