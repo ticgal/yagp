@@ -117,11 +117,14 @@ class PluginYagpTicket extends CommonDBTM
         return parent::getSpecificValueToSelect($field, $name, $values, $options);
     }
 
-
-    public static function postItemForm($params = [])
+    /**
+     * postItemForm
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    public static function postItemForm($params = []): void
     {
-        global $DB;
-
         $item = $params['item'];
         if (!is_array($item) && $item->getType() == Ticket::getType()) {
             $date = ($item->getID()) ? $item->fields['date'] : '';
@@ -137,7 +140,13 @@ JAVASCRIPT;
         }
     }
 
-    public static function preAddTicket(Ticket $ticket)
+    /**
+     * preAddTicket
+     *
+     * @param  mixed $ticket
+     * @return Ticket
+     */
+    public static function preAddTicket(Ticket $ticket): Ticket
     {
         $config = PluginYagpConfig::getConfig();
         $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
@@ -212,7 +221,13 @@ JAVASCRIPT;
         }
     }
 
-    public static function ticketRecategorization($ticket)
+    /**
+     * ticketRecategorization
+     *
+     * @param  mixed $ticket
+     * @return void
+     */
+    public static function ticketRecategorization($ticket): void
     {
         if (isset($ticket->oldvalues["itilcategories_id"])) {
             $ticket_cat = new self();
