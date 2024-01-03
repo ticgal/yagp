@@ -139,8 +139,6 @@ JAVASCRIPT;
 
     public static function preAddTicket(Ticket $ticket)
     {
-        global $DB;
-
         $config = PluginYagpConfig::getConfig();
         $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
 
@@ -149,8 +147,9 @@ JAVASCRIPT;
             if (preg_match_all($pattern, $mail->getContent(), $matches)) {
                 $string = $matches[0];
                 $useremail = str_replace($config->fields['requestlabel'], "", $string);
+                $useremail = str_replace(" ", "", $useremail); // remove possible spaces
                 $user = new User();
-                if ($user->getFromDBbyEmail($useremail[0])) {
+                if (isset($useremail[0]) && $user->getFromDBbyEmail($useremail[0])) {
                     $ticket->input['_users_id_requester'] = $user->fields['id'];
 
                     $mailgate = new MailCollector();
