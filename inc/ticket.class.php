@@ -157,6 +157,8 @@ JAVASCRIPT;
                 $string = $matches[0];
                 $useremail = str_replace($config->fields['requestlabel'], "", $string);
                 $useremail = str_replace(" ", "", $useremail); // remove possible spaces
+                //remove not valid characters
+                $useremail = preg_replace("/[^a-zA-Z0-9@._-]/", "", $useremail);
                 $user = new User();
                 if (isset($useremail[0]) && $user->getFromDBbyEmail($useremail[0])) {
                     $ticket->input['_users_id_requester'] = $user->fields['id'];
