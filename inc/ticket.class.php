@@ -263,19 +263,22 @@ JAVASCRIPT;
             $query = [
                 'FROM' => $is_table,
                 'WHERE' => [
-                    'solutiontypes_id'  => $config->fields['solutiontypes_id_rejected'],
+                    //'solutiontypes_id'  => $config->fields['solutiontypes_id_rejected'],
                     'itemtype'          => $parentItemtype,
                     'items_id'          => $parentItemsId,
-                    'status'            => CommonITILValidation::REFUSED
+                    //'status'            => CommonITILValidation::REFUSED
                 ],
                 'ORDER' => 'id DESC',
                 'LIMIT' => '1'
             ];
 
             $iterator = $DB->request($query);
+            $solution = $iterator->current();
             if (
-                $item->input['requesttypes_id'] != $config->fields['requesttypes_id_reopen']
-                && count($iterator) > 0
+                $item->input['requesttypes_id'] != $config->fields['requesttypes_id_reopen'] &&
+                count($iterator) > 0 &&
+                $solution['solutiontypes_id'] == $config->fields['solutiontypes_id_rejected'] &&
+                $solution['status'] == CommonITILValidation::REFUSED
             ) {
                 if ($parentItemtype == Ticket::class) {
                     $ticket = new $parentItemtype();

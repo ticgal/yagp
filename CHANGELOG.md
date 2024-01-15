@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.2.3 - 2024-01-15
+### Bugfixes
+- Fix reopened autoclosed tickets, second solution always closes the ticket
+
 ## 2.2.2 - 2024-01-03
 ### Bugfixes
 - Fix requester replacement for mailcollector #19272
