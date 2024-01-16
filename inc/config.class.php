@@ -227,9 +227,43 @@ class PluginYagpConfig extends CommonDBTM
         Dropdown::showYesNo("autoclose_rejected_tickets", $config->fields["autoclose_rejected_tickets"]);
         echo "</td></tr>\n";
 
+        // * Solution types for close tickets automatically
+        $solutiontypes = [];
+        $used = is_null($config->fields['solutiontypes'])
+            ? []
+            : importArrayFromDB($config->fields['solutiontypes']);
+        $iterator = $DB->request(['table' => SolutionType::getTable()]);
+        foreach ($iterator as $data) {
+            $solutiontypes[$data['id']] = $data['name'];
+        }
+        echo "<tr class='tab_bg_1'>";
+        echo "<td >" . __("Solution types for close tickets automatically", "yagp") . "</td><td >";
+        Dropdown::showFromArray(
+            'solutiontypes',
+            $solutiontypes,
+            ['values' => $used, 'multiple' => true, 'size' => 3]
+        );
+        echo "</td></tr>\n";
+
         $config->showFormButtons(['candel' => false]);
 
         return false;
+    }
+
+    /**
+     * prepareInputForUpdate
+     *
+     * @param  mixed $input
+     * @return array
+     */
+    public function prepareInputForUpdate($input): array
+    {
+        if ((!isset($input["solutiontypes"])) || (!is_array($input["solutiontypes"]))) {
+            $input["solutiontypes"] = [];
+        }
+        $input["solutiontypes"] = exportArrayToDB($input["solutiontypes"]);
+
+        return $input;
     }
 
     /**
@@ -353,6 +387,7 @@ class PluginYagpConfig extends CommonDBTM
                 `autotransfer` TINYINT(1) NOT NULL DEFAULT '0',
                 `transfer_entity` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `autoclose_rejected_tickets` TINYINT(1) NOT NULL DEFAULT '0',
+                `solutiontypes` TEXT DEFAULT NULL,
                 `solutiontypes_id_rejected` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
@@ -383,6 +418,7 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'autoclose_rejected_tickets', 'boolean', ['value' => 0]);
             $migration->addField($table, 'solutiontypes_id_rejected', 'int', ['value' => 0]);
             $migration->addField($table, 'requesttypes_id_reopen', 'int', ['value' => 0]);
+            $migration->addField($table, 'solutiontypes', 'text');
 
             $migration->migrationOneTable($table);
         }

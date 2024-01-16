@@ -220,6 +220,12 @@ JAVASCRIPT;
                     self::autocloseRejectedTickets($item);
                 }
                 break;
+            case ITILSolution::class:
+                $solutiontypes = importArrayFromDB($config->fields['solutiontypes']);
+                if (in_array($item->fields['solutiontypes_id'], $solutiontypes)) {
+                    self::autocloseTicket($item);
+                }
+                break;
         }
     }
 
@@ -289,6 +295,25 @@ JAVASCRIPT;
         }
 
         return true;
+    }
+
+    public static function autocloseTicket(ITILSolution $solution)
+    {
+        $solution->update([
+            'id'                => $solution->fields['id'],
+            'status'            => CommonITILValidation::ACCEPTED,
+            'date_approval'     => date("Y-m-d H:i:s"),
+            'users_id_approval' => $solution->fields['users_id']
+        ]);
+
+        if ($solution->fields['itemtype'] == Ticket::class) {
+            $itemtype = new $solution->fields['itemtype']();
+            $itemtype->getFromDB($solution->fields['items_id']);
+            $itemtype->update([
+                'id'     => $solution->fields['items_id'],
+                'status' => Ticket::CLOSED
+            ]);
+        }
     }
 
     public static function plugin_yagp_postItemForm($params)
