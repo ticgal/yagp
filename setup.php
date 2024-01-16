@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.2.3');
+define('PLUGIN_YAGP_VERSION', '2.3.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -155,6 +155,14 @@ function plugin_init_yagp(): void
         if ($config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'] = [
                 ITILFollowup::class => [
+                    PluginYagpTicket::class, 'pluginYagpItemAdd'
+                ]
+            ];
+        }
+
+        if (!empty($config->fields['solutiontypes'])) {
+            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'] = [
+                ITILSolution::class => [
                     PluginYagpTicket::class, 'pluginYagpItemAdd'
                 ]
             ];
