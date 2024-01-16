@@ -308,16 +308,14 @@ class PluginYagpConfig extends CommonDBTM
     private static function addSolutionType($config): void
     {
         $solutiontype = new SolutionType();
-        $solutionname = "Auto-close rejected tickets";
-        if (!$solutiontype->getFromDBByCrit(['name' => $solutionname])) {
+        if (!$solutiontype->getFromDB($config->fields['solutiontypes_id_rejected'])) {
+            $solutionname = "Auto-close rejected tickets";
             $solution_id = $solutiontype->add([
                 'name'      => $solutionname,
                 'comment'   => __('Solution type for rejected tickets'),
             ]);
-        } else {
-            $solution_id = $solutiontype->fields['id'];
+            $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
         }
-        $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
     }
 
     /**
@@ -329,16 +327,14 @@ class PluginYagpConfig extends CommonDBTM
     private static function addRequestType($config): void
     {
         $requesttype = new RequestType();
-        $requestname = "Reopen ticket";
-        if (!$requesttype->getFromDBByCrit(['name' => $requestname])) {
+        if (!$requesttype->getFromDB($config->fields['requesttypes_id_reopen'])) {
+            $requestname = "Reopen ticket";
             $request_id = $requesttype->add([
                 'name'      => $requestname,
                 'comment'   => __('Request type for reopening autoclosed tickets'),
             ]);
-        } else {
-            $request_id = $requesttype->fields['id'];
+            $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
         }
-        $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
     }
 
     /**
