@@ -281,6 +281,7 @@ JAVASCRIPT;
             $iterator = $DB->request($query);
             $solution = $iterator->current();
             if (
+                isset($item->input['requesttypes_id']) &&
                 $item->input['requesttypes_id'] != $config->fields['requesttypes_id_reopen'] &&
                 count($iterator) > 0 &&
                 $solution['solutiontypes_id'] == $config->fields['solutiontypes_id_rejected'] &&
@@ -297,7 +298,13 @@ JAVASCRIPT;
         return true;
     }
 
-    public static function autocloseTicket(ITILSolution $solution)
+    /**
+     * autocloseTicket
+     *
+     * @param  mixed $solution
+     * @return bool
+     */
+    public static function autocloseTicket(ITILSolution $solution): bool
     {
         $solution->update([
             'id'                => $solution->fields['id'],
@@ -313,7 +320,11 @@ JAVASCRIPT;
                 'id'     => $solution->fields['items_id'],
                 'status' => Ticket::CLOSED
             ]);
+
+            return true;
         }
+
+        return false;
     }
 
     public static function plugin_yagp_postItemForm($params)

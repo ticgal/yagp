@@ -153,18 +153,14 @@ function plugin_init_yagp(): void
         }
 
         if ($config->fields['autoclose_rejected_tickets']) {
-            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'] = [
-                ITILFollowup::class => [
-                    PluginYagpTicket::class, 'pluginYagpItemAdd'
-                ]
+            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
+                PluginYagpTicket::class, 'pluginYagpItemAdd'
             ];
         }
 
         if (!empty($config->fields['solutiontypes'])) {
-            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'] = [
-                ITILSolution::class => [
-                    PluginYagpTicket::class, 'pluginYagpItemAdd'
-                ]
+            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILSolution::class] = [
+                PluginYagpTicket::class, 'pluginYagpItemAdd'
             ];
         }
     }
