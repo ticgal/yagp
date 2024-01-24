@@ -159,8 +159,11 @@ JAVASCRIPT;
                 $string = $matches[0];
                 $useremail = str_replace($config->fields['requestlabel'], "", $string);
                 $useremail = str_replace(" ", "", $useremail); // remove possible spaces
-                //remove not valid characters
-                $useremail = preg_replace("/[^a-zA-Z0-9@._-]/", "", $useremail);
+                //remove not valid characters. Only letters, numbers, @, ., _
+                $letters = "a-zA-Z";
+                $numbers = "0-9";
+                $printable_chars = "@\.!#$%&'*+-/=?^_`{|}~";
+                $useremail = preg_replace("/[^" . $letters . $numbers . $printable_chars . "]/", "", $useremail);
                 $user = new User();
                 if (isset($useremail[0])) {
                     if ($user->getFromDBbyEmail($useremail[0])) {
