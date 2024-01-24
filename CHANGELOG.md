@@ -1,12 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 2.4.0 - 2024-01-24
-### Features
-- Allow anonymous requester #19798
-
-## 2.3.0 - 2024-01-16
+## 2.3.0 - 2024-01-24
 ### Features
 - Multiple solutions to autoclose tickets #19630
+- Allow anonymous requester #19798
 
 ## 2.2.3 - 2024-01-15
 ### Bugfixes
