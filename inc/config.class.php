@@ -421,7 +421,7 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'solutiontypes_id_rejected', 'int', ['value' => 0]);
             $migration->addField($table, 'requesttypes_id_reopen', 'int', ['value' => 0]);
             $migration->addField($table, 'solutiontypes', 'text');
-            // * 2.4.0 anonymous requester
+            // * 2.3.0 anonymous requester
             $migration->addField($table, 'allow_anonymous_requester', 'boolean', ['value' => 0]);
 
             $migration->migrationOneTable($table);
