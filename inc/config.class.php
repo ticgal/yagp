@@ -171,6 +171,11 @@ class PluginYagpConfig extends CommonDBTM
 
         if ($config->fields['findrequest']) {
             echo "<tr class='tab_bg_1'>";
+            echo "<td >" . __("Allow anonymous requester", "yagp") . "</td><td >";
+            Dropdown::showYesNo("allow_anonymous_requester", $config->fields["allow_anonymous_requester"]);
+            echo "</td></tr>\n";
+
+            echo "<tr class='tab_bg_1'>";
             echo "<td >" . __("Tag to search", "yagp") . "</td><td >";
             echo Html::input("requestlabel", ['value' => $config->fields["requestlabel"]]);
             echo "</td></tr>\n";
@@ -373,6 +378,7 @@ class PluginYagpConfig extends CommonDBTM
                 `gototicket` TINYINT(1) NOT NULL DEFAULT '0',
                 `blockdate` TINYINT(1) NOT NULL DEFAULT '0',
                 `findrequest` TINYINT(1) NOT NULL DEFAULT '0',
+                `allow_anonymous_requester` TINYINT(1) NOT NULL DEFAULT '0',
                 `requestlabel` VARCHAR(255) DEFAULT NULL,
                 `change_df_min_val` TINYINT(1) NOT NULL DEFAULT '0',
                 `df_min_validation` INT(11) NOT NULL DEFAULT '0',
@@ -415,6 +421,8 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'solutiontypes_id_rejected', 'int', ['value' => 0]);
             $migration->addField($table, 'requesttypes_id_reopen', 'int', ['value' => 0]);
             $migration->addField($table, 'solutiontypes', 'text');
+            // * 2.4.0 anonymous requester
+            $migration->addField($table, 'allow_anonymous_requester', 'boolean', ['value' => 0]);
 
             $migration->migrationOneTable($table);
         }

@@ -29,6 +29,8 @@
  * ----------------------------------------------------------------------
  */
 
+use Glpi\Debug\Toolbar;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
@@ -151,6 +153,8 @@ JAVASCRIPT;
         $config = PluginYagpConfig::getConfig();
         $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
 
+        Toolbox::logInFile('yagp', print_r($ticket, true));
+
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
             if (preg_match_all($pattern, $mail->getContent(), $matches)) {
@@ -160,8 +164,15 @@ JAVASCRIPT;
                 //remove not valid characters
                 $useremail = preg_replace("/[^a-zA-Z0-9@._-]/", "", $useremail);
                 $user = new User();
-                if (isset($useremail[0]) && $user->getFromDBbyEmail($useremail[0])) {
-                    $ticket->input['_users_id_requester'] = $user->fields['id'];
+                if (isset($useremail[0])) {
+                    if ($user->getFromDBbyEmail($useremail[0])) {
+                        $ticket->input['_users_id_requester'] = $user->fields['id'];
+                    } elseif ($config->fields['allow_anonymous_requester']) {
+                        $ticket->input['_users_id_requester'] = 0;
+                        $ticket->input['alternative_email']   = $useremail[0];
+                    } else {
+                        return $ticket;
+                    }
 
                     $mailgate = new MailCollector();
                     $mailgate->getFromDB($ticket->input['_mailgate']);
