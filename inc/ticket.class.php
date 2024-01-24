@@ -153,8 +153,6 @@ JAVASCRIPT;
         $config = PluginYagpConfig::getConfig();
         $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
 
-        Toolbox::logInFile('yagp', print_r($ticket, true));
-
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
             if (preg_match_all($pattern, $mail->getContent(), $matches)) {
@@ -169,7 +167,10 @@ JAVASCRIPT;
                         $ticket->input['_users_id_requester'] = $user->fields['id'];
                     } elseif ($config->fields['allow_anonymous_requester']) {
                         $ticket->input['_users_id_requester'] = 0;
-                        $ticket->input['alternative_email']   = $useremail[0];
+                        $ticket->input['_actors']['requester'][0]['itemtype']          = User::class;
+                        $ticket->input['_actors']['requester'][0]['items_id']          = 0;
+                        $ticket->input['_actors']['requester'][0]['use_notification']  = 1;
+                        $ticket->input['_actors']['requester'][0]['alternative_email'] = $useremail[0];
                     } else {
                         return $ticket;
                     }
