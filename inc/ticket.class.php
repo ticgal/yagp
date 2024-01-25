@@ -159,6 +159,11 @@ JAVASCRIPT;
             if (mb_detect_encoding($content) == 'ASCII') {
                 $content = quoted_printable_decode($content);
             }
+            // check if $content is a string in base64
+            if (base64_encode(base64_decode($content, true)) === $content) {
+                $content = base64_decode($content);
+            }
+
             if (preg_match_all($pattern, $content, $matches)) {
                 $string = $matches[0];
                 $useremail = str_replace($config->fields['requestlabel'], "", $string);
