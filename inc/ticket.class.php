@@ -156,6 +156,8 @@ JAVASCRIPT;
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
             $content = $mail->getContent();
+            Toolbox::logInFile('yagp_requester', 'ORIGINAL: ' . print_r($content, true) . PHP_EOL);
+            Toolbox::logInFile('yagp_requester', 'ENCODING: ' . print_r(mb_detect_encoding($content), true) . PHP_EOL);
             if (mb_detect_encoding($content) == 'ASCII') {
                 $content = quoted_printable_decode($content);
             }
@@ -163,22 +165,29 @@ JAVASCRIPT;
             if (base64_encode(base64_decode($content, true)) === $content) {
                 $content = base64_decode($content);
             }
+            Toolbox::logInFile('yagp_requester', 'DECODED: ' . print_r($content, true) . PHP_EOL);
 
             if (preg_match_all($pattern, $content, $matches)) {
+                Toolbox::logInFile('yagp_requester', 'MATCHES: ' . print_r($matches, true) . PHP_EOL);
                 $string = $matches[0];
                 $useremail = str_replace($config->fields['requestlabel'], "", $string);
                 $useremail = str_replace(" ", "", $useremail); // remove possible spaces
+                Toolbox::logInFile('yagp_requester', 'EMAIL: ' . print_r($useremail, true) . PHP_EOL);
                 $user = new User();
                 if (isset($useremail[0]) && filter_var($useremail[0], FILTER_VALIDATE_EMAIL)) {
+                    Toolbox::logInFile('yagp_requester', 'EMAIL VALIDATED' . PHP_EOL);
                     if ($user->getFromDBbyEmail($useremail[0])) {
+                        Toolbox::logInFile('yagp_requester', 'USER EXISTS' . PHP_EOL);
                         $ticket->input['_users_id_requester'] = $user->fields['id'];
                     } elseif ($config->fields['allow_anonymous_requester']) {
+                        Toolbox::logInFile('yagp_requester', 'USER ANONYMOUS' . PHP_EOL);
                         $ticket->input['_users_id_requester'] = 0;
                         $ticket->input['_actors']['requester'][0]['itemtype']          = User::class;
                         $ticket->input['_actors']['requester'][0]['items_id']          = 0;
                         $ticket->input['_actors']['requester'][0]['use_notification']  = 1;
                         $ticket->input['_actors']['requester'][0]['alternative_email'] = $useremail[0];
                     } else {
+                        Toolbox::logInFile('yagp_requester', 'NO CHANGES' . PHP_EOL);
                         return $ticket;
                     }
 
