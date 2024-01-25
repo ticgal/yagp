@@ -155,26 +155,25 @@ JAVASCRIPT;
 
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
-            Toolbox::logInFile('yagp_requester', 'MESSAGE: ' . print_r($mail, true) . PHP_EOL);
-            if (preg_match_all($pattern, $mail->getContent(), $matches)) {
+            $content = $mail->getContent();
+            if (mb_detect_encoding($content) == 'ASCII') {
+                $content = quoted_printable_decode($content);
+            }
+            if (preg_match_all($pattern, $content, $matches)) {
                 $string = $matches[0];
                 $useremail = str_replace($config->fields['requestlabel'], "", $string);
                 $useremail = str_replace(" ", "", $useremail); // remove possible spaces
                 $user = new User();
-                Toolbox::logInFile('yagp_requester', 'EMAIL: ' . print_r($useremail, true) . PHP_EOL);
                 if (isset($useremail[0]) && filter_var($useremail[0], FILTER_VALIDATE_EMAIL)) {
                     if ($user->getFromDBbyEmail($useremail[0])) {
-                        Toolbox::logInFile('yagp_requester', 'USER EXISTS' . PHP_EOL);
                         $ticket->input['_users_id_requester'] = $user->fields['id'];
                     } elseif ($config->fields['allow_anonymous_requester']) {
-                        Toolbox::logInFile('yagp_requester', 'ANONYMOUS REQUESTER' . PHP_EOL);
                         $ticket->input['_users_id_requester'] = 0;
                         $ticket->input['_actors']['requester'][0]['itemtype']          = User::class;
                         $ticket->input['_actors']['requester'][0]['items_id']          = 0;
                         $ticket->input['_actors']['requester'][0]['use_notification']  = 1;
                         $ticket->input['_actors']['requester'][0]['alternative_email'] = $useremail[0];
                     } else {
-                        Toolbox::logInFile('yagp_requester', 'NO MODIFICATIONS' . PHP_EOL);
                         return $ticket;
                     }
 
@@ -193,7 +192,6 @@ JAVASCRIPT;
                     foreach ($output as $key => $value) {
                         $ticket->input[$key] = $value;
                     }
-                    Toolbox::logInFile('yagp_requester', 'MAIL RULES OUTPUT: ' . print_r($ticket->input, true) . PHP_EOL);
                 }
             }
         }
