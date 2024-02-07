@@ -92,7 +92,7 @@ function plugin_init_yagp(): void
     if ($plugin->isActivated('yagp')) {
         Plugin::registerClass(PluginYagpTransfer::class);
 
-        $config = PluginYagpConfig::getConfig();
+        $config = PluginYagpConfig::getInstance();
         /**** Deprecated
         *   if ($config->fields['fixedmenu']) {
         *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';

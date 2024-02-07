@@ -150,7 +150,7 @@ JAVASCRIPT;
      */
     public static function preAddTicket(Ticket $ticket): Ticket
     {
-        $config = PluginYagpConfig::getConfig();
+        $config = PluginYagpConfig::getInstance();
         $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
 
         if (isset($ticket->input['_message'])) {

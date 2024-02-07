@@ -37,7 +37,7 @@ class PluginYagpPreshowtab extends CommonDBTM
 {
     public static function preShowTab($params = [])
     {
-        $config = PluginYagpConfig::getConfig();
+        $config = PluginYagpConfig::getInstance();
         $options = $params["options"];
         switch ($options["itemtype"]) {
             case "TicketValidation":

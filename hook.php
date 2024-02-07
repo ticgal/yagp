@@ -119,7 +119,7 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
  */
 function plugin_yagp_getAddSearchOptions($itemtype): array
 {
-    $config = PluginYagpConfig::getConfig();
+    $config = PluginYagpConfig::getInstance();
 
     $sopt = [];
     if ($config->fields['recategorization']) {

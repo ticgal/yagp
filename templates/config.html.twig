@@ -1,0 +1,20 @@
+{#
+#}
+
+{% import 'components/form/fields_macros.html.twig' as fields %}
+{% import 'components/form/buttons.html.twig' as buttons %}
+
+{% if options is not defined %}
+{% set options = {} %}
+{% endif %}
+
+{{ include('components/form/header.html.twig', {'in_twig': true, 'no_header': true}) }}
+
+<div class="row">
+    <div class="row ps-4">
+
+
+    </div>
+</div>
+
+{{ include('components/form/buttons.html.twig') }}
