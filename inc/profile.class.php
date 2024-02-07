@@ -115,6 +115,35 @@ class PluginYagpProfile extends Profile
     }
 
     /**
+     * showWarning
+     *
+     * @param  mixed $event - Events:
+     * - no_group - User has the allocator profile and is not in any group
+     * @return void
+     */
+    public static function showWarning(string $event): void
+    {
+        // save messages
+        $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
+        $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+
+        $msg = "";
+        switch ($event) {
+            case 'no_group':
+                $msg = "YAGP - " . __("See group tickets only", 'yagp') . " " . __("permission") . ": ";
+                $msg .= __("You are not in any group", 'yagp');
+                break;
+        }
+
+        // show message
+        Session::addMessageAfterRedirect($msg, false, WARNING);
+        Html::displayMessageAfterRedirect();
+
+        // restore messages
+        $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
+    }
+
+    /**
      * getAllocatorPermission
      *
      * @return bool
@@ -146,16 +175,9 @@ class PluginYagpProfile extends Profile
             $groups = implode(',', $grouplist);
         } else {
             $groups = 0;
-            // save messages
-            $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
-            $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
-            $msg = "YAGP - " . __("See group tickets only", 'yagp') . " " . __("permission") . ": ";
-            $msg .= __("You are not in any group", 'yagp');
-            // show message
-            Session::addMessageAfterRedirect($msg, false, WARNING);
-            Html::displayMessageAfterRedirect();
-            // restore messages
-            $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
+            if ($_SERVER['REQUEST_URI'] == '/front/ticket.php') {
+                self::showWarning('no_group');
+            }
         }
 
         // Tickets related to the user
