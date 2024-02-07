@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.3.0-a.2');
+define('PLUGIN_YAGP_VERSION', '2.3.0-a.3');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -91,6 +91,8 @@ function plugin_init_yagp(): void
     $plugin = new Plugin();
     if ($plugin->isActivated('yagp')) {
         Plugin::registerClass(PluginYagpTransfer::class);
+
+        Plugin::registerClass('PluginYagpProfile', ['addtabon' => 'Profile']);
 
         $config = PluginYagpConfig::getInstance();
         /**** Deprecated
