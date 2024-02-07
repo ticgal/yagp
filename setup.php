@@ -165,5 +165,7 @@ function plugin_init_yagp(): void
                 PluginYagpTicket::class, 'pluginYagpItemAdd'
             ];
         }
+
+        $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
     }
 }

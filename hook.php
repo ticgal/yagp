@@ -158,3 +158,52 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
     }
     return $sopt;
 }
+
+/**
+ * Plugin_Yagp_addDefaultWhere
+ * This where replaces the default assign permission
+ *
+ * @param  array $in
+ * @return array
+ */
+function Plugin_Yagp_addDefaultWhere(array $in): array
+{
+    if (
+        Session::haveRight('ticket', Ticket::READALL) ||
+        !Session::haveRight('ticket', Ticket::ASSIGN) ||
+        !Session::haveRight('plugin_yagp_tickets', PluginYagpProfile::SEE_GROUP_TICKETS_ONLY)
+    ) {
+        return $in;
+    }
+
+    if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
+        if (isset($in[1]) && $_SERVER['REQUEST_URI'] == '/front/ticket.php') {
+            $group_user = new Group_User();
+            $grouplist = array_column($group_user->find(['users_id' => Session::getLoginUserID()]), 'groups_id');
+
+            $condition = "`glpi_tickets`.`status`='1'";
+            $new_condition = "(`glpi_tickets`.`status`='1' AND `glpi_tickets`.`id` IN ";
+            $new_condition .= "(SELECT `tickets_id` FROM `glpi_groups_tickets` ";
+            if (!empty($grouplist)) {
+                $groups = implode(',', $grouplist);
+            } else {
+                $groups = 0;
+                // save messages
+                $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
+                $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+                $msg = "YAGP - " . __("See group tickets only", 'yagp') . " " . __("permission") . ": ";
+                $msg .= __("You are not in any group", 'yagp');
+                // show message
+                Session::addMessageAfterRedirect($msg, false, WARNING);
+                Html::displayMessageAfterRedirect();
+                // restore messages
+                $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
+            }
+            $new_condition .= "WHERE `groups_id` IN (" . $groups . ")))";
+            // * replace condition
+            $in[1] = str_replace($condition, $new_condition, $in[1]);
+        }
+    }
+
+    return $in;
+}
