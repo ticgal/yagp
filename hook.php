@@ -160,6 +160,60 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
 }
 
 /**
+ * Plugin_Yagp_addDefaultJoin
+ *
+ * @param  mixed $in
+ * @return array
+ */
+function Plugin_Yagp_addDefaultJoin($in): array
+{
+    list($itemtype, $out) = $in;
+
+    if (
+        Session::haveRight('ticket', Ticket::READALL) ||
+        !Session::haveRight('ticket', Ticket::ASSIGN) ||
+        !Session::haveRight('plugin_yagp_tickets', PluginYagpProfile::SEE_GROUP_TICKETS_ONLY)
+    ) {
+        return [$itemtype, $out];
+    }
+
+    $group_user = new Group_User();
+    $grouplist = array_column($group_user->find(['users_id' => Session::getLoginUserID()]), 'groups_id');
+
+    if (!empty($grouplist)) {
+        $groups = implode(',', $grouplist);
+    } else {
+        $groups = 0;
+        // save messages
+        $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
+        $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+        $msg = "YAGP - " . __("See group tickets only", 'yagp') . " " . __("permission") . ": ";
+        $msg .= __("You are not in any group", 'yagp');
+        // show message
+        Session::addMessageAfterRedirect($msg, false, WARNING);
+        Html::displayMessageAfterRedirect();
+        // restore messages
+        $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
+    }
+
+    $new_condition = "(";
+    $new_condition .= "SELECT `tickets_id`, `groups_id` AS `assigned`, 'Group' AS `assoc` FROM `glpi_groups_tickets` ";
+    $new_condition .= "WHERE `groups_id` IN (" . $groups . ") AND `type` = '2'";
+    $new_condition .= " UNION ALL ";
+    $new_condition .= "SELECT `tickets_id`, `users_id` AS `assigned`, 'User' AS `assoc`";
+    $new_condition .= "FROM `glpi_tickets_users` WHERE (`type` = '2'";
+    $new_condition .= " OR (`type` = '1' AND `users_id` = '" . Session::getLoginUserID() . "'))";
+    $new_condition .= " UNION ALL ";
+    $new_condition .= "SELECT `id` AS `tickets_id`, `users_id_recipient` AS `assigned`, 'Owner' AS `assoc` ";
+    $new_condition .= "FROM `glpi_tickets` WHERE `users_id_recipient` = '" . Session::getLoginUserID() . "'";
+    $new_condition .= ")";
+
+    $out .= " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id`";
+
+    return [$itemtype, $out];
+}
+
+/**
  * Plugin_Yagp_addDefaultWhere
  * This where replaces the default assign permission
  *
@@ -177,31 +231,15 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
     }
 
     if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
-        if (isset($in[1]) && $_SERVER['REQUEST_URI'] == '/front/ticket.php') {
-            $group_user = new Group_User();
-            $grouplist = array_column($group_user->find(['users_id' => Session::getLoginUserID()]), 'groups_id');
-
+        if (
+            isset($in[1]) &&
+            preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI'])
+        ) {
             $condition = "`glpi_tickets`.`status`='1'";
-            $new_condition = "(`glpi_tickets`.`status`='1' AND `glpi_tickets`.`id` IN ";
-            $new_condition .= "(SELECT `tickets_id` FROM `glpi_groups_tickets` ";
-            if (!empty($grouplist)) {
-                $groups = implode(',', $grouplist);
-            } else {
-                $groups = 0;
-                // save messages
-                $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
-                $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
-                $msg = "YAGP - " . __("See group tickets only", 'yagp') . " " . __("permission") . ": ";
-                $msg .= __("You are not in any group", 'yagp');
-                // show message
-                Session::addMessageAfterRedirect($msg, false, WARNING);
-                Html::displayMessageAfterRedirect();
-                // restore messages
-                $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
-            }
-            $new_condition .= "WHERE `groups_id` IN (" . $groups . ")))";
-            // * replace condition
+            $new_condition = "(`glpi_tickets`.`status`='1' AND `yagp`.`assoc` IS NOT NULL)";
+            // replace condition
             $in[1] = str_replace($condition, $new_condition, $in[1]);
+            $in[1] .= " AND `yagp`.`assoc` IS NOT NULL";
         }
     }
 
