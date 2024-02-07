@@ -115,6 +115,85 @@ class PluginYagpProfile extends Profile
     }
 
     /**
+     * getAllocatorPermission
+     *
+     * @return bool
+     */
+    public static function getAllocatorPermission(): bool
+    {
+        if (
+            !Session::haveRight('ticket', Ticket::READALL) &&
+            Session::haveRight('ticket', Ticket::ASSIGN) &&
+            Session::haveRight('plugin_yagp_tickets', PluginYagpProfile::SEE_GROUP_TICKETS_ONLY)
+        ) {
+            return true;
+        }
+
+        return true;
+    }
+
+    /**
+     * getAllocatorSQLTickets
+     *
+     * @return string
+     */
+    public static function getAllocatorSQLTickets(): string
+    {
+        $group_user = new Group_User();
+        $grouplist = array_column($group_user->find(['users_id' => Session::getLoginUserID()]), 'groups_id');
+
+        if (!empty($grouplist)) {
+            $groups = implode(',', $grouplist);
+        } else {
+            $groups = 0;
+            // save messages
+            $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
+            $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
+            $msg = "YAGP - " . __("See group tickets only", 'yagp') . " " . __("permission") . ": ";
+            $msg .= __("You are not in any group", 'yagp');
+            // show message
+            Session::addMessageAfterRedirect($msg, false, WARNING);
+            Html::displayMessageAfterRedirect();
+            // restore messages
+            $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
+        }
+
+        // Tickets related to the user
+        $sql = "(";
+        $sql .= "SELECT `tickets_id`, `groups_id` AS `assigned`, 'Group' AS `assoc` FROM `glpi_groups_tickets` ";
+        $sql .= "WHERE `groups_id` IN (" . $groups . ")";
+        $sql .= " UNION ALL ";
+        $sql .= "SELECT `tickets_id`, `users_id` AS `assigned`, 'User' AS `assoc`";
+        $sql .= "FROM `glpi_tickets_users` WHERE `users_id` = '" . Session::getLoginUserID() . "'";
+        $sql .= " UNION ALL ";
+        $sql .= "SELECT `id` AS `tickets_id`, `users_id_recipient` AS `assigned`, 'Owner' AS `assoc` ";
+        $sql .= "FROM `glpi_tickets` WHERE `users_id_recipient` = '" . Session::getLoginUserID() . "'";
+        $sql .= ")";
+
+        return $sql;
+    }
+
+    public static function checkAllocatorAccess(Ticket $item): bool
+    {
+        if (self::getAllocatorPermission()) {
+            $DB = DBConnection::getReadConnection();
+
+            $allocatorSQL = self::getAllocatorSQLTickets();
+            if (!is_null($item) && $items_id = $item->getID()) {
+                $query = "SELECT id FROM glpi_tickets INNER JOIN $allocatorSQL `yagp` ";
+                $query .= "ON `yagp`.`tickets_id` = `glpi_tickets`.`id` ";
+                $query .= "WHERE `glpi_tickets`.`id` = $items_id";
+                $access = count($DB->request($query));
+                if ($access == 0) {
+                    $item->right = 0;
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
      * uninstall
      *
      * @return void
