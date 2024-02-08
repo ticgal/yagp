@@ -174,7 +174,11 @@ function Plugin_Yagp_addDefaultJoin($in): array
     }
 
     if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
-        if (isset($in[1]) && preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI'])) {
+        if (
+            isset($in[1]) &&
+            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
+            preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
+        ) {
             $new_condition = PluginYagpProfile::getAllocatorSQLTickets();
             $out .= " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id`";
         }
@@ -196,7 +200,11 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
     }
 
     if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
-        if (isset($in[1]) && preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI'])) {
+        if (
+            isset($in[1]) &&
+            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
+            preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
+        ) {
             $condition = "`glpi_tickets`.`status`='1'";
             $new_condition = "(`glpi_tickets`.`status`='1' AND `yagp`.`assoc` IS NOT NULL)";
             // replace condition
