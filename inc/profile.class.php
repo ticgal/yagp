@@ -158,7 +158,7 @@ class PluginYagpProfile extends Profile
             return true;
         }
 
-        return true;
+        return false;
     }
 
     /**
