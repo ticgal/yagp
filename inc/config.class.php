@@ -35,7 +35,9 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginYagpConfig extends CommonDBTM
 {
-    private static $_instance = null;
+    private static $instance = null;
+
+    public static $rightname = 'config';
 
     /**
      * __construct
@@ -51,33 +53,6 @@ class PluginYagpConfig extends CommonDBTM
     }
 
     /**
-    * Summary of canCreate
-    * @return boolean
-    */
-    public static function canCreate(): bool
-    {
-        return Session::haveRight('config', UPDATE);
-    }
-
-    /**
-    * Summary of canView
-    * @return boolean
-    */
-    public static function canView(): bool
-    {
-        return Session::haveRight('config', READ);
-    }
-
-    /**
-    * Summary of canUpdate
-    * @return boolean
-    */
-    public static function canUpdate(): bool
-    {
-        return Session::haveRight('config', UPDATE);
-    }
-
-    /**
     * Summary of getTypeName
     * @param mixed $nb plural
     * @return mixed
@@ -88,36 +63,20 @@ class PluginYagpConfig extends CommonDBTM
     }
 
     /**
-    * Summary of getInstance
-    * @return mixed
-    */
-    public static function getInstance(): mixed
-    {
-        if (!isset(self::$_instance)) {
-            self::$_instance = new self();
-            if (!self::$_instance->getFromDB(1)) {
-                self::$_instance->getEmpty();
-            }
-        }
-        return self::$_instance;
-    }
-
-    /**
-     * getConfig
+     * getInstance
      *
-     * @param  mixed $update
+     * @param  mixed $n
      * @return mixed
      */
-    public static function getConfig($update = false): mixed
+    public static function getInstance($n = 1): mixed
     {
-        static $config = null;
-        if (is_null($config)) {
-            $config = new self();
+        if (!isset(self::$instance)) {
+            self::$instance = new self();
+            if (!self::$instance->getFromDB($n)) {
+                self::$instance->getEmpty();
+            }
         }
-        if ($update) {
-            $config->getFromDB(1);
-        }
-        return $config;
+        return self::$instance;
     }
 
     /**
@@ -127,10 +86,9 @@ class PluginYagpConfig extends CommonDBTM
     */
     public static function showConfigForm(): bool
     {
-        global $DB, $CFG_GLPI;
+        global $DB;
 
-        $config = new self();
-        $config->getFromDB(1);
+        $config = self::getInstance();
 
         $config->showFormHeader(['colspan' => 4]);
 
@@ -280,8 +238,6 @@ class PluginYagpConfig extends CommonDBTM
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
     {
-        global $LANG;
-
         if ($item->getType() == 'Config') {
             return "YAGP";
         }

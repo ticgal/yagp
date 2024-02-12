@@ -64,7 +64,7 @@ class PluginYagpTicketsolveddate extends CommonDBTM
     {
         global $DB;
 
-        $config = PluginYagpConfig::getConfig();
+        $config = PluginYagpConfig::getInstance();
         if ($config->fields['ticketsolveddate']) {
             $message = "";
             $ticket = new Ticket();

@@ -119,7 +119,7 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
  */
 function plugin_yagp_getAddSearchOptions($itemtype): array
 {
-    $config = PluginYagpConfig::getConfig();
+    $config = PluginYagpConfig::getInstance();
 
     $sopt = [];
     if ($config->fields['recategorization']) {
@@ -157,4 +157,61 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
         }
     }
     return $sopt;
+}
+
+/**
+ * Plugin_Yagp_addDefaultJoin
+ *
+ * @param  mixed $in
+ * @return array
+ */
+function Plugin_Yagp_addDefaultJoin($in): array
+{
+    list($itemtype, $out) = $in;
+
+    if (!PluginYagpProfile::getAllocatorPermission()) {
+        return [$itemtype, $out];
+    }
+
+    if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
+        if (
+            isset($in[1]) &&
+            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
+            preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
+        ) {
+            $new_condition = PluginYagpProfile::getAllocatorSQLTickets();
+            $out .= " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id`";
+        }
+    }
+
+    return [$itemtype, $out];
+}
+
+/**
+ * Plugin_Yagp_addDefaultWhere
+ *
+ * @param  array $in
+ * @return array
+ */
+function Plugin_Yagp_addDefaultWhere(array $in): array
+{
+    if (!PluginYagpProfile::getAllocatorPermission()) {
+        return $in;
+    }
+
+    if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
+        if (
+            isset($in[1]) &&
+            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
+            preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
+        ) {
+            $condition = "`glpi_tickets`.`status`='1'";
+            $new_condition = "(`glpi_tickets`.`status`='1' AND `yagp`.`assoc` IS NOT NULL)";
+            // replace condition
+            $in[1] = str_replace($condition, $new_condition, $in[1]);
+            $in[1] .= " AND `yagp`.`assoc` IS NOT NULL";
+        }
+    }
+
+    return $in;
 }

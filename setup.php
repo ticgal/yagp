@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.3.0-a.2');
+define('PLUGIN_YAGP_VERSION', '2.3.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -92,7 +92,9 @@ function plugin_init_yagp(): void
     if ($plugin->isActivated('yagp')) {
         Plugin::registerClass(PluginYagpTransfer::class);
 
-        $config = PluginYagpConfig::getConfig();
+        Plugin::registerClass('PluginYagpProfile', ['addtabon' => 'Profile']);
+
+        $config = PluginYagpConfig::getInstance();
         /**** Deprecated
         *   if ($config->fields['fixedmenu']) {
         *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
@@ -163,5 +165,12 @@ function plugin_init_yagp(): void
                 PluginYagpTicket::class, 'pluginYagpItemAdd'
             ];
         }
+
+        $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
+            PluginYagpProfile::class, 'checkAllocatorAccess'
+        ];
+
+        $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
+        $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
     }
 }

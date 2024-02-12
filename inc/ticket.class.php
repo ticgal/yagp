@@ -150,7 +150,7 @@ JAVASCRIPT;
      */
     public static function preAddTicket(Ticket $ticket): Ticket
     {
-        $config = PluginYagpConfig::getConfig();
+        $config = PluginYagpConfig::getInstance();
         $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
 
         if (isset($ticket->input['_message'])) {
@@ -403,7 +403,11 @@ JAVASCRIPT;
 
     public static function plugin_yagp_preShowItem($params)
     {
-        if ($_SESSION["glpiactiveprofile"]["interface"] == "helpdesk") {
+        $config = PluginYagpConfig::getInstance();
+        if (
+            $config->fields['hide_historical'] &&
+            $_SESSION["glpiactiveprofile"]["interface"] == "helpdesk"
+        ) {
             if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
                 switch (get_class($params['item'])) {
                     case 'Ticket':
