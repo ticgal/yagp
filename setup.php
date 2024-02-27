@@ -170,6 +170,10 @@ function plugin_init_yagp(): void
             PluginYagpProfile::class, 'checkAllocatorAccess'
         ];
 
+        $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][Item_SoftwareVersion::class] = [
+            PluginYagpSoftware::class, 'pluginYagpItemAdd'
+        ];
+
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
     }
