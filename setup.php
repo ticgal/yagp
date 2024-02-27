@@ -100,8 +100,10 @@ function plugin_init_yagp(): void
         *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
         }****/
         if ($config->fields['gototicket']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'] = 'js/gototicket.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
         }
+        
+        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/sortSoftwareVersion.js';
 
         if ($config->fields['blockdate']) {
             $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['yagp'] = [

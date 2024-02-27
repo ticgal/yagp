@@ -1,3 +1,5 @@
+/**
+ */
 
 $(document).ready(function () {
 	if ($(window).width() > 700 && !document.getElementById('yagp_form')) {
