@@ -29,6 +29,8 @@
  * ----------------------------------------------------------------------
  */
 
+use Glpi\Application\View\TemplateRenderer;
+
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
@@ -90,106 +92,6 @@ class PluginYagpConfig extends CommonDBTM
 
         $config = self::getInstance();
 
-        $config->showFormHeader(['colspan' => 4]);
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Change ticket solved date to last task end time", "yagp") . "</td><td >";
-        Dropdown::showYesNo("ticketsolveddate", $config->fields["ticketsolveddate"]);
-        echo "</td></tr>\n";
-
-        /**
-         * Deprecated
-         * echo "<tr class='tab_bg_1'>";
-         * echo "<td >" . __("Auto renew tacit contracts", "yagp") . "</td><td >";
-         * Dropdown::showYesNo("contractrenew", $config->fields["contractrenew"]);
-         * echo "</td></tr>\n";
-         */
-
-        /**** Deprecated
-        * echo "<tr class='tab_bg_1'>";
-        * echo "<td >".__("Fixed Menu", "yagp")."</td><td >";
-        * Dropdown::showYesNo("fixedmenu", $config->fields["fixedmenu"]);
-        * echo "</td></tr>\n";
-        ****/
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Go to ticket", "yagp") . "</td><td >";
-        Dropdown::showYesNo("gototicket", $config->fields["gototicket"]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Block opening date", "yagp") . "</td><td >";
-        Dropdown::showYesNo("blockdate", $config->fields["blockdate"]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Replace ticket requester (mailcollector)", "yagp") . "</td><td >";
-        Dropdown::showYesNo("findrequest", $config->fields["findrequest"]);
-        echo "</td></tr>\n";
-
-        if ($config->fields['findrequest']) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td >" . __("Allow anonymous requester", "yagp") . "</td><td >";
-            Dropdown::showYesNo("allow_anonymous_requester", $config->fields["allow_anonymous_requester"]);
-            echo "</td></tr>\n";
-
-            echo "<tr class='tab_bg_1'>";
-            echo "<td >" . __("Tag to search", "yagp") . "</td><td >";
-            echo Html::input("requestlabel", ['value' => $config->fields["requestlabel"]]);
-            echo "</td></tr>\n";
-        }
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Change default minimum validation required", "yagp") . "</td><td >";
-        Dropdown::showYesNo("change_df_min_val", $config->fields["change_df_min_val"]);
-        echo "</td></tr>\n";
-
-        if ($config->fields['change_df_min_val']) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td >" . __("Default minimum validation required", "yagp") . "</td><td >";
-            $possible_values = [];
-            $possible_values[0] = "0%";
-            $possible_values[50] = "50%";
-            $possible_values[100] = "100%";
-            Dropdown::showFromArray('df_min_validation', $possible_values, ['value' => $config->fields["df_min_validation"]]);
-            echo "</td></tr>\n";
-        }
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Enable re-categorization tracking", "yagp") . "</td><td >";
-        Dropdown::showYesNo("recategorization", $config->fields["recategorization"]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Hide historical tab to post-only users", "yagp") . "</td><td >";
-        Dropdown::showYesNo("hide_historical", $config->fields["hide_historical"]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Enhance Private task/followup view", "yagp") . "</td><td >";
-        Dropdown::showYesNo("private_view", $config->fields["private_view"]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Enable quick transfer for tickets", "yagp") . "</td><td >";
-        Dropdown::showYesNo("quick_transfer", $config->fields["quick_transfer"]);
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Automatic transfer", "yagp") . "</td><td class='d-flex'>";
-        Dropdown::showYesNo("autotransfer", $config->fields["autotransfer"]);
-        if ($config->fields['autotransfer'] == 1) {
-            echo "<div class='ms-2'>";
-            Entity::dropdown(['name' => 'transfer_entity', 'value' => $config->fields["transfer_entity"]]);
-            echo "</div>";
-        }
-        echo "</td></tr>\n";
-
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Auto-closing of rejected tickets", "yagp") . "</td><td >";
-        Dropdown::showYesNo("autoclose_rejected_tickets", $config->fields["autoclose_rejected_tickets"]);
-        echo "</td></tr>\n";
-
         // * Solution types for close tickets automatically
         $solutiontypes = [];
         $used = is_null($config->fields['solutiontypes'])
@@ -199,16 +101,16 @@ class PluginYagpConfig extends CommonDBTM
         foreach ($iterator as $data) {
             $solutiontypes[$data['id']] = $data['name'];
         }
-        echo "<tr class='tab_bg_1'>";
-        echo "<td >" . __("Solution types for close tickets automatically", "yagp") . "</td><td >";
-        Dropdown::showFromArray(
-            'solutiontypes',
-            $solutiontypes,
-            ['values' => $used, 'multiple' => true, 'size' => 3]
-        );
-        echo "</td></tr>\n";
 
-        $config->showFormButtons(['candel' => false]);
+        $template = "@yagp/config.html.twig";
+        TemplateRenderer::getInstance()->display($template, [
+            'item'                  => $config,
+            'solutiontypes'         => $solutiontypes,
+            'used_solutiontypes'    => $used,
+            'options' => [
+                'full_width' => true
+            ]
+        ]);
 
         return false;
     }
@@ -348,6 +250,7 @@ class PluginYagpConfig extends CommonDBTM
                 `solutiontypes` TEXT DEFAULT NULL,
                 `solutiontypes_id_rejected` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
+                `software_enhance` TINYINT(1) NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
@@ -379,6 +282,7 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'solutiontypes', 'text');
             // * 2.3.0 anonymous requester
             $migration->addField($table, 'allow_anonymous_requester', 'boolean', ['value' => 0]);
+            $migration->addField($table, 'software_enhance', 'boolean', ['value' => 0]);
 
             $migration->migrationOneTable($table);
         }

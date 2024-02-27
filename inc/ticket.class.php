@@ -29,8 +29,6 @@
  * ----------------------------------------------------------------------
  */
 
-use Glpi\Debug\Toolbar;
-
 if (!defined('GLPI_ROOT')) {
     die("Sorry. You can't access this file directly");
 }
@@ -127,14 +125,15 @@ class PluginYagpTicket extends CommonDBTM
      */
     public static function postItemForm($params = []): void
     {
+        var_dump($params);
         $item = $params['item'];
         if (!is_array($item) && $item->getType() == Ticket::getType()) {
             $date = ($item->getID()) ? $item->fields['date'] : '';
             $script = <<<JAVASCRIPT
-            $(document).ready(function() {
-                console.log($("input[name='date']").parent());
-                $("input[name='date']").parent().parent().html("{$date}");
-            });
+$(document).ready(function() {
+    console.log($("input[name='date']").parent());
+    $("input[name='date']").parent().parent().html("{$date}");
+});
 JAVASCRIPT;
             if ($date != null) {
                 echo Html::scriptBlock($script);
@@ -412,10 +411,10 @@ JAVASCRIPT;
                 switch (get_class($params['item'])) {
                     case 'Ticket':
                         $script = <<<JAVASCRIPT
-                        $(document).ready(function() {
-                            console.log($("a[data-bs-target^='#tab-Log']").get());
-                            $("a[data-bs-target^='#tab-Log']").css({display:"none"});
-                        });
+$(document).ready(function() {
+    console.log($("a[data-bs-target^='#tab-Log']").get());
+    $("a[data-bs-target^='#tab-Log']").css({display:"none"});
+});
 JAVASCRIPT;
 
                         echo Html::scriptBlock($script);

@@ -13,6 +13,163 @@
 <div class="row">
     <div class="row ps-4">
 
+        <div class="hr-text">
+            <i class="ti ti-layout-kanban"></i>
+            <span>{{__('Ticket enhancements')}}</span>
+        </div>
+
+        {{ fields.dropdownYesNo(
+        'gototicket',
+        item.fields['gototicket'],
+        __("Display an input to quickly access a ticket", "yagp"),
+        options
+        ) }}
+
+        {{ fields.dropdownYesNo(
+        'blockdate',
+        item.fields['blockdate'],
+        __("Block opening date", "yagp"),
+        options
+        ) }}
+
+        {{ fields.dropdownYesNo(
+        'recategorization',
+        item.fields['recategorization'],
+        __("Enable re-categorization tracking", "yagp"),
+        options
+        ) }}
+
+        {{ fields.dropdownYesNo(
+        'hide_historical',
+        item.fields['hide_historical'],
+        __("Hide historical tab to post-only users", "yagp"),
+        options
+        ) }}
+
+        {# Ticket solution #}
+
+        {{ fields.dropdownYesNo(
+        'ticketsolveddate',
+        item.fields['ticketsolveddate'],
+        __("Change ticket solved date to last task end time", "yagp"),
+        options
+        ) }}
+
+        {{ fields.dropdownYesNo(
+        'autoclose_rejected_tickets',
+        item.fields['autoclose_rejected_tickets'],
+        __("Auto-closing of rejected tickets", "yagp"),
+        options
+        ) }}
+
+        {{ fields.dropdownArrayField(
+        'solutiontypes',
+        '',
+        solutiontypes,
+        __("Solution types for close tickets automatically", "yagp"),
+        options|merge({'values': used_solutiontypes, 'multiple': true, 'size': 3})
+        ) }}
+
+        <div class="hr-text">
+            <i class="ti ti-layout-kanban"></i>
+            <span>{{__('Related to tickets', 'yagp')}}</span>
+        </div>
+
+        {{ fields.dropdownYesNo(
+        'private_view',
+        item.fields['private_view'],
+        __("Enhance Private task/followup view", "yagp"),
+        options
+        ) }}
+
+        {# Ticket creation by mail #}
+
+        {{ fields.dropdownYesNo(
+        'findrequest',
+        item.fields['findrequest'],
+        __("Replace ticket requester (mailcollector)", "yagp"),
+        options
+        ) }}
+
+        {% if item.fields['findrequest'] %}
+            {{ fields.dropdownYesNo(
+            'allow_anonymous_requester',
+            item.fields['allow_anonymous_requester'],
+            __("Allow anonymous requester", "yagp"),
+            options
+            ) }}
+
+            {{ fields.textField(
+            'requestlabel',
+            item.fields['requestlabel'],
+            __("Tag to search", "yagp"),
+            options
+            ) }}
+        {% endif %}
+
+        {# Ticket validation #}
+
+        {{ fields.dropdownYesNo(
+        'change_df_min_val',
+        item.fields['change_df_min_val'],
+        __("Change default minimum validation required", "yagp"),
+        options
+        ) }}
+
+        {% if item.fields['change_df_min_val'] %}
+            {% set possible_values = {
+                0: "0%",
+                50: "50%",
+                100: "100%"
+            } %}
+
+            {{ fields.dropdownArrayField(
+            'df_min_validation',
+            item.fields['df_min_validation'],
+            possible_values,
+            __("Minimum validation", "yagp"),
+            options|merge({'width': 'auto'})
+            ) }}
+        {% endif %}
+
+        {# Ticket Transfer #}
+
+        {{ fields.dropdownYesNo(
+        'quick_transfer',
+        item.fields['quick_transfer'],
+        __("Enable quick transfer for tickets", "yagp"),
+        options
+        ) }}
+
+        {{ fields.dropdownYesNo(
+        'autotransfer',
+        item.fields['autotransfer'],
+        __("Enable automatic transfer", "yagp"),
+        options
+        ) }}
+
+        {% if item.fields['autotransfer'] %}
+            {{ fields.dropdownField(
+            'Entity',
+            'transfer_entity',
+            item.fields['transfer_entity'],
+            __('Transfer destination', 'yagp'),
+            options|merge({'width': 'auto'})
+            ) }}
+        {% endif %}
+
+        <div class="hr-text">
+            <i class="ti ti-layout-kanban"></i>
+            <span>{{__('Other enhancements', 'yagp')}}</span>
+        </div>
+
+        {{ fields.dropdownYesNo(
+        'software_enhance',
+        item.fields['software_enhance'],
+        __("It replaces the latest software version installed on the assets when a higher version is added 
+        and sorts the version list by making the stable versions appear first.", "yagp"),
+        options
+        ) }}
 
     </div>
 </div>

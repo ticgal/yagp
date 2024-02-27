@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.3.0');
+define('PLUGIN_YAGP_VERSION', '2.3.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -102,13 +102,13 @@ function plugin_init_yagp(): void
         if ($config->fields['gototicket']) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
         }
-        
-        $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/sortSoftwareVersion.js';
+
+        if ($config->fields['software_enhance']) {
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/sortSoftwareVersion.js';
+        }
 
         if ($config->fields['blockdate']) {
-            $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['yagp'] = [
-                PluginYagpTicket::class, 'postItemForm'
-            ];
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/blockdate.js';
         }
 
         if ($config->fields['findrequest']) {
