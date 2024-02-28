@@ -5,6 +5,9 @@
 - Multiple solutions to autoclose tickets #19630
 - Allow anonymous requester #19798
 - See my group-assigned tickets only profile #20128
+- Software enhancement, better installation #20545
+### Bugfixes
+- Blockdate option fixed
 
 ## 2.2.3 - 2024-01-15
 ### Bugfixes
