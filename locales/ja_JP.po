@@ -1,107 +1,147 @@
 msgid ""
 msgstr ""
+"Project-Id-Version: YAGP\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2024-02-28 09:21+0100\n"
+"Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
-"Project-Id-Version: YAGP\n"
-"Language: ja_JP\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
 
-#: inc/config.class.php:226
-msgid "Auto-closing of rejected tickets"
-msgstr "Auto-closing of rejected tickets"
+#: front/transfer.form.php:70 ajax/quicktransfer.php:80
+#, php-format
+msgid "Ticket transferred to %s"
+msgstr "チケットの転送先 : %s"
 
-#: inc/config.class.php:216
-msgid "Automatic transfer"
-msgstr "Automatic transfer"
+#: front/transfer.form.php:79 ajax/quicktransfer.php:89
+msgid "You can close this window"
+msgstr "このウィンドウを閉じても構いません"
 
-#: inc/config.class.php:163
-msgid "Block opening date"
-msgstr "開始日編集のブロック"
+#: inc/postshowitem.class.php:115
+msgid "Select an entity to transfer"
+msgstr "転送するエンティティを選択してください"
 
-#: inc/ticketsolveddate.class.php:56
-msgid "Change date"
-msgstr "日付を変更"
+#: inc/postshowitem.class.php:119
+msgid "Transfer to"
+msgstr "転送先"
 
-#: inc/config.class.php:180
-msgid "Change default minimum validation required"
-msgstr "必要検証承認率の既定値を変更"
-
-#: inc/config.class.php:138
-msgid "Change ticket solved date to last task end time"
-msgstr "チケットの解決日を最後のタスクの終了日時に変更"
-
-#: inc/preshowtab.class.php:47
+#: inc/preshowtab.class.php:48
 msgid "Current minimum validation"
 msgstr "現在の必要検証承認率"
 
-#: inc/config.class.php:186
-msgid "Default minimum validation required"
-msgstr "必要検証承認率の既定値"
-
-#: inc/config.class.php:211
-msgid "Enable quick transfer for tickets"
-msgstr "Enable quick transfer for tickets"
-
-#: inc/config.class.php:196
-msgid "Enable re-categorization tracking"
-msgstr "カテゴリー変更の記録を有効にする"
-
-#: inc/config.class.php:206
-msgid "Enhance Private task/followup view"
-msgstr "Enhance Private task/followup view"
-
-#: inc/config.class.php:158
-msgid "Go to ticket"
-msgstr "チケットへのリンク"
-
-#: inc/config.class.php:201
-msgid "Hide historical tab to post-only users"
-msgstr "投稿専用ユーザーに対して履歴タブを非表示に"
-
-#: hook.php:147
-msgid "Initial category"
-msgstr "初期カテゴリー"
-
-#: inc/ticketsolveddate.class.php:57
-msgid "Number of tickets"
-msgstr "チケット数"
-
-#: hook.php:133
-msgid "Recategorized"
-msgstr "カテゴリー変更済み"
+#: inc/contractrenew.class.php:47
+msgid "Renews tacit contracts"
+msgstr "自動更新契約の内容を補正"
 
 #: inc/contractrenew.class.php:81
 #, php-format
 msgid "Renewed Contract id: %s"
 msgstr "更新した契約 ID : %s"
 
-#: inc/contractrenew.class.php:47
-msgid "Renews tacit contracts"
-msgstr "自動更新契約の内容を補正"
+#: inc/ticketsolveddate.class.php:56
+msgid "Change date"
+msgstr "日付を変更"
 
-#: inc/config.class.php:168
+#: inc/ticketsolveddate.class.php:57
+msgid "Number of tickets"
+msgstr "チケット数"
+
+#: inc/profile.class.php:128 inc/profile.class.php:159
+msgid "See group tickets only"
+msgstr "See group tickets only"
+
+#: inc/profile.class.php:160
+msgid "You are not in any group"
+msgstr "You are not in any group"
+
+#: hook.php:133
+msgid "Recategorized"
+msgstr "カテゴリー変更済み"
+
+#: hook.php:147
+msgid "Initial category"
+msgstr "初期カテゴリー"
+
+#: templates/config.html.twig:50
+msgid "Display an input to quickly access a ticket"
+msgstr "Display an input to quickly access a ticket"
+
+#: templates/config.html.twig:57
+msgid "Block opening date"
+msgstr "開始日編集のブロック"
+
+#: templates/config.html.twig:64
+msgid "Enable re-categorization tracking"
+msgstr "カテゴリー変更の記録を有効にする"
+
+#: templates/config.html.twig:71
+msgid "Hide historical tab to post-only users"
+msgstr "投稿専用ユーザーに対して履歴タブを非表示に"
+
+#: templates/config.html.twig:80
+msgid "Change ticket solved date to last task end time"
+msgstr "チケットの解決日を最後のタスクの終了日時に変更"
+
+#: templates/config.html.twig:87
+msgid "Auto-closing of rejected tickets"
+msgstr "拒否済みチケットの自動終了"
+
+#: templates/config.html.twig:95
+msgid "Solution types for close tickets automatically"
+msgstr "Solution types for close tickets automatically"
+
+#: templates/config.html.twig:101
+msgid "Related to tickets"
+msgstr "Related to tickets"
+
+#: templates/config.html.twig:107
+msgid "Enhance Private task/followup view"
+msgstr "個人のタスク・回答表示を強化"
+
+#: templates/config.html.twig:116
 msgid "Replace ticket requester (mailcollector)"
 msgstr "チケットの要求者を置き換え (メールコレクター)"
 
-#: inc/postshowitem.class.php:115
-msgid "Select an entity to transfer"
-msgstr "Select an entity to transfer"
+#: templates/config.html.twig:124
+msgid "Allow anonymous requester"
+msgstr "Allow anonymous requester"
 
-#: inc/config.class.php:174
+#: templates/config.html.twig:131
 msgid "Tag to search"
 msgstr "検索するタグ"
 
-#: ajax/quicktransfer.php:80 front/transfer.form.php:70
-#, php-format
-msgid "Ticket transferred to %s"
-msgstr "Ticket transferred to %s"
+#: templates/config.html.twig:141
+msgid "Change default minimum validation required"
+msgstr "必要検証承認率の既定値を変更"
 
-#: inc/postshowitem.class.php:119
-msgid "Transfer to"
-msgstr "Transfer to"
+#: templates/config.html.twig:156
+msgid "Minimum validation"
+msgstr "Minimum validation"
 
-#: ajax/quicktransfer.php:89 front/transfer.form.php:79
-msgid "You can close this window"
-msgstr "You can close this window"
+#: templates/config.html.twig:166
+msgid "Enable quick transfer for tickets"
+msgstr "チケットのクイック転送を有効にする"
+
+#: templates/config.html.twig:173
+msgid "Enable automatic transfer"
+msgstr "Enable automatic transfer"
+
+#: templates/config.html.twig:182
+msgid "Transfer destination"
+msgstr "Transfer destination"
+
+#: templates/config.html.twig:189
+msgid "Other enhancements"
+msgstr "Other enhancements"
+
+#: templates/config.html.twig:195
+msgid ""
+"It replaces the latest software version installed on the assets when a "
+"higher version is added and sorts the version list by making the stable "
+"versions appear first."
+msgstr ""
+"It replaces the latest software version installed on the assets when a "
+"higher version is added and sorts the version list by making the stable "
+"versions appear first."

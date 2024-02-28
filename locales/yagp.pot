@@ -1,15 +1,15 @@
 # yagp Glpi Plugin.
-# Copyright (C) 2023 TICgal
+# Copyright (C) 2024 TICgal
 # This file is distributed under the same license as the PACKAGE package.
-# TICgal, 2023
+# TICgal, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-19 16:44+0200\n"
-"PO-Revision-Date: 2023-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2024-02-28 09:21+0100\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -17,73 +17,25 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: hook.php:133
-msgid "Recategorized"
-msgstr ""
-
-#: hook.php:147
-msgid "Initial category"
-msgstr ""
-
-#: ajax/quicktransfer.php:80 front/transfer.form.php:70
+#: front/transfer.form.php:70 ajax/quicktransfer.php:80
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr ""
 
-#: ajax/quicktransfer.php:89 front/transfer.form.php:79
+#: front/transfer.form.php:79 ajax/quicktransfer.php:89
 msgid "You can close this window"
 msgstr ""
 
-#: inc/config.class.php:138
-msgid "Change ticket solved date to last task end time"
+#: inc/postshowitem.class.php:115
+msgid "Select an entity to transfer"
 msgstr ""
 
-#: inc/config.class.php:158
-msgid "Go to ticket"
+#: inc/postshowitem.class.php:119
+msgid "Transfer to"
 msgstr ""
 
-#: inc/config.class.php:163
-msgid "Block opening date"
-msgstr ""
-
-#: inc/config.class.php:168
-msgid "Replace ticket requester (mailcollector)"
-msgstr ""
-
-#: inc/config.class.php:174
-msgid "Tag to search"
-msgstr ""
-
-#: inc/config.class.php:180
-msgid "Change default minimum validation required"
-msgstr ""
-
-#: inc/config.class.php:186
-msgid "Default minimum validation required"
-msgstr ""
-
-#: inc/config.class.php:196
-msgid "Enable re-categorization tracking"
-msgstr ""
-
-#: inc/config.class.php:201
-msgid "Hide historical tab to post-only users"
-msgstr ""
-
-#: inc/config.class.php:206
-msgid "Enhance Private task/followup view"
-msgstr ""
-
-#: inc/config.class.php:211
-msgid "Enable quick transfer for tickets"
-msgstr ""
-
-#: inc/config.class.php:216
-msgid "Automatic transfer"
-msgstr ""
-
-#: inc/config.class.php:226
-msgid "Auto-closing of rejected tickets"
+#: inc/preshowtab.class.php:48
+msgid "Current minimum validation"
 msgstr ""
 
 #: inc/contractrenew.class.php:47
@@ -95,22 +47,105 @@ msgstr ""
 msgid "Renewed Contract id: %s"
 msgstr ""
 
-#: inc/postshowitem.class.php:115
-msgid "Select an entity to transfer"
-msgstr ""
-
-#: inc/postshowitem.class.php:119
-msgid "Transfer to"
-msgstr ""
-
-#: inc/preshowtab.class.php:47
-msgid "Current minimum validation"
-msgstr ""
-
 #: inc/ticketsolveddate.class.php:56
 msgid "Change date"
 msgstr ""
 
 #: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
+msgstr ""
+
+#: inc/profile.class.php:128 inc/profile.class.php:159
+msgid "See group tickets only"
+msgstr ""
+
+#: inc/profile.class.php:160
+msgid "You are not in any group"
+msgstr ""
+
+#: hook.php:133
+msgid "Recategorized"
+msgstr ""
+
+#: hook.php:147
+msgid "Initial category"
+msgstr ""
+
+#: templates/config.html.twig:50
+msgid "Display an input to quickly access a ticket"
+msgstr ""
+
+#: templates/config.html.twig:57
+msgid "Block opening date"
+msgstr ""
+
+#: templates/config.html.twig:64
+msgid "Enable re-categorization tracking"
+msgstr ""
+
+#: templates/config.html.twig:71
+msgid "Hide historical tab to post-only users"
+msgstr ""
+
+#: templates/config.html.twig:80
+msgid "Change ticket solved date to last task end time"
+msgstr ""
+
+#: templates/config.html.twig:87
+msgid "Auto-closing of rejected tickets"
+msgstr ""
+
+#: templates/config.html.twig:95
+msgid "Solution types for close tickets automatically"
+msgstr ""
+
+#: templates/config.html.twig:101
+msgid "Related to tickets"
+msgstr ""
+
+#: templates/config.html.twig:107
+msgid "Enhance Private task/followup view"
+msgstr ""
+
+#: templates/config.html.twig:116
+msgid "Replace ticket requester (mailcollector)"
+msgstr ""
+
+#: templates/config.html.twig:124
+msgid "Allow anonymous requester"
+msgstr ""
+
+#: templates/config.html.twig:131
+msgid "Tag to search"
+msgstr ""
+
+#: templates/config.html.twig:141
+msgid "Change default minimum validation required"
+msgstr ""
+
+#: templates/config.html.twig:156
+msgid "Minimum validation"
+msgstr ""
+
+#: templates/config.html.twig:166
+msgid "Enable quick transfer for tickets"
+msgstr ""
+
+#: templates/config.html.twig:173
+msgid "Enable automatic transfer"
+msgstr ""
+
+#: templates/config.html.twig:182
+msgid "Transfer destination"
+msgstr ""
+
+#: templates/config.html.twig:189
+msgid "Other enhancements"
+msgstr ""
+
+#: templates/config.html.twig:195
+msgid ""
+"It replaces the latest software version installed on the assets when a "
+"higher version is added and sorts the version list by making the stable "
+"versions appear first."
 msgstr ""
