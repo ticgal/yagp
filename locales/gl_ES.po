@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-28 09:21+0100\n"
+"POT-Creation-Date: 2024-03-08 14:15+0100\n"
 "Language: gl_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,17 +133,3 @@ msgstr "Activa a transferencia automática"
 #: templates/config.html.twig:182
 msgid "Transfer destination"
 msgstr "Destino de transferencia"
-
-#: templates/config.html.twig:189
-msgid "Other enhancements"
-msgstr "Outras melloras"
-
-#: templates/config.html.twig:195
-msgid ""
-"It replaces the latest software version installed on the assets when a "
-"higher version is added and sorts the version list by making the stable "
-"versions appear first."
-msgstr ""
-"Substitúe a última versión de software instalada nos activos cando se engade "
-"unha versión superior e ordena a lista de versións facendo que as versións "
-"estables aparezan primeiro."

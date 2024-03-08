@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-28 09:21+0100\n"
+"POT-Creation-Date: 2024-03-08 14:15+0100\n"
 "PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -137,15 +137,4 @@ msgstr ""
 
 #: templates/config.html.twig:182
 msgid "Transfer destination"
-msgstr ""
-
-#: templates/config.html.twig:189
-msgid "Other enhancements"
-msgstr ""
-
-#: templates/config.html.twig:195
-msgid ""
-"It replaces the latest software version installed on the assets when a "
-"higher version is added and sorts the version list by making the stable "
-"versions appear first."
 msgstr ""
