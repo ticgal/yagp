@@ -184,18 +184,6 @@
             ) }}
         {% endif %}
 
-        <div class="hr-text">
-            <i class="ti ti-layout-kanban"></i>
-            <span>{{__('Other enhancements', 'yagp')}}</span>
-        </div>
-
-        {{ fields.dropdownYesNo(
-        'software_enhance',
-        item.fields['software_enhance'],
-        __("It replaces the latest software version installed on the assets when a higher version is added and sorts the version list by making the stable versions appear first.", "yagp"),
-        options
-        ) }}
-
     </div>
 </div>
 

@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.3.1');
+define('PLUGIN_YAGP_VERSION', '2.3.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -103,10 +103,6 @@ function plugin_init_yagp(): void
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
         }
 
-        if ($config->fields['software_enhance']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/sortSoftwareVersion.js';
-        }
-
         if ($config->fields['blockdate']) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/blockdate.js';
         }
@@ -170,10 +166,6 @@ function plugin_init_yagp(): void
 
         $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
             PluginYagpProfile::class, 'checkAllocatorAccess'
-        ];
-
-        $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][Item_SoftwareVersion::class] = [
-            PluginYagpSoftware::class, 'pluginYagpItemAdd'
         ];
 
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
