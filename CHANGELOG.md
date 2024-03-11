@@ -1,12 +1,14 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.3.1 - 2024-03-11
+### Bugfixes
+- Blockdate option fixed
+
 ## 2.3.0 - 2024-03-08
 ### Features
 - Multiple solutions to autoclose tickets #19630
 - Allow anonymous requester #19798
 - See my group-assigned tickets only profile #20128
-### Bugfixes
-- Blockdate option fixed
 
 ## 2.2.3 - 2024-01-15
 ### Bugfixes
