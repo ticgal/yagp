@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-08 14:15+0100\n"
+"POT-Creation-Date: 2024-03-11 15:24+0100\n"
 "Language: es_EC\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -50,11 +50,11 @@ msgstr "Número de Casos"
 
 #: inc/profile.class.php:128 inc/profile.class.php:159
 msgid "See group tickets only"
-msgstr "See group tickets only"
+msgstr "Ver solo tickets de tus grupos"
 
 #: inc/profile.class.php:160
 msgid "You are not in any group"
-msgstr "You are not in any group"
+msgstr "No estás en ningún grupo"
 
 #: hook.php:133
 msgid "Recategorized"
@@ -66,7 +66,7 @@ msgstr "Categoría inicial"
 
 #: templates/config.html.twig:50
 msgid "Display an input to quickly access a ticket"
-msgstr "Display an input to quickly access a ticket"
+msgstr "Mostrar una entrada para acceder rápidamente a un ticket"
 
 #: templates/config.html.twig:57
 msgid "Block opening date"
@@ -92,11 +92,11 @@ msgstr "Cierre automático de casos rechazados"
 
 #: templates/config.html.twig:95
 msgid "Solution types for close tickets automatically"
-msgstr "Solution types for close tickets automatically"
+msgstr "Tipos de soluciones para cerrar tickets automáticamente"
 
 #: templates/config.html.twig:101
 msgid "Related to tickets"
-msgstr "Related to tickets"
+msgstr "Relacionado con tickets"
 
 #: templates/config.html.twig:107
 msgid "Enhance Private task/followup view"
@@ -108,7 +108,7 @@ msgstr "Reemplazar solicitante de Casos (mailcollector)"
 
 #: templates/config.html.twig:124
 msgid "Allow anonymous requester"
-msgstr "Allow anonymous requester"
+msgstr "Permitir solicitante anónimo"
 
 #: templates/config.html.twig:131
 msgid "Tag to search"
@@ -120,7 +120,7 @@ msgstr "Cambiar la validación mínima requerida por defecto"
 
 #: templates/config.html.twig:156
 msgid "Minimum validation"
-msgstr "Minimum validation"
+msgstr "Validación mínima"
 
 #: templates/config.html.twig:166
 msgid "Enable quick transfer for tickets"
@@ -128,8 +128,8 @@ msgstr "Habilitar la transferencia rápida para casos"
 
 #: templates/config.html.twig:173
 msgid "Enable automatic transfer"
-msgstr "Enable automatic transfer"
+msgstr "Habilitar la transferencia automática"
 
 #: templates/config.html.twig:182
 msgid "Transfer destination"
-msgstr "Transfer destination"
+msgstr "Destino de transferencia"
