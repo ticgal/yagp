@@ -34,6 +34,11 @@
    </authors>
    <versions>
       <version>
+        <num>2.3.1</num>
+        <compatibility>~10.0.0</compatibility>
+	<download_url>https://github.com/ticgal/yagp/releases/download/2.3.1/glpi-yagp-2.3.1.tar.tgz</download_url>      
+      </version>
+      <version>
         <num>2.2.2</num>
         <compatibility>~10.0.0</compatibility>
 	<download_url>https://github.com/ticgal/yagp/releases/download/2.2.2/glpi-yagp-2.2.2.tar.tgz</download_url>      
