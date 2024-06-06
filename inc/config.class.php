@@ -68,9 +68,9 @@ class PluginYagpConfig extends CommonDBTM
      * getInstance
      *
      * @param  mixed $n
-     * @return mixed
+     * @return PluginYagpConfig
      */
-    public static function getInstance($n = 1): mixed
+    public static function getInstance($n = 1): PluginYagpConfig
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
