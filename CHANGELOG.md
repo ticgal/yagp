@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.3.2 - 2024-06-10
+### Bugfixes
+- Fix strong typing definition #22663
+
 ## 2.3.1 - 2024-03-11
 ### Bugfixes
 - Blockdate option fixed
@@ -36,7 +40,7 @@
 
 ## 2.1.0 - 2022-09-30
 ### Features
-- New Config option: Enable re-categorization tracking) #11262
+- New Config option: Enable re-categorization tracking #11262
 - New Config option: Hide historical tab to post-only users #11328
 - New Config option: Enhance Private task/followup view #11432
 
