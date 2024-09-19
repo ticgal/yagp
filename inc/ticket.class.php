@@ -125,7 +125,6 @@ class PluginYagpTicket extends CommonDBTM
      */
     public static function postItemForm($params = []): void
     {
-        var_dump($params);
         $item = $params['item'];
         if (!is_array($item) && $item->getType() == Ticket::getType()) {
             $date = ($item->getID()) ? $item->fields['date'] : '';
