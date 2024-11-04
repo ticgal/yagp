@@ -120,11 +120,8 @@ function plugin_init_yagp(): void
             }
         }
 
-        if ($config->fields['change_df_min_val']) {
-            $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = [
-                PluginYagpPreshowtab::class, "preShowTab"
-            ];
-        }
+        $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = 'plugin_yagp_pre_show_tab';
+        $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['yagp'] = 'plugin_yagp_post_show_tab';
 
         if ($config->fields['recategorization'] || $config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['yagp'] = [
@@ -140,9 +137,6 @@ function plugin_init_yagp(): void
         if ($config->fields['hide_historical']) {
             $PLUGIN_HOOKS[Hooks::PRE_SHOW_ITEM]['yagp'] = [
                 PluginYagpTicket::class, 'plugin_yagp_preShowItem'
-            ];
-            $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = [
-                PluginYagpPreshowtab::class, "plugin_yagp_preShowTab"
             ];
         }
 
