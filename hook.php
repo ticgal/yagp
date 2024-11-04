@@ -38,13 +38,13 @@ function plugin_yagp_install(): bool
 {
     $migration = new Migration(PLUGIN_YAGP_VERSION);
 
-   // Parse inc directory
+    // Parse inc directory
     foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-       // Load *.class.php files and get the class name
+        // Load *.class.php files and get the class name
         if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
             $classname = 'PluginYagp' . ucfirst($matches[1]);
             include_once($filepath);
-           // If the install method exists, load it
+            // If the install method exists, load it
             if (method_exists($classname, 'install')) {
                 $classname::install($migration);
             }
@@ -63,13 +63,13 @@ function plugin_yagp_uninstall(): bool
 {
     $migration = new Migration(PLUGIN_YAGP_VERSION);
 
-   // Parse inc directory
+    // Parse inc directory
     foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-       // Load *.class.php files and get the class name
+        // Load *.class.php files and get the class name
         if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
             $classname = 'PluginYagp' . ucfirst($matches[1]);
             include_once($filepath);
-           // If the install method exists, load it
+            // If the install method exists, load it
             if (method_exists($classname, 'uninstall')) {
                 $classname::uninstall($migration);
             }
@@ -91,8 +91,8 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
         $input = $item->input;
         if ($input["ticketsolveddate"] == 1) {
             Crontask::Register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
-            'state' => 1,
-            'mode'  => CronTask::MODE_EXTERNAL
+                'state' => 1,
+                'mode'  => CronTask::MODE_EXTERNAL
             ]);
         } elseif ($input["ticketsolveddate"] == 0) {
             Crontask::Unregister("YagpTicketsolveddate");
@@ -177,7 +177,7 @@ function Plugin_Yagp_addDefaultJoin($in): array
         if (
             isset($in[1]) &&
             (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
-            preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
+                preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
         ) {
             $new_condition = PluginYagpProfile::getAllocatorSQLTickets();
             $out .= " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id`";
@@ -203,7 +203,7 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
         if (
             isset($in[1]) &&
             (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
-            preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
+                preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
         ) {
             $condition = "`glpi_tickets`.`status`='1'";
             $new_condition = "(`glpi_tickets`.`status`='1' AND `yagp`.`assoc` IS NOT NULL)";
@@ -214,4 +214,48 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
     }
 
     return $in;
+}
+
+function plugin_yagp_pre_show_tab(array $params): void
+{
+    $config = PluginYagpConfig::getInstance();
+
+    if ($config->fields['change_df_min_val']) {
+        PluginYagpPreshowtab::preShowTab($params);
+    }
+
+    if ($config->fields['hide_historical']) {
+        PluginYagpPreshowtab::plugin_yagp_preShowTab($params);
+    }
+}
+
+function plugin_yagp_post_show_tab(array $params): void
+{
+    global $DB;
+
+    $config = PluginYagpConfig::getInstance();
+
+    if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
+        $item = $params['item'];
+        if ($item->getType() == 'Ticket' && isset($params['options']['tabnum']) && $params['options']['tabnum'] == 3) {
+
+            $query = [
+                'FROM' => TicketSatisfaction::getTable(),
+                'WHERE' => [
+                    'tickets_id' => $item->getID(),
+                    'date_answered' => NULL
+                ]
+            ];
+            $req = $DB->request($query);
+            if (count($req) == 1) {
+                $minstart = $config->fields['default_satisfaction'];
+                $script = <<<JAVASCRIPT
+                    $(document).ready(function() {
+                        $('#stars').rateit('value', {$minstart});
+                    });
+    JAVASCRIPT;
+                echo Html::scriptBlock($script);
+            }
+        }
+    }
 }
