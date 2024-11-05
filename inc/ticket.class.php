@@ -37,6 +37,49 @@ class PluginYagpTicket extends CommonDBTM
 {
     public static $rightname = 'ticket';
 
+    static function cronInfo($name)
+	{
+		switch ($name) {
+			case 'pluginyagpticketsatisfaction':
+				return ['description' => __('Expired satisfaction removal', 'yagp')];
+				break;
+		}
+
+		return [];
+	}
+
+	static function cronPluginYagpTicketSatisfaction($task)
+	{
+		global $DB;
+
+		$tot = 0;
+
+		$iterator = $DB->request([
+			'FROM' => TicketSatisfaction::getTable(),
+			'WHERE' => [
+				'date_answered' => NULL,
+			]
+		]);
+		foreach ($iterator as $data) {
+			$ticket = new Ticket();
+            $ticket->getFromDB($data['tickets_id']);
+
+            $duration = (int) Entity::getUsedConfig('inquest_duration', $ticket->fields['entities_id']);
+            if ((time() - strtotime($data['date_begin'])) > $duration * DAY_TIMESTAMP) {
+                $DB->update(TicketSatisfaction::getTable(), [
+                    'date_answered' => date('Y-m-d H:i:s'),
+                ], [
+                    'id' => $data['id']
+                ]); 
+                $task->log(__("Satisfaction expired for ticket", 'yagp') . ' ' . $ticket->fields['id']);
+                $tot++;
+            }
+		}
+
+		$task->setVolume($tot);
+		return ($tot > 0 ? 1 : 0);
+	}
+
     public static function getSpecificValueToDisplay($field, $values, array $options = [])
     {
         if (!is_array($values)) {

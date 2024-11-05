@@ -164,5 +164,7 @@ function plugin_init_yagp(): void
 
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
+
+        Crontask::Register('PluginYagpTicket', 'pluginyagpticketsatisfaction', DAY_TIMESTAMP, ['state' => 0, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 0, 'horumax' => 24]);
     }
 }
