@@ -1,5 +1,10 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.4.0 - 2024-11-11
+### Bugfixes
+- New Config option: Change default satisfaction
+- New automatic action expired satisfaction removal
+
 ## 2.3.2 - 2024-06-10
 ### Bugfixes
 - Fix strong typing definition #22663
