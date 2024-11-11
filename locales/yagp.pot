@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-11 15:24+0100\n"
+"POT-Creation-Date: 2024-11-11 09:40+0100\n"
 "PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,13 +17,30 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: front/transfer.form.php:70 ajax/quicktransfer.php:80
+#: hook.php:133
+msgid "Recategorized"
+msgstr ""
+
+#: hook.php:147
+msgid "Initial category"
+msgstr ""
+
+#: ajax/quicktransfer.php:80 front/transfer.form.php:70
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr ""
 
-#: front/transfer.form.php:79 ajax/quicktransfer.php:89
+#: ajax/quicktransfer.php:89 front/transfer.form.php:79
 msgid "You can close this window"
+msgstr ""
+
+#: inc/contractrenew.class.php:47
+msgid "Renews tacit contracts"
+msgstr ""
+
+#: inc/contractrenew.class.php:81
+#, php-format
+msgid "Renewed Contract id: %s"
 msgstr ""
 
 #: inc/postshowitem.class.php:115
@@ -38,23 +55,6 @@ msgstr ""
 msgid "Current minimum validation"
 msgstr ""
 
-#: inc/contractrenew.class.php:47
-msgid "Renews tacit contracts"
-msgstr ""
-
-#: inc/contractrenew.class.php:81
-#, php-format
-msgid "Renewed Contract id: %s"
-msgstr ""
-
-#: inc/ticketsolveddate.class.php:56
-msgid "Change date"
-msgstr ""
-
-#: inc/ticketsolveddate.class.php:57
-msgid "Number of tickets"
-msgstr ""
-
 #: inc/profile.class.php:128 inc/profile.class.php:159
 msgid "See group tickets only"
 msgstr ""
@@ -63,78 +63,18 @@ msgstr ""
 msgid "You are not in any group"
 msgstr ""
 
-#: hook.php:133
-msgid "Recategorized"
+#: inc/ticket.class.php:44
+msgid "Expired satisfaction removal"
 msgstr ""
 
-#: hook.php:147
-msgid "Initial category"
+#: inc/ticket.class.php:74
+msgid "Satisfaction expired for ticket"
 msgstr ""
 
-#: templates/config.html.twig:50
-msgid "Display an input to quickly access a ticket"
+#: inc/ticketsolveddate.class.php:56
+msgid "Change date"
 msgstr ""
 
-#: templates/config.html.twig:57
-msgid "Block opening date"
-msgstr ""
-
-#: templates/config.html.twig:64
-msgid "Enable re-categorization tracking"
-msgstr ""
-
-#: templates/config.html.twig:71
-msgid "Hide historical tab to post-only users"
-msgstr ""
-
-#: templates/config.html.twig:80
-msgid "Change ticket solved date to last task end time"
-msgstr ""
-
-#: templates/config.html.twig:87
-msgid "Auto-closing of rejected tickets"
-msgstr ""
-
-#: templates/config.html.twig:95
-msgid "Solution types for close tickets automatically"
-msgstr ""
-
-#: templates/config.html.twig:101
-msgid "Related to tickets"
-msgstr ""
-
-#: templates/config.html.twig:107
-msgid "Enhance Private task/followup view"
-msgstr ""
-
-#: templates/config.html.twig:116
-msgid "Replace ticket requester (mailcollector)"
-msgstr ""
-
-#: templates/config.html.twig:124
-msgid "Allow anonymous requester"
-msgstr ""
-
-#: templates/config.html.twig:131
-msgid "Tag to search"
-msgstr ""
-
-#: templates/config.html.twig:141
-msgid "Change default minimum validation required"
-msgstr ""
-
-#: templates/config.html.twig:156
-msgid "Minimum validation"
-msgstr ""
-
-#: templates/config.html.twig:166
-msgid "Enable quick transfer for tickets"
-msgstr ""
-
-#: templates/config.html.twig:173
-msgid "Enable automatic transfer"
-msgstr ""
-
-#: templates/config.html.twig:182
-msgid "Transfer destination"
+#: inc/ticketsolveddate.class.php:57
+msgid "Number of tickets"
 msgstr ""
