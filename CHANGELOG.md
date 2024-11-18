@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.4.1 - 2024-11-18
+### Bugfixes
+- Session control and better conditions
+
 ## 2.4.0 - 2024-11-11
 ### Bugfixes
 - New Config option: Change default satisfaction

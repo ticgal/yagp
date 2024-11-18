@@ -31,15 +31,14 @@
 
 include("../../../inc/includes.php");
 
+if (!Plugin::isPluginActive('yagp')) {
+    Html::displayNotFoundError();
+}
+
 $config = new PluginYagpConfig();
 if (isset($_POST["update"])) {
     $config->check($_POST['id'], UPDATE);
-    // save
     $config->update($_POST);
-    Html::back();
-} elseif (isset($_POST["refresh"])) {
-    // Undefined function refresh ?
-    $config->refresh($_POST); // used to refresh process list, task category list
     Html::back();
 }
 

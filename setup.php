@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.4.0');
+define('PLUGIN_YAGP_VERSION', '2.4.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -58,14 +58,6 @@ function plugin_version_yagp(): array
             ]
         ]
     ];
-}
-
-/**
- * Check plugin's config before activation
- */
-function plugin_yagp_check_config($verbose = false): bool
-{
-    return true;
 }
 
 /**
@@ -165,6 +157,16 @@ function plugin_init_yagp(): void
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
 
-        Crontask::Register('PluginYagpTicket', 'pluginyagpticketsatisfaction', DAY_TIMESTAMP, ['state' => 0, 'mode' => CronTask::MODE_EXTERNAL, 'hourmin' => 0, 'horumax' => 24]);
+        Crontask::Register(
+            'PluginYagpTicket',
+            'pluginyagpticketsatisfaction',
+            DAY_TIMESTAMP,
+            [
+                'state'     => 0,
+                'mode'      => CronTask::MODE_EXTERNAL,
+                'hourmin'   => 0,
+                'horumax'   => 24
+            ]
+        );
     }
 }

@@ -31,8 +31,7 @@
 
 include('../../../inc/includes.php');
 
-$plugin = new Plugin();
-if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
+if (!Plugin::isPluginActive('yagp')) {
     Html::displayNotFoundError();
 }
 

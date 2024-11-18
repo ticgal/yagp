@@ -45,14 +45,11 @@ Html::header('yagp');
 
 $transfer = new PluginYagpTransfer();
 if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
-    $transfer->showForm(
-        1,
-        [
-            'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
-            'display'       => false,
-            'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions()
-        ]
-    );
+    $transfer->showForm(1, [
+        'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
+        'display'       => false,
+        'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions()
+    ]);
 }
 
 if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
@@ -68,6 +65,7 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     if (
         isset($config->fields['autotransfer'])
         && $config->fields['autotransfer'] == 1
+        && isset($item->fields['entities_id'])
         && $item->fields['entities_id'] != $config->fields['transfer_entity']
     ) {
         $glpitransfer = new Transfer();

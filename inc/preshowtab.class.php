@@ -35,7 +35,13 @@ if (!defined('GLPI_ROOT')) {
 
 class PluginYagpPreshowtab extends CommonDBTM
 {
-    public static function preShowTab($params = [])
+    /**
+     * preShowTab
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    public static function preShowTab($params = []): void
     {
         $config = PluginYagpConfig::getInstance();
         $options = $params["options"];
@@ -48,31 +54,43 @@ class PluginYagpPreshowtab extends CommonDBTM
                 $string = __("Current minimum validation", "yagp");
 
                 $script = <<<JAVASCRIPT
-                    $(document).ready(function() {
-                        $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
-                        $("select[name='validation_percent'] option").text('{$df_min_validation}%');
-                        $(".tab_cadre_fixe tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
-                    });
+$(document).ready(function() {
+    $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
+    $("select[name='validation_percent'] option").text('{$df_min_validation}%');
+    $(".tab_cadre_fixe tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
+});
 JAVASCRIPT;
                 echo Html::scriptBlock($script);
+                break;
         }
     }
 
-    public static function plugin_yagp_preShowTab($params)
+    /**
+     * plugin_yagp_preShowTab
+     *
+     * @param  mixed $params
+     * @return void
+     */
+    public static function plugin_yagp_preShowTab($params): void
     {
-        if ($_SESSION["glpiactiveprofile"]["interface"] == "helpdesk") {
+        if (
+            isset($_SESSION["glpiactiveprofile"])
+            && isset($_SESSION["glpiactiveprofile"]["interface"])
+            && $_SESSION["glpiactiveprofile"]["interface"] == "helpdesk"
+        ) {
             $options = $params["options"];
             switch ($options["itemtype"]) {
                 case "Log":
                     $script = <<<JAVASCRIPT
-                    $(document).ready(function() {
-                        console.log($("a[data-bs-target^='#tab-Log']").get());
-                        $("div[id^='tab-Log']").css({display:"none"});
-                        $("div[id^='tab--'] div.table-responsive").css({display:"none"});
-                    });
+$(document).ready(function() {
+    console.log($("a[data-bs-target^='#tab-Log']").get());
+    $("div[id^='tab-Log']").css({display:"none"});
+    $("div[id^='tab--'] div.table-responsive").css({display:"none"});
+});
 JAVASCRIPT;
 
                     echo Html::scriptBlock($script);
+                    break;
             }
         }
     }
