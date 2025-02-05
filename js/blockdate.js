@@ -1,5 +1,3 @@
-<?php
-
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
@@ -29,19 +27,18 @@
  * ----------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+$(document).ready(function() {
+    if (window.location.href.indexOf("/front/ticket.form.php?id=") > -1) {
+        function blockDateField() {
+            var input = $('div#itil-data input[name="date"]').next();
+            input.attr('disabled', 'disabled');
+        }
 
-if (!Plugin::isPluginActive('yagp')) {
-    Html::displayNotFoundError();
-}
-
-$config = new PluginYagpConfig();
-if (isset($_POST["update"])) {
-    $config->check($_POST['id'], UPDATE);
-    $config->update($_POST);
-    Html::back();
-}
-
-$redirect = $CFG_GLPI["root_doc"] . "/front/config.form.php";
-$redirect .= "?forcetab=" . urlencode('PluginYagpConfig$1');
-Html::redirect($redirect);
+        var interval = setInterval(() => {
+            if ($('div#itil-data input[name="date"]').length > 0) {
+                clearInterval(interval);
+                blockDateField();
+            }
+        }, 100);
+    }
+});

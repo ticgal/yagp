@@ -1,19 +1,23 @@
 {
-	"upload": {
-		"type": "pot",
-		"deprecate": "project",
-		"files": [
-			"yagp.pot",
-			{
-				"group": "existing",
-				"file": "yagp.pot",
-				"pattern": "./*.po",
-				"type": "po",
-				"lang": "${autodetectLang}"
-			}
-		]
-	},
-	"download": {
-		"files": "${languageCode}_${regionCode}.po"
-	}
+    "upload": {
+        "type": "pot",
+        "deprecate": "project",
+        "files": [
+            {
+                "pattern": "yagp.pot",
+                "lang": "en_GB"
+            },
+            {
+                "group": "existing",
+                "file": "yagp.pot",
+                "pattern": "./*.po",
+                "type": "po",
+                "lang": "${autodetectLang}"
+            }
+        ]
+    },
+    "download": {
+        "files": "${languageCode}_${regionCode}.po",
+        "includeSourceLang": true
+    }
 }

@@ -1,15 +1,15 @@
-# YAGP Glpi Plugin.
-# Copyright (C) 2022 TICgal
+# yagp Glpi Plugin.
+# Copyright (C) 2024 TICgal
 # This file is distributed under the same license as the PACKAGE package.
-# TICgal, 2022
+# TICgal, 2024
 #
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-02-02 17:39+0100\n"
-"PO-Revision-Date: 2022-MO-DA HO:MI+ZONE\n"
+"POT-Creation-Date: 2024-11-11 09:40+0100\n"
+"PO-Revision-Date: 2024-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
 "Language: \n"
@@ -17,59 +17,64 @@ msgstr ""
 "Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
 
-#: inc/config.class.php:45 inc/config.class.php:133
-msgid "Yagp"
+#: hook.php:133
+msgid "Recategorized"
 msgstr ""
 
-#: inc/config.class.php:88
-msgid "Change ticket solved date to last task end time"
+#: hook.php:147
+msgid "Initial category"
 msgstr ""
 
-#: inc/config.class.php:93
-msgid "Auto renew tacit contracts"
+#: ajax/quicktransfer.php:80 front/transfer.form.php:70
+#, php-format
+msgid "Ticket transferred to %s"
 msgstr ""
 
-#: inc/config.class.php:98
-msgid "Fixed Menu"
+#: ajax/quicktransfer.php:89 front/transfer.form.php:79
+msgid "You can close this window"
 msgstr ""
 
-#: inc/config.class.php:103
-msgid "Go to ticket"
-msgstr ""
-
-#: inc/config.class.php:108
-msgid "Block opening date"
-msgstr ""
-
-#: inc/config.class.php:113
-msgid "Search for request in the mail"
-msgstr ""
-
-#: inc/config.class.php:119
-msgid "Tag to search"
-msgstr ""
-
-#: inc/contractrenew.class.php:5
-msgid "YagpContractRenew"
-msgstr ""
-
-#: inc/contractrenew.class.php:11
+#: inc/contractrenew.class.php:47
 msgid "Renews tacit contracts"
 msgstr ""
 
-#: inc/contractrenew.class.php:41
+#: inc/contractrenew.class.php:81
 #, php-format
 msgid "Renewed Contract id: %s"
 msgstr ""
 
-#: inc/ticketsolveddate.class.php:5
-msgid "YagpTicketSolvedDate"
+#: inc/postshowitem.class.php:115
+msgid "Select an entity to transfer"
 msgstr ""
 
-#: inc/ticketsolveddate.class.php:11
+#: inc/postshowitem.class.php:119
+msgid "Transfer to"
+msgstr ""
+
+#: inc/preshowtab.class.php:48
+msgid "Current minimum validation"
+msgstr ""
+
+#: inc/profile.class.php:128 inc/profile.class.php:159
+msgid "See group tickets only"
+msgstr ""
+
+#: inc/profile.class.php:160
+msgid "You are not in any group"
+msgstr ""
+
+#: inc/ticket.class.php:44
+msgid "Expired satisfaction removal"
+msgstr ""
+
+#: inc/ticket.class.php:74
+msgid "Satisfaction expired for ticket"
+msgstr ""
+
+#: inc/ticketsolveddate.class.php:56
 msgid "Change date"
 msgstr ""
 
-#: inc/ticketsolveddate.class.php:12
+#: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
 msgstr ""
