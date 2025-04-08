@@ -251,6 +251,7 @@ class PluginYagpConfig extends CommonDBTM
                 `solutiontypes_id_rejected` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `default_satisfaction` INT {$default_key_sign} NOT NULL DEFAULT '3',
+                `modal_satisfaction` TINYINT(1) NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";

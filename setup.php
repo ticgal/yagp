@@ -107,7 +107,10 @@ function plugin_init_yagp(): void
                 $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'] = [
                     Ticket::class => [
                         PluginYagpTicket::class, 'preAddTicket'
-                    ]
+                    ],
+                    ITILFollowup::class => [
+                        PluginYagpTicket::class, 'preAddFollowup'
+                    ],
                 ];
             }
         }
@@ -132,7 +135,7 @@ function plugin_init_yagp(): void
             ];
         }
 
-        if ($config->fields['private_view'] || $config->fields['quick_transfer']) {
+        if ($config->fields['private_view'] || $config->fields['quick_transfer'] || $config->fields['modal_satisfaction']) {
             $PLUGIN_HOOKS[Hooks::POST_SHOW_ITEM]['yagp'] = [
                 PluginYagpPostshowitem::class, 'pluginYagpPostShowItem'
             ];

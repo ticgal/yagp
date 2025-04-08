@@ -103,6 +103,13 @@
         options|merge({'values': used_solutiontypes, 'multiple': true, 'size': 3})
         ) }}
 
+        {{ fields.dropdownYesNo(
+        'modal_satisfaction',
+        item.fields['modal_satisfaction'],
+        __("Display satisfaction in a modal window after closing a ticket", "yagp"),
+        options
+        ) }}
+
         <div class="hr-text">
             <i class="ti ti-layout-kanban"></i>
             <span>{{__('Related to tickets', 'yagp')}}</span>

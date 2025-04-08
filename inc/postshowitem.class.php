@@ -58,6 +58,10 @@ class PluginYagpPostshowitem extends CommonDBTM
                 if ($config->fields['quick_transfer'] == 1) {
                     self::quickTransfer($params);
                 }
+
+                if ($config->fields['modal_satisfaction'] == 1) {
+                    self::showSatisfactionModal($params);
+                }
                 break;
         }
 
@@ -158,5 +162,165 @@ JAVASCRIPT;
         }
 
         return true;
+    }
+
+    public static function showSatisfactionModal(array $params): bool
+    {
+        $item = isset($params['item']) ? $params['item'] : null;
+        if (!is_object($item)) {
+            return false;
+        }
+        switch ($item->getType()) {
+            case Ticket::class:
+                $ticket_status = $item->fields['status'];
+                $ticket_entity = $item->fields['entities_id'];
+                if ($ticket_status != Ticket::CLOSED) {
+                    return false;
+                } else {
+                    $entity_config = self::getUsedConfig('inquest_config', $ticket_entity, 'inquest_delay', -2);
+                    if ($entity_config != 0) {
+                        return false;
+                    } else {
+                        $ticket_satisfaction = new TicketSatisfaction();
+                        if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+                            return false;
+                        } else {
+                            $ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']]);
+
+                            if ($ticket_satisfaction->fields['satisfaction'] != null) {
+                                return false;
+                            } else {
+                                $ajax_id = 'ajax_satisfaction';
+                                $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
+                                $ajax_title = __('Satisfaction', 'yagp');
+
+                                Ajax::createIframeModalWindow(
+                                    $ajax_id,
+                                    $ajax_url,
+                                    [
+                                        'title'         => $ajax_title,
+                                        'width'         => '700',
+                                        'height'        => '700',
+                                        'reloadonclose' => true,
+                                    ]
+                                );
+
+                                echo "<script>
+            $(document).ready(function() {
+                var test_inteval = setInterval(function() {
+                    if ($('#ajax_satisfaction').length > 0) {
+                        $('#ajax_satisfaction').modal('show');
+                        clearInterval(test_inteval);
+                    }
+                }, 100);
+            });
+        </script>";
+
+                                break;
+                            }
+                        }
+                    }
+                }
+        }
+        return true;
+    }
+
+
+    public static function getUsedConfig($fieldref, $entities_id, $fieldval = '', $default_value = -2)
+    {
+
+        if (empty($fieldval)) {
+            $fieldval = $fieldref;
+        }
+
+        $entity = new Entity();
+        //$entity = new self();
+        // Search in entity data of the current entity
+        if ($entity->getFromDBByCrit(['id' => $entities_id])) {
+            // Value is defined : use it
+            if (isset($entity->fields[$fieldref])) {
+                // Numerical value
+                if (is_numeric($default_value) && ($entity->fields[$fieldref] != Entity::CONFIG_PARENT) && (!empty($entity->fields[$fieldref]))) {
+                    return $entity->fields[$fieldval];
+                }
+                // String value
+                if (!is_numeric($default_value) && $entity->fields[$fieldref]) {
+                    return $entity->fields[$fieldval];
+                }
+            }
+        }
+
+        // Entity data not found or not defined : search in parent one
+        if ($entities_id > 0) {
+            $entity = new Entity();
+            if ($entity->getFromDB($entities_id)) {
+                $ret = self::getUsedConfig($fieldref, $entity->fields['entities_id'], $fieldval, $default_value);
+                return $ret;
+            }
+        }
+
+        return $default_value;
+    }
+
+    public function showSatisfaction($ID)
+    {
+        $satisfaction = new TicketSatisfaction();
+       
+            $satisfaction->getFromDBByCrit(['tickets_id' => $ID]);
+            $ticket = new Ticket();
+            $ticket->getFromDB($ID);
+            $add = true;
+            if ($satisfaction->getField('satisfaction') == null) {
+                $add = false;
+            }
+            $rand = mt_rand();
+            $out = "<form name='costentity_form$rand' id='costentity_form$rand' method='post' action='";
+            $out .= self::getFormUrl() . "'>";
+            $out .= "<table class='tab_cadre_fixe'>";
+
+            $out .= "<tr><td colspan='2'>";
+            $out .= "<input type='hidden' name='id' value='$ID'>";
+            $out .= "</td></tr>\n";
+            $out .= "<tr class='tab_bg_2'>";
+            $out .= "<td>";
+            $out .= "<span>" . __('Satisfaction with the resolution of the ticket') . "</span> <br><br>";
+            $out .= "<input type='hidden' name='tickets_id' value='$ID'>";
+            $out .= "<select id='satisfaction_data' name='satisfaction'>";
+            for ($i = 0; $i <= 5; $i++) {
+                $out .= "<option value='$i' " . (($i == $satisfaction->getField('satisfaction')) ? 'selected' : '') .
+                    ">$i</option>";
+            }
+            $out .= "</select>";
+            $out .= "<div class='rateit' id='stars'></div>";
+            $out .=  "<script type='text/javascript'>";
+            $out .= "$(function() {";
+            $out .= "$('#stars').rateit({value: " . $satisfaction->getField('satisfaction') . ",
+                                   min : 0,
+                                   max : 5,
+                                   step: 1,
+                                   backingfld: '#satisfaction_data',
+                                   ispreset: true,
+                                   resetable: false});";
+            $out .= "});</script>";
+
+            $out .= "</td></tr>";
+
+            $out .= "<tr class='tab_bg_2'>";
+            $out .= "<td rowspan='1' class='middle'>";
+            $out .= "<span>" . __('Comentarios') . "</span><br><br>";
+            $out .= "<textarea class='form-control' rows='10' cols='100' name='comment'>" . $satisfaction->getField('comment') . "</textarea>";
+            $out .= "</td></tr>";
+            $out .= "</tbody>";
+            $out .= "</table>";
+            if ($ticket->fields['status'] == Ticket::CLOSED) {
+                if ($add == true) {
+                    $out .= "<input type='submit' name='add' value='" . _sx('button', 'Add') . "' class='submit'>";
+                } else {
+                    $out .= "<input type='submit' name='update' value='" . _sx('button', 'Update') . "' class='submit'>";
+                }
+            }
+            $out .= Html::closeForm(false);
+            echo $out;
+        
     }
 }

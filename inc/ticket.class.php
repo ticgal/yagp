@@ -245,6 +245,12 @@ JAVASCRIPT;
         return $ticket;
     }
 
+    public static function preAddFollowup(ITILFollowup $followup): ITILFollowup
+    {
+        Toolbox::logInFile('preitemadd', print_r($followup,true));
+        return $followup;
+    }
+
     /**
      * itemUpdate
      *
