@@ -286,7 +286,7 @@ JAVASCRIPT;
             $out .= "<span>" . __('Satisfaction with the resolution of the ticket') . "</span> <br><br>";
             $out .= "<input type='hidden' name='tickets_id' value='$ID'>";
             $out .= "<select id='satisfaction_data' name='satisfaction'>";
-            for ($i = 0; $i <= 5; $i++) {
+            for ($i = 1; $i <= 5; $i++) {
                 $out .= "<option value='$i' " . (($i == $satisfaction->getField('satisfaction')) ? 'selected' : '') .
                     ">$i</option>";
             }
@@ -295,7 +295,7 @@ JAVASCRIPT;
             $out .=  "<script type='text/javascript'>";
             $out .= "$(function() {";
             $out .= "$('#stars').rateit({value: " . $satisfaction->getField('satisfaction') . ",
-                                   min : 0,
+                                   min : 1,
                                    max : 5,
                                    step: 1,
                                    backingfld: '#satisfaction_data',

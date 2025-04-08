@@ -47,8 +47,31 @@ Html::header('yagp');
 if(isset($_POST['add'])){
     $ticket_satisfaction = new TicketSatisfaction();
     $ticket_satisfaction->add($_POST);
+    $sprintf="Satisfaction updated";
+    echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
+        echo "<div class='alert alert-info mt-4'>";
+        echo "<h3>" . $sprintf . "</h3>";
+        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
+        echo "</div>";
+        echo "</div>";
 }
 if(isset($_POST['update'])){
     $ticket_satisfaction = new TicketSatisfaction();
     $ticket_satisfaction->update($_POST);
+    $sprintf="Satisfaction updated";
+    echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
+        echo "<div class='alert alert-info mt-4'>";
+        echo "<h3>" . $sprintf . "</h3>";
+        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
+        echo "</div>";
+        echo "</div>";
+}
+if(empty($_POST)){
+    $sprintf="Satisfaction updated";
+    echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
+        echo "<div class='alert alert-info mt-4'>";
+        echo "<h3>" . $sprintf . "</h3>";
+        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
+        echo "</div>";
+        echo "</div>";
 }

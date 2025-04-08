@@ -5,7 +5,7 @@
 - Session control and better conditions
 
 ## 2.4.0 - 2024-11-11
-### Bugfixes
+### Features
 - New Config option: Change default satisfaction
 - New automatic action expired satisfaction removal
 
