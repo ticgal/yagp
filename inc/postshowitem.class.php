@@ -199,8 +199,8 @@ JAVASCRIPT;
                                     $ajax_url,
                                     [
                                         'title'         => $ajax_title,
-                                        'width'         => '700',
-                                        'height'        => '700',
+                                        'width'         => '500',
+                                        'height'        => '500',
                                         'reloadonclose' => true,
                                     ]
                                 );
@@ -274,6 +274,7 @@ JAVASCRIPT;
                 $add = false;
             }
             $rand = mt_rand();
+            //$out = "<link rel='stylesheet' type='text/css' href='public/lib/jquery.rateit.css'>";
             $out = "<form name='costentity_form$rand' id='costentity_form$rand' method='post' action='";
             $out .= self::getFormUrl() . "'>";
             $out .= "<table class='tab_cadre_fixe'>";
@@ -293,8 +294,9 @@ JAVASCRIPT;
             $out .= "</select>";
             $out .= "<div class='rateit' id='stars'></div>";
             $out .=  "<script type='text/javascript'>";
-            $out .= "$(function() {";
-            $out .= "$('#stars').rateit({value: " . $satisfaction->getField('satisfaction') . ",
+            $out .=  "$(document).ready(function() {";
+            //$out .= "$(function() {";
+            $out .= "$('#stars').rateit({value: " . (int)$satisfaction->getField('satisfaction') . ",
                                    min : 1,
                                    max : 5,
                                    step: 1,

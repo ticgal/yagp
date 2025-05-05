@@ -29,31 +29,75 @@
  * ----------------------------------------------------------------------
  */
 
- include("../../../inc/includes.php");
- header("Content-Type: text/html; charset=UTF-8");
- Html::header_nocache();
- 
- $plugin = new Plugin();
- if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
-     Html::displayNotFoundError();
- }
+include("../../../inc/includes.php");
+header("Content-Type: text/html; charset=UTF-8");
+Html::header_nocache();
 
- Session::checkLoginUser();
- Html::popHeader(
+$plugin = new Plugin();
+if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
+    Html::displayNotFoundError();
+}
+
+Session::checkLoginUser();
+Html::popHeader(
     PluginYagpPostshowitem::getTypeName(1),
     $_SERVER['PHP_SELF'],
     false,
     '',
     '',
     PluginYagpPostshowitem::getType(),
- );
- 
- // Indicar que el contenido se carga en un modal
- $_REQUEST['_in_modal'] = 1;
- $id = $_GET['id'];
+);
+Html::requireJs('rateit');
+echo '<link rel="stylesheet" type="text/css" href="/public/lib/jquery.rateit.css">';
+// Indicar que el contenido se carga en un modal
+$_REQUEST['_in_modal'] = 1;
+$id = $_GET['id'];
 $ticket = new Ticket();
 $ticket->getFromDB($id);
+$ts = new TicketSatisfaction();
+$ts->getFromDBByCrit(['tickets_id' => $id]);
+$ts->fields['name'] = $ticket->fields['name'];
 $satisfaction = new PluginYagpPostshowitem();
-$satisfaction->showSatisfaction($id);
- // Contenido del modal
- Html::popFooter();
+$ts->showSatisactionForm($ticket);
+//$satisfaction->showSatisfaction($id);
+// Contenido del modal
+
+echo <<<HTML
+<script>
+$(document).ready(function () {
+    // Ocultar el campo de comentarios inicialmente
+    const commentRow = $("textarea[name='comment']").closest("tr");
+    if (commentRow.length > 0) {
+        commentRow.hide();
+        // Función para comprobar el estilo del elemento
+        function checkStyle() {
+            const rateitStyle = $(".rateit-selected").attr("style");
+            if (
+                rateitStyle === "height: 16px; width: 48px;" ||
+                rateitStyle === "height: 16px; width: 32px;" ||
+                rateitStyle === "height: 16px; width: 16px;"
+            ) {
+                commentRow.show();
+            } else {
+                commentRow.hide();
+            }
+        }
+
+        // Comprobar el estilo inicialmente
+        checkStyle();
+
+        // Observar cambios en el atributo 'style' del elemento con clase 'rateit-selected'
+        const observer = new MutationObserver(checkStyle);
+        observer.observe(document.querySelector(".rateit-selected"), {
+            attributes: true,
+            attributeFilter: ["style"]
+        });
+    } else {
+        console.error("No se encontró el campo de comentarios.");
+    }
+
+    $(".rateit-hover").hide(); // Ocultar visualmente
+});
+</script>
+HTML;
+Html::popFooter();
