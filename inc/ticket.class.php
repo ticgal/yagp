@@ -462,6 +462,22 @@ JAVASCRIPT;
         }
     }
 
+    public static function plugin_yagp_preItemUpdate($item)
+    {
+        $input = $item->input;
+        if(isset($input['satisfaction']) && $input['satisfaction'] < 4) {
+            if(empty($input['comment'])){
+                $item->input = [];
+                Session::addMessageAfterRedirect(
+                    __('You must provide a comment to close the ticket with less than 3 stars', 'yagp'),
+                    false,
+                    ERROR
+                );
+                return false;
+            }
+        }
+    }
+
     /**
      * install
      *

@@ -61,43 +61,17 @@ $satisfaction = new PluginYagpPostshowitem();
 $ts->showSatisactionForm($ticket);
 //$satisfaction->showSatisfaction($id);
 // Contenido del modal
-
-echo <<<HTML
+if (!$ts->fields['date_answered']) {
+    echo <<<HTML
 <script>
 $(document).ready(function () {
-    // Ocultar el campo de comentarios inicialmente
-    const commentRow = $("textarea[name='comment']").closest("tr");
-    if (commentRow.length > 0) {
-        commentRow.hide();
-        // Función para comprobar el estilo del elemento
-        function checkStyle() {
-            const rateitStyle = $(".rateit-selected").attr("style");
-            if (
-                rateitStyle === "height: 16px; width: 48px;" ||
-                rateitStyle === "height: 16px; width: 32px;" ||
-                rateitStyle === "height: 16px; width: 16px;"
-            ) {
-                commentRow.show();
-            } else {
-                commentRow.hide();
-            }
-        }
-
-        // Comprobar el estilo inicialmente
-        checkStyle();
-
-        // Observar cambios en el atributo 'style' del elemento con clase 'rateit-selected'
-        const observer = new MutationObserver(checkStyle);
-        observer.observe(document.querySelector(".rateit-selected"), {
-            attributes: true,
-            attributeFilter: ["style"]
-        });
-    } else {
-        console.error("No se encontró el campo de comentarios.");
-    }
-
-    $(".rateit-hover").hide(); // Ocultar visualmente
+   setTimeout(() => {
+    var rateitpreset = $(".rateit-preset");
+    rateitpreset.attr('style','height: 16px; width: 0px;');
+   }, timeout = 10);
 });
 </script>
 HTML;
+}
+
 Html::popFooter();
