@@ -2,13 +2,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-11 09:40+0100\n"
+"POT-Creation-Date: 2025-06-04 15:41+0200\n"
 "Language: hu_HU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+#: front/transfer.form.php:69 ajax/quicktransfer.php:78
+#, php-format
+msgid "Ticket transferred to %s"
+msgstr "Jegy átvitt %s"
+
+#: front/transfer.form.php:78 front/postshowitem.form.php:54
+#: front/postshowitem.form.php:65 front/postshowitem.form.php:74
+#: ajax/quicktransfer.php:87
+msgid "You can close this window"
+msgstr "Bezárhatja ezt az ablakot"
 
 #: hook.php:133
 msgid "Recategorized"
@@ -18,14 +29,17 @@ msgstr "Átkategorizált"
 msgid "Initial category"
 msgstr "Kezdeti kategória"
 
-#: ajax/quicktransfer.php:80 front/transfer.form.php:70
-#, php-format
-msgid "Ticket transferred to %s"
-msgstr "Jegy átvitt %s"
+#: inc/ticket.class.php:44
+msgid "Expired satisfaction removal"
+msgstr "Expired satisfaction removal"
 
-#: ajax/quicktransfer.php:89 front/transfer.form.php:79
-msgid "You can close this window"
-msgstr "Bezárhatja ezt az ablakot"
+#: inc/ticket.class.php:74
+msgid "Satisfaction expired for ticket"
+msgstr "Satisfaction expired for ticket"
+
+#: inc/ticket.class.php:472
+msgid "You must provide a comment to close the ticket with less than 3 stars"
+msgstr "You must provide a comment to close the ticket with less than 3 stars"
 
 #: inc/contractrenew.class.php:47
 msgid "Renews tacit contracts"
@@ -36,17 +50,17 @@ msgstr "Megújítja a hallgatólagos szerződéseket"
 msgid "Renewed Contract id: %s"
 msgstr "Megújított szerződés azonosítója: %s"
 
-#: inc/postshowitem.class.php:115
+#: inc/postshowitem.class.php:119
 msgid "Select an entity to transfer"
 msgstr "Válasszon ki egy átviendő entitást"
 
-#: inc/postshowitem.class.php:119
+#: inc/postshowitem.class.php:123
 msgid "Transfer to"
 msgstr "Átutalás ide"
 
-#: inc/preshowtab.class.php:48
-msgid "Current minimum validation"
-msgstr "Jelenlegi minimális érvényesítés"
+#: inc/postshowitem.class.php:195
+msgid "Satisfaction"
+msgstr "Satisfaction"
 
 #: inc/profile.class.php:128 inc/profile.class.php:159
 msgid "See group tickets only"
@@ -56,13 +70,9 @@ msgstr "See group tickets only"
 msgid "You are not in any group"
 msgstr "You are not in any group"
 
-#: inc/ticket.class.php:44
-msgid "Expired satisfaction removal"
-msgstr "Expired satisfaction removal"
-
-#: inc/ticket.class.php:74
-msgid "Satisfaction expired for ticket"
-msgstr "Satisfaction expired for ticket"
+#: inc/preshowtab.class.php:54
+msgid "Current minimum validation"
+msgstr "Jelenlegi minimális érvényesítés"
 
 #: inc/ticketsolveddate.class.php:56
 msgid "Change date"
@@ -71,3 +81,80 @@ msgstr "Dátum módosítása"
 #: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
 msgstr "Jegyek száma"
+
+#: entrada estándar:50
+msgid "Display an input to quickly access a ticket"
+msgstr "Display an input to quickly access a ticket"
+
+#: entrada estándar:57
+msgid "Block opening date"
+msgstr "Nyitás dátumának blokkolása"
+
+#: entrada estándar:64
+msgid "Enable re-categorization tracking"
+msgstr "Engedélyezze az újbóli kategorizálási"
+
+#: entrada estándar:71
+msgid "Hide historical tab to post-only users"
+msgstr "Történelmi lap elrejtése csak posztolási felhasználók számára"
+
+#: entrada estándar:78
+msgid "Default Satisfaction"
+msgstr "Default Satisfaction"
+
+#: entrada estándar:87
+msgid "Change ticket solved date to last task end time"
+msgstr ""
+"A jegy megoldott dátumának módosítása az utolsó feladat befejezési idejére"
+
+#: entrada estándar:94
+msgid "Auto-closing of rejected tickets"
+msgstr "Az elutasított jegyek automatikus bezárása"
+
+#: entrada estándar:102
+msgid "Solution types for close tickets automatically"
+msgstr "Solution types for close tickets automatically"
+
+#: entrada estándar:109
+msgid "Display satisfaction in a modal window after closing a ticket"
+msgstr "Display satisfaction in a modal window after closing a ticket"
+
+#: entrada estándar:115
+msgid "Related to tickets"
+msgstr "Related to tickets"
+
+#: entrada estándar:121
+msgid "Enhance Private task/followup view"
+msgstr "Privát feladat/nyomon követési nézet javítása"
+
+#: entrada estándar:130
+msgid "Replace ticket requester (mailcollector)"
+msgstr "Jegykérő cseréje (mailgyűjtő)"
+
+#: entrada estándar:138
+msgid "Allow anonymous requester"
+msgstr "Allow anonymous requester"
+
+#: entrada estándar:145
+msgid "Tag to search"
+msgstr "Címke a kereséshez"
+
+#: entrada estándar:155
+msgid "Change default minimum validation required"
+msgstr "Az alapértelmezett minimális érvényesítés módosítása"
+
+#: entrada estándar:170
+msgid "Minimum validation"
+msgstr "Minimum validation"
+
+#: entrada estándar:180
+msgid "Enable quick transfer for tickets"
+msgstr "A jegyek gyors transzferének engedélyezése"
+
+#: entrada estándar:187
+msgid "Enable automatic transfer"
+msgstr "Enable automatic transfer"
+
+#: entrada estándar:196
+msgid "Transfer destination"
+msgstr "Transfer destination"

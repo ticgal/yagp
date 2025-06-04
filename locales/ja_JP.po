@@ -2,13 +2,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-11 09:40+0100\n"
+"POT-Creation-Date: 2025-06-04 15:41+0200\n"
 "Language: ja_JP\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=1; plural=0;\n"
+
+#: front/transfer.form.php:69 ajax/quicktransfer.php:78
+#, php-format
+msgid "Ticket transferred to %s"
+msgstr "チケットの転送先 : %s"
+
+#: front/transfer.form.php:78 front/postshowitem.form.php:54
+#: front/postshowitem.form.php:65 front/postshowitem.form.php:74
+#: ajax/quicktransfer.php:87
+msgid "You can close this window"
+msgstr "このウィンドウを閉じても構いません"
 
 #: hook.php:133
 msgid "Recategorized"
@@ -18,14 +29,17 @@ msgstr "カテゴリー変更済み"
 msgid "Initial category"
 msgstr "初期カテゴリー"
 
-#: ajax/quicktransfer.php:80 front/transfer.form.php:70
-#, php-format
-msgid "Ticket transferred to %s"
-msgstr "チケットの転送先 : %s"
+#: inc/ticket.class.php:44
+msgid "Expired satisfaction removal"
+msgstr "期限切れ満足度調査の削除"
 
-#: ajax/quicktransfer.php:89 front/transfer.form.php:79
-msgid "You can close this window"
-msgstr "このウィンドウを閉じても構いません"
+#: inc/ticket.class.php:74
+msgid "Satisfaction expired for ticket"
+msgstr "チケットの満足度調査は期限切れ"
+
+#: inc/ticket.class.php:472
+msgid "You must provide a comment to close the ticket with less than 3 stars"
+msgstr "You must provide a comment to close the ticket with less than 3 stars"
 
 #: inc/contractrenew.class.php:47
 msgid "Renews tacit contracts"
@@ -36,17 +50,17 @@ msgstr "自動更新契約の内容を補正"
 msgid "Renewed Contract id: %s"
 msgstr "更新した契約 ID : %s"
 
-#: inc/postshowitem.class.php:115
+#: inc/postshowitem.class.php:119
 msgid "Select an entity to transfer"
 msgstr "転送するエンティティを選択してください"
 
-#: inc/postshowitem.class.php:119
+#: inc/postshowitem.class.php:123
 msgid "Transfer to"
 msgstr "転送先"
 
-#: inc/preshowtab.class.php:48
-msgid "Current minimum validation"
-msgstr "現在の必要検証承認率"
+#: inc/postshowitem.class.php:195
+msgid "Satisfaction"
+msgstr "Satisfaction"
 
 #: inc/profile.class.php:128 inc/profile.class.php:159
 msgid "See group tickets only"
@@ -56,13 +70,9 @@ msgstr "グループチケットのみを表示"
 msgid "You are not in any group"
 msgstr "あなたはどのグループにも属していません"
 
-#: inc/ticket.class.php:44
-msgid "Expired satisfaction removal"
-msgstr "Expired satisfaction removal"
-
-#: inc/ticket.class.php:74
-msgid "Satisfaction expired for ticket"
-msgstr "Satisfaction expired for ticket"
+#: inc/preshowtab.class.php:54
+msgid "Current minimum validation"
+msgstr "現在の必要検証承認率"
 
 #: inc/ticketsolveddate.class.php:56
 msgid "Change date"
@@ -71,3 +81,79 @@ msgstr "日付を変更"
 #: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
 msgstr "チケット数"
+
+#: entrada estándar:50
+msgid "Display an input to quickly access a ticket"
+msgstr "チケット番号ですばやく移動できるコントロールを表示"
+
+#: entrada estándar:57
+msgid "Block opening date"
+msgstr "開始日付を編集不可に"
+
+#: entrada estándar:64
+msgid "Enable re-categorization tracking"
+msgstr "カテゴリー変更の記録を有効にする"
+
+#: entrada estándar:71
+msgid "Hide historical tab to post-only users"
+msgstr "投稿専用ユーザーは履歴タブを非表示に"
+
+#: entrada estándar:78
+msgid "Default Satisfaction"
+msgstr "Default Satisfaction"
+
+#: entrada estándar:87
+msgid "Change ticket solved date to last task end time"
+msgstr "チケットの解決日付を、最後のタスクの終了日時に変更"
+
+#: entrada estándar:94
+msgid "Auto-closing of rejected tickets"
+msgstr "拒否済みチケットの自動終了"
+
+#: entrada estándar:102
+msgid "Solution types for close tickets automatically"
+msgstr "チケットを自動終了する際の、解決の種類"
+
+#: entrada estándar:109
+msgid "Display satisfaction in a modal window after closing a ticket"
+msgstr "Display satisfaction in a modal window after closing a ticket"
+
+#: entrada estándar:115
+msgid "Related to tickets"
+msgstr "チケット関連"
+
+#: entrada estándar:121
+msgid "Enhance Private task/followup view"
+msgstr "個人のタスク・回答表示を強化"
+
+#: entrada estándar:130
+msgid "Replace ticket requester (mailcollector)"
+msgstr "チケットの要求者を置き換え (メールコレクター)"
+
+#: entrada estándar:138
+msgid "Allow anonymous requester"
+msgstr "匿名の要求者を許可"
+
+#: entrada estándar:145
+msgid "Tag to search"
+msgstr "検索タグ"
+
+#: entrada estándar:155
+msgid "Change default minimum validation required"
+msgstr "必要検証承認率の既定値を変更"
+
+#: entrada estándar:170
+msgid "Minimum validation"
+msgstr "必要承認率"
+
+#: entrada estándar:180
+msgid "Enable quick transfer for tickets"
+msgstr "チケットのクイック転送を有効にする"
+
+#: entrada estándar:187
+msgid "Enable automatic transfer"
+msgstr "自動転送を有効にする"
+
+#: entrada estándar:196
+msgid "Transfer destination"
+msgstr "転送先"

@@ -2,13 +2,24 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-11 09:40+0100\n"
+"POT-Creation-Date: 2025-06-04 15:41+0200\n"
 "Language: es_ES\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
+
+#: front/transfer.form.php:69 ajax/quicktransfer.php:78
+#, php-format
+msgid "Ticket transferred to %s"
+msgstr "Ticket transferido a %s"
+
+#: front/transfer.form.php:78 front/postshowitem.form.php:54
+#: front/postshowitem.form.php:65 front/postshowitem.form.php:74
+#: ajax/quicktransfer.php:87
+msgid "You can close this window"
+msgstr "Puedes cerrar esta ventana"
 
 #: hook.php:133
 msgid "Recategorized"
@@ -18,14 +29,19 @@ msgstr "Recategorizado"
 msgid "Initial category"
 msgstr "Categoría inicial"
 
-#: ajax/quicktransfer.php:80 front/transfer.form.php:70
-#, php-format
-msgid "Ticket transferred to %s"
-msgstr "Ticket transferido a %s"
+#: inc/ticket.class.php:44
+msgid "Expired satisfaction removal"
+msgstr "Retirada de satisfacción expirada"
 
-#: ajax/quicktransfer.php:89 front/transfer.form.php:79
-msgid "You can close this window"
-msgstr "Puedes cerrar esta ventana"
+#: inc/ticket.class.php:74
+msgid "Satisfaction expired for ticket"
+msgstr "Ha expirado la satisfacción de la petición"
+
+#: inc/ticket.class.php:472
+msgid "You must provide a comment to close the ticket with less than 3 stars"
+msgstr ""
+"Debes proporcionar un comentario para cerrar el ticket con menos de 3 "
+"estrellas"
 
 #: inc/contractrenew.class.php:47
 msgid "Renews tacit contracts"
@@ -36,17 +52,17 @@ msgstr "Renueva contratos tácitos"
 msgid "Renewed Contract id: %s"
 msgstr "ID de contrato renovado: %s"
 
-#: inc/postshowitem.class.php:115
+#: inc/postshowitem.class.php:119
 msgid "Select an entity to transfer"
 msgstr "Seleccione una entidad para transferir"
 
-#: inc/postshowitem.class.php:119
+#: inc/postshowitem.class.php:123
 msgid "Transfer to"
 msgstr "Transferir a"
 
-#: inc/preshowtab.class.php:48
-msgid "Current minimum validation"
-msgstr "Validación mínima actual"
+#: inc/postshowitem.class.php:195
+msgid "Satisfaction"
+msgstr "Satisfacción"
 
 #: inc/profile.class.php:128 inc/profile.class.php:159
 msgid "See group tickets only"
@@ -56,13 +72,9 @@ msgstr "Ver solo las peticiones para grupos"
 msgid "You are not in any group"
 msgstr "No estás en ningún grupo"
 
-#: inc/ticket.class.php:44
-msgid "Expired satisfaction removal"
-msgstr "Expired satisfaction removal"
-
-#: inc/ticket.class.php:74
-msgid "Satisfaction expired for ticket"
-msgstr "Satisfaction expired for ticket"
+#: inc/preshowtab.class.php:54
+msgid "Current minimum validation"
+msgstr "Validación mínima actual"
 
 #: inc/ticketsolveddate.class.php:56
 msgid "Change date"
@@ -71,3 +83,80 @@ msgstr "Cambiar fecha"
 #: inc/ticketsolveddate.class.php:57
 msgid "Number of tickets"
 msgstr "Número de peticiones"
+
+#: entrada estándar:50
+msgid "Display an input to quickly access a ticket"
+msgstr "Mostrar una entrada para acceder rápidamente a un ticket"
+
+#: entrada estándar:57
+msgid "Block opening date"
+msgstr "Bloquear fecha de apertura"
+
+#: entrada estándar:64
+msgid "Enable re-categorization tracking"
+msgstr "Habilitar el seguimiento de recategorización"
+
+#: entrada estándar:71
+msgid "Hide historical tab to post-only users"
+msgstr "Ocultar la pestaña de histórico a los usuarios post-only"
+
+#: entrada estándar:78
+msgid "Default Satisfaction"
+msgstr "Satisfacción por defecto"
+
+#: entrada estándar:87
+msgid "Change ticket solved date to last task end time"
+msgstr "Cambiar fecha de solución por la fecha de fin de la ultima tarea"
+
+#: entrada estándar:94
+msgid "Auto-closing of rejected tickets"
+msgstr "Cierre automático de tickets rechazados"
+
+#: entrada estándar:102
+msgid "Solution types for close tickets automatically"
+msgstr "Tipos de soluciones para cerrar tickets automáticamente"
+
+#: entrada estándar:109
+msgid "Display satisfaction in a modal window after closing a ticket"
+msgstr ""
+"Mostrar la satisfacción en una ventana modal después de cerrar un ticket"
+
+#: entrada estándar:115
+msgid "Related to tickets"
+msgstr "Relacionado con peticiones"
+
+#: entrada estándar:121
+msgid "Enhance Private task/followup view"
+msgstr "Mejorar la vista de tareas privadas/seguimiento"
+
+#: entrada estándar:130
+msgid "Replace ticket requester (mailcollector)"
+msgstr "Reemplazar solicitante de tickets (mailcollector)"
+
+#: entrada estándar:138
+msgid "Allow anonymous requester"
+msgstr "Permitir al solicitante anónimo"
+
+#: entrada estándar:145
+msgid "Tag to search"
+msgstr "Etiqueta a buscar"
+
+#: entrada estándar:155
+msgid "Change default minimum validation required"
+msgstr "Cambiar la validación mínima requerida por defecto"
+
+#: entrada estándar:170
+msgid "Minimum validation"
+msgstr "Validación mínima"
+
+#: entrada estándar:180
+msgid "Enable quick transfer for tickets"
+msgstr "Habilitar transferencia rápida para tickets"
+
+#: entrada estándar:187
+msgid "Enable automatic transfer"
+msgstr "Habilitar la transferencia automática"
+
+#: entrada estándar:196
+msgid "Transfer destination"
+msgstr "Destino de la transferencia"
