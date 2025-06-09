@@ -192,11 +192,17 @@ JAVASCRIPT;
     public static function preAddTicket(Ticket $ticket): Ticket
     {
         $config = PluginYagpConfig::getInstance();
-        $pattern = "/" . $config->fields['requestlabel'] . ".*" . $config->fields['requestlabel'] . "/i";
+        // allow white spaces after and before the email
+        $emailpattern = "\s*\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*";
+        $pattern = "/" . $config->fields['requestlabel'] . $emailpattern . $config->fields['requestlabel'] . "/i";
 
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
-            $content = $mail->getContent();
+            if ($mail instanceof \Laminas\Mail\Storage\Message) {
+                $content = $mail->getContent();
+            } else {
+                $content = $mail;
+            }
             if (mb_detect_encoding($content) == 'ASCII') {
                 $content = quoted_printable_decode($content);
             }
@@ -223,10 +229,11 @@ JAVASCRIPT;
                         return $ticket;
                     }
 
-                    $mailgate = new MailCollector();
-                    $mailgate->getFromDB($ticket->input['_mailgate']);
+                    //$mailgate = new MailCollector();
+                    //$mailgate->getFromDB($ticket->input['_mailgate']);
                     $rule_options['ticket']              = $ticket->input;
-                    $rule_options['headers']             = $mailgate->getHeaders($ticket->input['_message']);
+                    //$rule_options['headers']             = $mailgate->getHeaders($ticket->input['_message']);
+                    $rule_options['headers']             = $ticket->input['_head'];
                     $rule_options['mailcollector']       = $ticket->input['_mailgate'];
                     $rule_options['_users_id_requester'] = $ticket->input['_users_id_requester'];
                     $rulecollection                      = new RuleMailCollectorCollection();
@@ -244,6 +251,7 @@ JAVASCRIPT;
 
         return $ticket;
     }
+
 
     public static function preAddFollowup(ITILFollowup $followup): ITILFollowup
     {
