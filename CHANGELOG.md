@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.5.0 - 2024-06-09
+### Features
+- Display modal window after the ticket is closed to complete the satisfaction survey
+
 ## 2.4.1 - 2024-11-18
 ### Bugfixes
 - Session control and better conditions
