@@ -150,7 +150,7 @@ class PluginYagpTicketsolveddate extends CommonDBTM
              AND ticket.is_deleted=0
          AND ticket.date<task.last_task_end" . $limit;
 
-            foreach ($DB->request($query) as $id => $row) {
+            foreach ($DB->doQuery($query) as $id => $row) {
                 if (!is_null($row["first_task_begin"])) {
                     if ($row["date"] > $row["first_task_begin"]) {
                         $newdate = strtotime('-1 hour', strtotime($row["first_task_begin"]));

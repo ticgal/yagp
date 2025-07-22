@@ -97,7 +97,7 @@ class PluginYagpConfig extends CommonDBTM
         $used = is_null($config->fields['solutiontypes'])
             ? []
             : importArrayFromDB($config->fields['solutiontypes']);
-        $iterator = $DB->request(['table' => SolutionType::getTable()]);
+        $iterator = $DB->request(['FROM' => SolutionType::getTable()]);
         foreach ($iterator as $data) {
             $solutiontypes[$data['id']] = $data['name'];
         }
@@ -207,7 +207,7 @@ class PluginYagpConfig extends CommonDBTM
      */
     private static function disableCronTask(): void
     {
-        Crontask::Unregister("YagpContractrenew");
+        CronTask::Unregister("YagpContractrenew");
     }
 
     /**
@@ -261,7 +261,7 @@ class PluginYagpConfig extends CommonDBTM
              * `contractrenew` TINYINT(1) NOT NULL DEFAULT '0',
              */
 
-            $DB->query($query) or die($DB->error());
+            $DB->doQuery($query);
             $config->add(['id' => 1]);
         } else {
             $migration->addField($table, 'gototicket', 'boolean');

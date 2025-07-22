@@ -33,9 +33,9 @@ use Glpi\Plugin\Hooks;
 
 define('PLUGIN_YAGP_VERSION', '2.5.0');
 // Minimal GLPI version, inclusive
-define("PLUGIN_YAGP_MIN_GLPI", "10.0");
+define("PLUGIN_YAGP_MIN_GLPI", "11.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_YAGP_MAX_GLPI", "11.0");
+define("PLUGIN_YAGP_MAX_GLPI", "12.0");
 
 /**
  * plugin_version_yagp
@@ -93,11 +93,11 @@ function plugin_init_yagp(): void
         *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
         }****/
         if ($config->fields['gototicket']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'public/gototicket.js';
         }
 
         if ($config->fields['blockdate']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/blockdate.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'public/blockdate.js';
         }
 
         if ($config->fields['findrequest']) {
@@ -161,7 +161,7 @@ function plugin_init_yagp(): void
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
 
-        Crontask::Register(
+        CronTask::Register(
             'PluginYagpTicket',
             'pluginyagpticketsatisfaction',
             DAY_TIMESTAMP,
