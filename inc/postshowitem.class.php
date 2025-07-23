@@ -118,7 +118,7 @@ JAVASCRIPT;
                 ) {
                     $entity_name = __("Select an entity to transfer", "yagp");
                     $ajax_id = 'ajax_playground';
-                    $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
+                    $ajax_url = '/plugins/yagp/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
                     $ajax_title = __("Transfer to", "yagp");
                     if (
@@ -143,7 +143,7 @@ JAVASCRIPT;
                     $append .= "</div>";
 
                     $script = <<<JAVASCRIPT
-                    $('div#item-main .form-field').first().append("{$append}");
+                    $('section#item-main .form-field').first().append("{$append}");
 JAVASCRIPT;
 
                     Ajax::createIframeModalWindow(
