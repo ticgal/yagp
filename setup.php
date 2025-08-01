@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,20 +18,20 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.5.0');
+define('PLUGIN_YAGP_VERSION', '2.6.0-alpha.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -47,7 +47,7 @@ function plugin_version_yagp(): array
     return [
         'name'              => 'YAGP',
         'version'           => PLUGIN_YAGP_VERSION,
-        'author'            => '<a href="https://tic.gal">TICgal</a>',
+        'author'            => '<a href="https://tic.gal">TICGAL</a>',
         'homepage'          => 'https://tic.gal/yagp',
         'license'           => 'GPLv3+',
         'minGlpiVersion'    => PLUGIN_YAGP_MIN_GLPI,
@@ -55,8 +55,8 @@ function plugin_version_yagp(): array
             'glpi'   => [
                 'min' => PLUGIN_YAGP_MIN_GLPI,
                 'max' => PLUGIN_YAGP_MAX_GLPI,
-            ]
-        ]
+            ],
+        ],
     ];
 }
 
@@ -67,6 +67,7 @@ function plugin_version_yagp(): array
  */
 function plugin_init_yagp(): void
 {
+    /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
     $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['yagp'] = true;
@@ -83,15 +84,9 @@ function plugin_init_yagp(): void
 
     $plugin = new Plugin();
     if ($plugin->isActivated('yagp')) {
-        Plugin::registerClass(PluginYagpTransfer::class);
-
-        Plugin::registerClass('PluginYagpProfile', ['addtabon' => 'Profile']);
+        Plugin::registerClass(PluginYagpProfile::class, ['addtabon' => Profile::class]);
 
         $config = PluginYagpConfig::getInstance();
-        /**** Deprecated
-        *   if ($config->fields['fixedmenu']) {
-        *      $PLUGIN_HOOKS['add_css']['yagp']='fixedmenu.css';
-        }****/
         if ($config->fields['gototicket']) {
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
         }
@@ -107,10 +102,7 @@ function plugin_init_yagp(): void
             ) {
                 $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'] = [
                     Ticket::class => [
-                        PluginYagpTicket::class, 'preAddTicket'
-                    ],
-                    ITILFollowup::class => [
-                        PluginYagpTicket::class, 'preAddFollowup'
+                        PluginYagpTicket::class, 'preAddTicket',
                     ],
                 ];
             }
@@ -122,46 +114,50 @@ function plugin_init_yagp(): void
         if ($config->fields['recategorization'] || $config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['yagp'] = [
                 Ticket::class => [
-                    PluginYagpTicket::class, 'pluginYagpItemUpdate'
+                    PluginYagpTicket::class, 'pluginYagpItemUpdate',
                 ],
             ];
             $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['yagp'] = [
-                PluginYagpTicket::class, 'plugin_yagp_postItemForm'
+                PluginYagpTicket::class, 'plugin_yagp_postItemForm',
             ];
         }
 
         if ($config->fields['hide_historical']) {
             $PLUGIN_HOOKS[Hooks::PRE_SHOW_ITEM]['yagp'] = [
-                PluginYagpTicket::class, 'plugin_yagp_preShowItem'
+                PluginYagpTicket::class, 'plugin_yagp_preShowItem',
             ];
         }
 
-        if ($config->fields['private_view'] || $config->fields['quick_transfer'] || $config->fields['modal_satisfaction']) {
+        if (
+            $config->fields['private_view']
+            || $config->fields['quick_transfer']
+            || $config->fields['modal_satisfaction']
+        ) {
             $PLUGIN_HOOKS[Hooks::POST_SHOW_ITEM]['yagp'] = [
-                PluginYagpPostshowitem::class, 'pluginYagpPostShowItem'
+                PluginYagpPostshowitem::class, 'pluginYagpPostShowItem',
             ];
         }
 
         if ($config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginYagpTicket::class, 'pluginYagpItemAdd'
+                PluginYagpTicket::class, 'pluginYagpItemAdd',
             ];
         }
 
         if (!empty($config->fields['solutiontypes'])) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILSolution::class] = [
-                PluginYagpTicket::class, 'pluginYagpItemAdd'
+                PluginYagpTicket::class, 'pluginYagpItemAdd',
             ];
         }
 
         $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
-            PluginYagpProfile::class, 'checkAllocatorAccess'
+            PluginYagpProfile::class, 'checkAllocatorAccess',
         ];
 
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
 
-        Crontask::Register(
+        CronTask::register(
             'PluginYagpTicket',
             'pluginyagpticketsatisfaction',
             DAY_TIMESTAMP,
@@ -169,8 +165,8 @@ function plugin_init_yagp(): void
                 'state'     => 0,
                 'mode'      => CronTask::MODE_EXTERNAL,
                 'hourmin'   => 0,
-                'horumax'   => 24
-            ]
+                'horumax'   => 24,
+            ],
         );
     }
 }

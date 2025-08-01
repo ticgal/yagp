@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,30 +18,26 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpPreshowtab extends CommonDBTM
 {
     /**
-     * preShowTab
+     * @param  array $params
      *
-     * @param  mixed $params
      * @return void
      */
-    public static function preShowTab($params = []): void
+    public static function preShowTab(array $params = []): void
     {
         $config = PluginYagpConfig::getInstance();
         $options = $params["options"];
@@ -57,7 +53,9 @@ class PluginYagpPreshowtab extends CommonDBTM
 $(document).ready(function() {
     $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
     $("select[name='validation_percent'] option").text('{$df_min_validation}%');
-    $(".tab_cadre_fixe tbody:first").append("<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>");
+    $(".tab_cadre_fixe tbody:first").append(
+        "<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>"
+    );
 });
 JAVASCRIPT;
                 echo Html::scriptBlock($script);
@@ -66,12 +64,12 @@ JAVASCRIPT;
     }
 
     /**
-     * plugin_yagp_preShowTab
+     * @param  array $params
      *
-     * @param  mixed $params
      * @return void
      */
-    public static function plugin_yagp_preShowTab($params): void
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function plugin_yagp_preShowTab(array $params): void
     {
         if (
             isset($_SESSION["glpiactiveprofile"])
@@ -83,7 +81,6 @@ JAVASCRIPT;
                 case "Log":
                     $script = <<<JAVASCRIPT
 $(document).ready(function() {
-    console.log($("a[data-bs-target^='#tab-Log']").get());
     $("div[id^='tab-Log']").css({display:"none"});
     $("div[id^='tab--'] div.table-responsive").css({display:"none"});
 });
