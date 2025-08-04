@@ -57,8 +57,10 @@ if (isset($_POST['transfer'])) {
             $_POST[$k] = isset($_POST[$k]) ? $_POST[$k] : $v;
         }
 
+        $items = json_decode(stripslashes($_POST['transferlist']), true);
+        PluginYagpTransfer::validateTransferList($items);
         $transfer->moveItems(
-            json_decode(stripslashes($_POST['transferlist']), true),
+            $items,
             $_POST['to_entity'],
             $_POST,
         );

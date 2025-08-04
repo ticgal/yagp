@@ -427,4 +427,34 @@ class PluginYagpTransfer extends CommonDBTM
 
         return $params;
     }
+
+    /**
+     * @param array $items
+     *
+     * @return void
+     */
+    public static function validateTransferList(array $items): void
+    {
+        Toolbox::logInFile('yagp-debug', 'Transfer list: ' . print_r($items, true) . PHP_EOL);
+        foreach ($items as $itemtype => $items_ids) {
+            if (!is_string($itemtype) || !is_array($items_ids)) {
+                Session::addMessageAfterRedirect(
+                    __('Invalid transfer list', 'yagp'),
+                    false,
+                    ERROR
+                );
+                exit;
+            }
+            foreach ($items_ids as $items_id) {
+                if (!is_numeric($items_id)) {
+                    Session::addMessageAfterRedirect(
+                        __('Invalid transfer list', 'yagp'),
+                        false,
+                        ERROR
+                    );
+                    exit;
+                }
+            }
+        }
+    }
 }
