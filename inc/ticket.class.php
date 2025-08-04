@@ -298,6 +298,9 @@ JAVASCRIPT;
                 if ($config->fields['autoclose_rejected_tickets']) {
                     self::autocloseRejectedTickets($item);
                 }
+                if ($config->fields['observers_affect_status']) {
+                    self::observersAffectStatus($item);
+                }
                 break;
             case ITILSolution::class:
                 /** @var ITILSolution $item */
@@ -308,6 +311,8 @@ JAVASCRIPT;
                 break;
         }
     }
+
+
 
     /**
      * @param  Ticket $ticket
@@ -324,6 +329,48 @@ JAVASCRIPT;
                     "tickets_id"                    => $ticket->fields["id"],
                     "plugin_yagp_itilcategories_id" => $ticket->oldvalues["itilcategories_id"],
                 ]);
+            }
+        }
+    }
+
+    /**
+     * @param ITILFollowup $followup
+     *
+     * @return void
+     */
+    public static function observersAffectStatus(ITILFollowup $followup): void
+    {
+        $followup->fields['is_private'] = $followup->fields['is_private'] ?? 1;
+        $parent = $followup->fields['itemtype'] ?? '';
+        $parents_id = $followup->fields['items_id'] ?? 0;
+        $users_id = $followup->fields['users_id'] ?? 0;
+        if (
+            $followup->fields['is_private']
+            || $parent !== Ticket::class
+            || $parents_id <= 0
+            || $users_id <= 0
+        ) {
+            return;
+        }
+
+        /** @var Ticket $parent */
+        $parent_item = $parent::getById($parents_id);
+        if ($parent_item->fields['status'] == Ticket::WAITING) {
+            $observers = $parent_item->getActorsForType(CommonITILActor::OBSERVER);
+            if (!in_array($users_id, $observers)) {
+                return;
+            }
+
+            $pendingreason_item = new PendingReason_Item();
+            $pr_criteria = [];
+            if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
+                $pendingreason = PendingReason::getById($pendingreason_item->fields['pendingreasons_id']);
+                if ($pendingreason->fields['followups_before_resolution'] == 1) {
+                    $parent_item->update([
+                        'id'        => $parents_id,
+                        'status'    => $pendingreason_item->fields['previous_status']
+                    ]);
+                }
             }
         }
     }

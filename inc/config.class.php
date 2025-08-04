@@ -238,6 +238,7 @@ class PluginYagpConfig extends CommonDBTM
                 `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `default_satisfaction` INT {$default_key_sign} NOT NULL DEFAULT '3',
                 `modal_satisfaction` TINYINT(1) NOT NULL DEFAULT '0',
+                `observers_affect_status` TINYINT(1) NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
@@ -273,6 +274,8 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'default_satisfaction', 'int', ['value' => 3]);
             // * 2.5.0
             $migration->addField($table, 'modal_satisfaction', 'boolean', ['value' => 0]);
+            // * 2.6.0
+            $migration->addField($table, 'observers_affect_status', 'boolean', ['value' => 0]);
 
             $migration->migrationOneTable($table);
         }

@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.6.0-alpha.1');
+define('PLUGIN_YAGP_VERSION', '2.6.0-alpha.2');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -146,6 +146,12 @@ function plugin_init_yagp(): void
 
         if (!empty($config->fields['solutiontypes'])) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILSolution::class] = [
+                PluginYagpTicket::class, 'pluginYagpItemAdd',
+            ];
+        }
+
+        if ($config->fields['observers_affect_status']) {
+            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
                 PluginYagpTicket::class, 'pluginYagpItemAdd',
             ];
         }

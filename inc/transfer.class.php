@@ -441,7 +441,7 @@ class PluginYagpTransfer extends CommonDBTM
                 Session::addMessageAfterRedirect(
                     __('Invalid transfer list', 'yagp'),
                     false,
-                    ERROR
+                    ERROR,
                 );
                 exit;
             }
@@ -450,7 +450,7 @@ class PluginYagpTransfer extends CommonDBTM
                     Session::addMessageAfterRedirect(
                         __('Invalid transfer list', 'yagp'),
                         false,
-                        ERROR
+                        ERROR,
                     );
                     exit;
                 }
