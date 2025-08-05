@@ -362,7 +362,11 @@ JAVASCRIPT;
             }
 
             $pendingreason_item = new PendingReason_Item();
-            $pr_criteria = [];
+            $pr_criteria = [
+                'pendingreasons_id' => $parent_item->fields['pendingreasons_id'],
+                'itemtype'          => $parent::class,
+                'items_id'          => $parent_item->getID(),
+            ];
             if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
                 $pendingreason = PendingReason::getById($pendingreason_item->fields['pendingreasons_id']);
                 if ($pendingreason->fields['followups_before_resolution'] == 1) {
