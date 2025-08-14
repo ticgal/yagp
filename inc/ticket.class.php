@@ -373,8 +373,8 @@ JAVASCRIPT;
             return;
         }
 
-        /** @var Ticket $parent */
         $parent_item = $parent::getById($parents_id);
+        /** @var Ticket $parent_item */
         if ($parent_item->fields['status'] == Ticket::WAITING) {
             $observers = $parent_item->getActorsForType(CommonITILActor::OBSERVER);
             $observers_row_id = 0;
@@ -405,7 +405,7 @@ JAVASCRIPT;
                     $parent_item->fields['status'] = $new_value;
                     $updated = $parent_item->updateInDB(
                         ['status'],
-                        ['status' => $old_value]
+                        ['status' => $old_value],
                     );
                 }
             }
