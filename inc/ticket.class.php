@@ -288,7 +288,7 @@ JAVASCRIPT;
      * @param  CommonDBTM $item
      * @return void
      */
-    public static function pluginYagpItemAdd($item): void
+    public static function pluginYagpItemAdd(CommonDBTM $item): void
     {
         $config = PluginYagpConfig::getInstance();
 
@@ -312,6 +312,26 @@ JAVASCRIPT;
         }
     }
 
+    /**
+     * @param CommonDBTM $item
+     *
+     * @return CommonDBTM
+     */
+    public static function preItemAdd(CommonDBTM $item): CommonDBTM
+    {
+        $config = PluginYagpConfig::getInstance();
+
+        switch ($item::class) {
+            case ITILFollowup::class:
+                /** @var ITILFollowup $item */
+                if ($config->fields['observers_affect_status']) {
+                    self::observersAffectStatus($item);
+                }
+                break;
+        }
+
+        return $item;
+    }
 
 
     /**
@@ -334,18 +354,18 @@ JAVASCRIPT;
     }
 
     /**
-     * @param ITILFollowup $followup
+     * @param ITILFollowup &$followup
      *
      * @return void
      */
-    public static function observersAffectStatus(ITILFollowup $followup): void
+    public static function observersAffectStatus(ITILFollowup &$followup): void
     {
-        $followup->fields['is_private'] = $followup->fields['is_private'] ?? 1;
-        $parent = $followup->fields['itemtype'] ?? '';
-        $parents_id = $followup->fields['items_id'] ?? 0;
-        $users_id = $followup->fields['users_id'] ?? 0;
+        $is_private = $followup->input['is_private'] ?? 0;
+        $parent = $followup->input['itemtype'] ?? '';
+        $parents_id = $followup->input['items_id'] ?? 0;
+        $users_id = Session::getLoginUserID();
         if (
-            $followup->fields['is_private']
+            $is_private
             || $parent !== Ticket::class
             || $parents_id <= 0
             || $users_id <= 0
@@ -357,23 +377,36 @@ JAVASCRIPT;
         $parent_item = $parent::getById($parents_id);
         if ($parent_item->fields['status'] == Ticket::WAITING) {
             $observers = $parent_item->getActorsForType(CommonITILActor::OBSERVER);
-            if (!in_array($users_id, $observers)) {
+            $observers_row_id = 0;
+            foreach ($observers as $observer) {
+                if ($observer['itemtype'] == User::class && $observer['items_id'] == $users_id) {
+                    $observers_row_id = $observer['id'];
+                    break;
+                }
+            }
+
+            if (!$observers_row_id) {
                 return;
             }
 
             $pendingreason_item = new PendingReason_Item();
             $pr_criteria = [
-                'pendingreasons_id' => $parent_item->fields['pendingreasons_id'],
-                'itemtype'          => $parent::class,
+                'itemtype'          => $parent_item::getType(),
                 'items_id'          => $parent_item->getID(),
             ];
             if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
-                $pendingreason = PendingReason::getById($pendingreason_item->fields['pendingreasons_id']);
-                if ($pendingreason->fields['followups_before_resolution'] == 1) {
-                    $parent_item->update([
-                        'id'        => $parents_id,
-                        'status'    => $pendingreason_item->fields['previous_status']
-                    ]);
+                // TODO: count followups since the pending reason creation
+                // TODO: for pending reasons with followups_before_resolution over 1
+                // ? only one observer? what if there are more? 2 or 3 follow-ups per user or collectively?
+                if ($pendingreason_item->fields['followups_before_resolution'] >= 1) {
+                    $pendingreason_item->delete(['id' => $pendingreason_item->getID()], true);
+                    $old_value = $parent_item->fields['status'];
+                    $new_value = $pendingreason_item->fields['previous_status'];
+                    $parent_item->fields['status'] = $new_value;
+                    $updated = $parent_item->updateInDB(
+                        ['status'],
+                        ['status' => $old_value]
+                    );
                 }
             }
         }

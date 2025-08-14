@@ -151,8 +151,8 @@ function plugin_init_yagp(): void
         }
 
         if ($config->fields['observers_affect_status']) {
-            $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginYagpTicket::class, 'pluginYagpItemAdd',
+            $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][ITILFollowup::class] = [
+                PluginYagpTicket::class, 'preItemAdd',
             ];
         }
 
