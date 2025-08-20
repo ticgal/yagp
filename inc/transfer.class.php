@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,33 +18,25 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpTransfer extends CommonDBTM
 {
-    public function showForm($ID, array $options = [])
+    /**
+     * {@inheritdoc}
+     */
+    public function showForm($ID, array $options = []): bool
     {
-        /*
-        $edit_form = true;
-        if (strpos($_SERVER['HTTP_REFERER'], "transfer.form.php") === false) {
-            $edit_form = false;
-        }
-        */
-        $edit_form = false; // custom form
-
         $transfer = new Transfer();
         $transfer->initForm($ID, $options);
 
@@ -53,47 +45,26 @@ class PluginYagpTransfer extends CommonDBTM
             $params['readonly'] = true;
         }
 
-        if ($edit_form) {
-            $transfer->showFormHeader($options);
-        } else {
-            echo "<form method='post' name=form action='" . $options['target'] . "'>";
-            echo "<div class='center' id='tabsbody' >";
-            echo "<table class='tab_cadre_fixe'>";
+        echo "<form method='post' name=form action='" . $options['target'] . "'>";
+        echo "<div class='center' id='tabsbody' >";
+        echo "<table class='tab_cadre_fixe'>";
 
-            echo "<tr><td class='tab_bg_2 top' colspan='4'>";
-            echo "<div class='center'>";
-            echo "<input type='hidden' name='transferlist' value='" . json_encode($options['transferlist']) . "'>";
-            Entity::dropdown(['name' => 'to_entity']);
-            echo "&nbsp;<input type='submit' name='transfer' value=\"" . __s('Execute') . "\"
-                    class='btn btn-primary'></div>";
-            echo "</td></tr>";
-        }
-
-        if ($edit_form) {
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>" . __('Name') . "</td><td>";
-            echo Html::input('name', ['value' => $transfer->fields['name']]);
-            echo "</td>";
-            echo "<td rowspan='3' class='middle right'>" . __('Comments') . "</td>";
-            echo "<td class='center middle' rowspan='3'>
-                <textarea class='form-control' name='comment' >" . $transfer->fields["comment"] . "</textarea>";
-            echo "</td></tr>";
-
-            echo "<tr class='tab_bg_1'>";
-            echo "<td>" . __('Last update') . "</td>";
-            echo "<td>" . ($transfer->fields["date_mod"] ? Html::convDateTime($transfer->fields["date_mod"])
-                                                : __('Never'));
-            echo "</td></tr>";
-        }
+        echo "<tr><td class='tab_bg_2 top' colspan='4'>";
+        echo "<div class='center'>";
+        echo "<input type='hidden' name='transferlist' value='" . json_encode($options['transferlist']) . "'>";
+        Entity::dropdown(['name' => 'to_entity']);
+        echo "&nbsp;<input type='submit' name='transfer' value=\"" . __s('Execute') . "\"
+                class='btn btn-primary'></div>";
+        echo "</td></tr>";
 
         if (isset($options['display']) && $options['display'] == true) {
             $keep  = [0 => _x('button', 'Delete permanently'),
-                1 => __('Preserve')
+                1 => __('Preserve'),
             ];
 
             $clean = [0 => __('Preserve'),
                 1 => _x('button', 'Put in trashbin'),
-                2 => _x('button', 'Delete permanently')
+                2 => _x('button', 'Delete permanently'),
             ];
 
             echo "<tr class='tab_bg_1'>";
@@ -101,9 +72,7 @@ class PluginYagpTransfer extends CommonDBTM
             $params['value'] = $transfer->fields['keep_history'];
             Dropdown::showFromArray('keep_history', $keep, $params);
             echo "</td>";
-            if (!$edit_form) {
-                echo "<td colspan='2'>&nbsp;</td>";
-            }
+            echo "<td colspan='2'>&nbsp;</td>";
             echo "</tr>";
 
             // Clean glpi 10.0.10 doesn't have this field in Transfer table
@@ -112,14 +81,12 @@ class PluginYagpTransfer extends CommonDBTM
                 echo "<td>" . _n('Location', 'Locations', 1) . "</td><td>";
                 $location_option  = [
                     0 => __("Empty the location"),
-                    1 => __('Preserve')
+                    1 => __('Preserve'),
                 ];
                 $params['value'] = $transfer->fields['keep_location'];
                 Dropdown::showFromArray('keep_location', $location_option, $params);
                 echo "</td>";
-                if (!$edit_form) {
-                    echo "<td colspan='2'>&nbsp;</td>";
-                }
+                echo "<td colspan='2'>&nbsp;</td>";
                 echo "</tr>";
             }
 
@@ -130,7 +97,7 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<td>" . _n('Network port', 'Network ports', Session::getPluralNumber()) . "</td><td>";
             $options = [0 => _x('button', 'Delete permanently'),
                 1 => _x('button', 'Disconnect') ,
-                2 => __('Keep')
+                2 => __('Keep'),
             ];
             $params['value'] = $transfer->fields['keep_networklink'];
             Dropdown::showFromArray('keep_networklink', $options, $params);
@@ -138,7 +105,7 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<td>" . _n('Ticket', 'Tickets', Session::getPluralNumber()) . "</td><td>";
             $options = [0 => _x('button', 'Delete permanently'),
                 1 => _x('button', 'Disconnect') ,
-                2 => __('Keep')
+                2 => __('Keep'),
             ];
             $params['value'] = $transfer->fields['keep_ticket'];
             Dropdown::showFromArray('keep_ticket', $options, $params);
@@ -297,12 +264,9 @@ class PluginYagpTransfer extends CommonDBTM
             Dropdown::showFromArray('clean_certificate', $clean, $params);
             echo "</td></tr>";
         }
-        if ($edit_form) {
-            $transfer->showFormButtons($options);
-        } else {
-            echo "</table></div>";
-            Html::closeForm();
-        }
+        echo "</table></div>";
+        Html::closeForm();
+
         return true;
     }
 
@@ -313,6 +277,10 @@ class PluginYagpTransfer extends CommonDBTM
      */
     public function showTransferList($transferlist = [])
     {
+        /**
+         * @var \DBmysql $DB
+         * @var array $CFG_GLPI
+         */
         global $DB, $CFG_GLPI;
 
         echo "<div class='d-flex w-100 flex-column'>";
@@ -324,22 +292,6 @@ class PluginYagpTransfer extends CommonDBTM
             echo "<table class='mx-2 text-center' >";
             echo "<thead>";
             echo '<tr><th>' . __('Items to transfer') . '</th>';
-
-            /*
-            echo '<th>' . __('Transfer mode') . "&nbsp;";
-            $rand = Transfer::dropdown([
-                'name'      => 'id',
-                'comments'  => false,
-                'value'     => 1,
-                'toupdate'  => [
-                    'value_fieldname'   => 'id',
-                    'to_update'         => "transfer_form",
-                    //'url'               => $CFG_GLPI["root_doc"] . "/ajax/transfers.php"
-                    'url'               => Plugin::getWebDir('yagp') . "/ajax/quicktransfer.php"
-                ]
-            ]);
-            echo '</th></tr>';
-            */
             echo "</thead>";
 
             echo "<tbody>";
@@ -357,31 +309,31 @@ class PluginYagpTransfer extends CommonDBTM
                             "$table.id",
                             "$table.name",
                             'entities.completename AS locname',
-                            'entities.id AS entID'
+                            'entities.id AS entID',
                         ],
                         'FROM'      => $table,
                         'LEFT JOIN' => [
                             'glpi_entities AS entities'   => [
                                 'ON' => [
                                     'entities' => 'id',
-                                    $table     => 'entities_id'
-                                ]
-                            ]
+                                    $table     => 'entities_id',
+                                ],
+                            ],
                         ],
                         'WHERE'     => ["$table.id" => $tab],
-                        'ORDERBY'   => ['locname', "$table.name"]
+                        'ORDERBY'   => ['locname', "$table.name"],
                     ]);
                     $entID = -1;
 
                     if (count($iterator)) {
                         echo '<div class="d-flex justify-content-around py-2">';
                         foreach ($iterator as $data) {
-                                echo '<span>' . $item->getTypeName() . '</span>';
+                            echo '<span>' . $item->getTypeName() . '</span>';
                             if ($entID != $data['entID']) {
                                 $entID = $data['entID'];
                                 echo "<span>" . $data['locname'] . "</span>";
                             }
-                                echo "<span>" . ($data['name'] ? $data['name'] : "(" . $data['id'] . ")") . "</span>";
+                            echo "<span>" . ($data['name'] ? $data['name'] : "(" . $data['id'] . ")") . "</span>";
                         }
                         echo '</div>';
                     }
@@ -414,8 +366,8 @@ class PluginYagpTransfer extends CommonDBTM
                 [
                     'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
                     'display'       => $display,
-                    'transferlist'  => $transferlist
-                ]
+                    'transferlist'  => $transferlist,
+                ],
             );
             /*
             Html::showSimpleForm(
@@ -436,8 +388,6 @@ class PluginYagpTransfer extends CommonDBTM
     }
 
     /**
-     * getCompleteTransferOptions
-     *
      * @return array
      */
     public static function getCompleteTransferOptions(): array
@@ -476,5 +426,34 @@ class PluginYagpTransfer extends CommonDBTM
         ];
 
         return $params;
+    }
+
+    /**
+     * @param array $items
+     *
+     * @return void
+     */
+    public static function validateTransferList(array $items): void
+    {
+        foreach ($items as $itemtype => $items_ids) {
+            if (!is_string($itemtype) || !is_array($items_ids)) {
+                Session::addMessageAfterRedirect(
+                    __('Invalid transfer list', 'yagp'),
+                    false,
+                    ERROR,
+                );
+                exit;
+            }
+            foreach ($items_ids as $items_id) {
+                if (!is_numeric($items_id)) {
+                    Session::addMessageAfterRedirect(
+                        __('Invalid transfer list', 'yagp'),
+                        false,
+                        ERROR,
+                    );
+                    exit;
+                }
+            }
+        }
     }
 }

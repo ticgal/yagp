@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,15 +18,15 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
 /**
@@ -82,32 +82,22 @@ function plugin_yagp_uninstall(): bool
 /**
  * plugin_yagp_updateitem
  *
- * @param  mixed $item
+ * @param  CommonDBTM $item
  * @return void
  */
 function plugin_yagp_updateitem(CommonDBTM $item): void
 {
     if ($item::getType() == "PluginYagpConfig") {
+        /** @var PluginYagpConfig $item */
         $input = $item->input;
         if ($input["ticketsolveddate"] == 1) {
-            Crontask::Register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
+            CronTask::register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
                 'state' => 1,
-                'mode'  => CronTask::MODE_EXTERNAL
+                'mode'  => CronTask::MODE_EXTERNAL,
             ]);
         } elseif ($input["ticketsolveddate"] == 0) {
-            Crontask::Unregister("YagpTicketsolveddate");
+            CronTask::unregister("YagpTicketsolveddate");
         }
-
-        /* Deprecated
-        if ($input["contractrenew"] == 1) {
-            Crontask::Register("PluginYagpContractrenew", 'renewContract', DAY_TIMESTAMP, [
-            'state' => 0,
-            'mode'  => CronTask::MODE_EXTERNAL
-            ]);
-        } elseif ($input["contractrenew"] == 0) {
-            Crontask::Unregister("YagpContractrenew");
-        }
-        */
     }
 }
 
@@ -137,8 +127,8 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
                     'datatype'              => 'specific',
                     'joinparams' => [
                         'jointype'          => 'child',
-                        'linkfield'         => 'tickets_id'
-                    ]
+                        'linkfield'         => 'tickets_id',
+                    ],
                 ];
 
                 $sopt[9021322] = [
@@ -151,8 +141,8 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
                     'datatype'              => 'specific',
                     'joinparams' => [
                         'jointype'          => 'child',
-                        'linkfield'         => 'tickets_id'
-                    ]
+                        'linkfield'         => 'tickets_id',
+                    ],
                 ];
         }
     }
@@ -216,6 +206,11 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
     return $in;
 }
 
+/**
+ * @param array $params
+ *
+ * @return void
+ */
 function plugin_yagp_pre_show_tab(array $params): void
 {
     $config = PluginYagpConfig::getInstance();
@@ -229,22 +224,32 @@ function plugin_yagp_pre_show_tab(array $params): void
     }
 }
 
+/**
+ * @param array $params
+ *
+ * @return void
+ */
 function plugin_yagp_post_show_tab(array $params): void
 {
+    /** @var \DBmysql $DB */
     global $DB;
 
     $config = PluginYagpConfig::getInstance();
 
     if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
         $item = $params['item'];
-        if ($item->getType() == 'Ticket' && isset($params['options']['tabnum']) && $params['options']['tabnum'] == 3) {
-
+        if (
+            $item->getType() == 'Ticket'
+            && isset($params['options']['tabnum'])
+            && $params['options']['tabnum'] == 3
+        ) {
+            /** @var Ticket $item */
             $query = [
                 'FROM' => TicketSatisfaction::getTable(),
                 'WHERE' => [
                     'tickets_id' => $item->getID(),
-                    'date_answered' => NULL
-                ]
+                    'date_answered' => null,
+                ],
             ];
             $req = $DB->request($query);
             if (count($req) == 1) {
