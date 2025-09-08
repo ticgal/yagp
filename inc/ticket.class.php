@@ -384,6 +384,7 @@ JAVASCRIPT;
         if ($parent_item->fields['status'] == Ticket::WAITING) {
             $observers = $parent_item->getActorsForType(CommonITILActor::OBSERVER);
             $observers_row_id = 0;
+            // TODO: maybe check groups too in the future
             foreach ($observers as $observer) {
                 if ($observer['itemtype'] == User::class && $observer['items_id'] == $users_id) {
                     $observers_row_id = $observer['id'];
