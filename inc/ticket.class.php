@@ -414,6 +414,12 @@ JAVASCRIPT;
                         ['status' => $old_value],
                     );
                 }
+            } else {
+                $parent_item->fields['status'] = Ticket::ASSIGNED;
+                $parent_item->updateInDB(
+                    ['status'],
+                    ['status' => Ticket::WAITING],
+                );
             }
         }
     }
