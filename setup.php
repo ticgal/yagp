@@ -88,7 +88,9 @@ function plugin_init_yagp(): void
 
         $config = PluginYagpConfig::getInstance();
         if ($config->fields['gototicket']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
+            if(Session::getCurrentInterface() != "helpdesk") {
+                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
+            }
         }
 
         if ($config->fields['blockdate']) {
