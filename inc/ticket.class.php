@@ -360,16 +360,22 @@ JAVASCRIPT;
      */
     public static function observersAffectStatus(ITILFollowup &$followup): void
     {
-        $is_private = $followup->input['is_private'] ?? 0;
-        $parent = $followup->input['itemtype'] ?? '';
+        $parent     = $followup->input['itemtype'] ?? '';
         $parents_id = $followup->input['items_id'] ?? 0;
-        $users_id = Session::getLoginUserID();
+        $users_id   = Session::getLoginUserID();
+
         if (
-            $is_private
-            || $parent !== Ticket::class
+            $parent !== Ticket::class
             || $parents_id <= 0
             || $users_id <= 0
         ) {
+            return;
+        }
+
+        $is_pending = $followup->input['pending'] ?? 0;
+        $is_private = $followup->input['is_private'] ?? 0;
+
+        if ($is_pending || $is_private) {
             return;
         }
 
@@ -378,6 +384,7 @@ JAVASCRIPT;
         if ($parent_item->fields['status'] == Ticket::WAITING) {
             $observers = $parent_item->getActorsForType(CommonITILActor::OBSERVER);
             $observers_row_id = 0;
+            // TODO: maybe check groups too in the future
             foreach ($observers as $observer) {
                 if ($observer['itemtype'] == User::class && $observer['items_id'] == $users_id) {
                     $observers_row_id = $observer['id'];
@@ -397,7 +404,6 @@ JAVASCRIPT;
             if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
                 // TODO: count followups since the pending reason creation
                 // TODO: for pending reasons with followups_before_resolution over 1
-                // ? only one observer? what if there are more? 2 or 3 follow-ups per user or collectively?
                 if ($pendingreason_item->fields['followups_before_resolution'] >= 1) {
                     $pendingreason_item->delete(['id' => $pendingreason_item->getID()], true);
                     $old_value = $parent_item->fields['status'];
