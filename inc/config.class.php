@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,23 +18,20 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
 use Glpi\Application\View\TemplateRenderer;
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpConfig extends CommonDBTM
 {
     private static $instance = null;
@@ -48,6 +45,7 @@ class PluginYagpConfig extends CommonDBTM
      */
     public function __construct()
     {
+        /** @var \DBmysql $DB */
         global $DB;
         if ($DB->tableExists(self::getTable())) {
             $this->getFromDB(1);
@@ -55,10 +53,8 @@ class PluginYagpConfig extends CommonDBTM
     }
 
     /**
-    * Summary of getTypeName
-    * @param mixed $nb plural
-    * @return mixed
-    */
+     * {@inheritdoc}
+     */
     public static function getTypeName($nb = 0): string
     {
         return "YAGP";
@@ -67,10 +63,10 @@ class PluginYagpConfig extends CommonDBTM
     /**
      * getInstance
      *
-     * @param  mixed $n
+     * @param  int $n
      * @return PluginYagpConfig
      */
-    public static function getInstance($n = 1): PluginYagpConfig
+    public static function getInstance(int $n = 1): PluginYagpConfig
     {
         if (!isset(self::$instance)) {
             self::$instance = new self();
@@ -82,12 +78,11 @@ class PluginYagpConfig extends CommonDBTM
     }
 
     /**
-    * Summary of showConfigForm
-    * @param mixed $item is the config
     * @return boolean
     */
     public static function showConfigForm(): bool
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $config = self::getInstance();
@@ -108,20 +103,17 @@ class PluginYagpConfig extends CommonDBTM
             'solutiontypes'         => $solutiontypes,
             'used_solutiontypes'    => $used,
             'options' => [
-                'full_width' => true
-            ]
+                'full_width' => true,
+            ],
         ]);
 
-        return false;
+        return true;
     }
 
     /**
-     * prepareInputForUpdate
-     *
-     * @param  mixed $input
-     * @return array
+     * {@inheritdoc}
      */
-    public function prepareInputForUpdate($input): array
+    public function prepareInputForUpdate($input): false|array
     {
         if ((!isset($input["solutiontypes"])) || (!is_array($input["solutiontypes"]))) {
             $input["solutiontypes"] = [];
@@ -132,43 +124,36 @@ class PluginYagpConfig extends CommonDBTM
     }
 
     /**
-     * getTabNameForItem
-     *
-     * @param  mixed $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritdoc}
      */
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string|array
     {
         if ($item->getType() == 'Config') {
             return "YAGP";
         }
+
         return '';
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  mixed $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return bool
+     * {@inheritdoc}
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
         if ($item->getType() == 'Config') {
-            self::showConfigForm($item);
+            return self::showConfigForm();
         }
-        return true;
+
+        return false;
     }
 
     /**
      * addSolutionType
      *
-     * @param  mixed $config
+     * @param  PluginYagpConfig $config
      * @return void
      */
-    private static function addSolutionType($config): void
+    private static function addSolutionType(PluginYagpConfig $config): void
     {
         $solutiontype = new SolutionType();
         if (!$solutiontype->getFromDB($config->fields['solutiontypes_id_rejected'])) {
@@ -184,10 +169,10 @@ class PluginYagpConfig extends CommonDBTM
     /**
      * addRequestType
      *
-     * @param  mixed $config
+     * @param  PluginYagpConfig $config
      * @return void
      */
-    private static function addRequestType($config): void
+    private static function addRequestType(PluginYagpConfig $config): void
     {
         $requesttype = new RequestType();
         if (!$requesttype->getFromDB($config->fields['requesttypes_id_reopen'])) {
@@ -207,17 +192,18 @@ class PluginYagpConfig extends CommonDBTM
      */
     private static function disableCronTask(): void
     {
-        CronTask::Unregister("YagpContractrenew");
+        CronTask::unregister("YagpContractrenew");
     }
 
     /**
      * install
      *
-     * @param  mixed $migratio
+     * @param  Migration $migration
      * @return void
      */
     public static function install(Migration $migration): void
     {
+        /** @var \DBmysql $DB */
         global $DB;
 
         $default_charset    = DBConnection::getDefaultCharset();
@@ -229,7 +215,7 @@ class PluginYagpConfig extends CommonDBTM
 
         if (!$DB->tableExists($table) && !$DB->tableExists("glpi_plugin_yagp_config")) {
             $migration->displayMessage("Installing $table");
-           //Install
+            //Install
             $query = "CREATE TABLE `$table` (
 				`id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
                 `ticketsolveddate` TINYINT(1) NOT NULL DEFAULT '0',
@@ -252,6 +238,7 @@ class PluginYagpConfig extends CommonDBTM
                 `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `default_satisfaction` INT {$default_key_sign} NOT NULL DEFAULT '3',
                 `modal_satisfaction` TINYINT(1) NOT NULL DEFAULT '0',
+                `observers_affect_status` TINYINT(1) NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
 			) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
             COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
@@ -287,6 +274,8 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'default_satisfaction', 'int', ['value' => 3]);
             // * 2.5.0
             $migration->addField($table, 'modal_satisfaction', 'boolean', ['value' => 0]);
+            // * 2.6.0
+            $migration->addField($table, 'observers_affect_status', 'boolean', ['value' => 0]);
 
             $migration->migrationOneTable($table);
         }

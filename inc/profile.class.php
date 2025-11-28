@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,21 +18,18 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access directly to this file");
-}
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpProfile extends Profile
 {
     public static $rightname = "profile";
@@ -40,57 +37,45 @@ class PluginYagpProfile extends Profile
     public const SEE_GROUP_TICKETS_ONLY = 1;
 
     /**
-     * getTabNameForItem
-     *
-     * @param  mixed $item
-     * @param  mixed $withtemplate
-     * @return string
+     * {@inheritdoc}
      */
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string
+    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string|array
     {
         switch ($item->getType()) {
             case 'Profile':
                 return self::createTabEntry('YAGP');
-                break;
         }
 
         return '';
     }
 
     /**
-     * displayTabContentForItem
-     *
-     * @param  mixed $item
-     * @param  mixed $tabnum
-     * @param  mixed $withtemplate
-     * @return void
+     * {@inheritdoc}
      */
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): void
+    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
         switch ($item->getType()) {
             case 'Profile':
+                /** @var Profile $item */
                 $profile = new self();
-                $profile->showForm($item->getID());
-                break;
+                return $profile->showForm($item->getID());
         }
+
+        return false;
     }
 
     /**
-     * showForm
-     *
-     * @param  mixed $profiles_id
-     * @param  mixed $options
-     * @return void
+     * {@inheritdoc}
      */
-    public function showForm($profiles_id, $options = []): void
+    public function showForm($ID, $options = []): bool
     {
         if (!Session::haveRight("profile", READ)) {
-            return;
+            return false;
         }
         $canedit = Session::haveRight("profile", UPDATE);
 
         $profile = new Profile();
-        $profile->getFromDB($profiles_id);
+        $profile->getFromDB($ID);
 
         echo "<form action='" . Profile::getFormUrl() . "' method='post'>";
 
@@ -98,7 +83,7 @@ class PluginYagpProfile extends Profile
         $matrix_options = [
             'canedit'       => $canedit,
             'default_class' => 'tab_bg_2',
-            'title'         => 'Yet Another GLPI Plugin'
+            'title'         => 'Yet Another GLPI Plugin',
         ];
 
         $profile->displayRightsChoiceMatrix($general_rights, $matrix_options);
@@ -106,15 +91,17 @@ class PluginYagpProfile extends Profile
 
         if ($canedit) {
             echo "<div class='center'>";
-            echo Html::hidden('id', ['value' => $profiles_id]);
+            echo Html::hidden('id', ['value' => $ID]);
             echo Html::submit("<i class='fas fa-save'></i><span>" . _sx('button', 'Save') . "</span>", [
                 'class' => 'btn btn-primary mt-2',
-                'name'  => 'update'
+                'name'  => 'update',
             ]);
             echo "</div>\n";
             Html::closeForm();
         }
         echo "</div>";
+
+        return true;
     }
 
     /**
@@ -125,7 +112,7 @@ class PluginYagpProfile extends Profile
     public static function getGeneralRights(): array
     {
         $crud = [
-            self::SEE_GROUP_TICKETS_ONLY => __("See group tickets only", 'yagp')
+            self::SEE_GROUP_TICKETS_ONLY => __("See group tickets only", 'yagp'),
         ];
 
         $rights = [
@@ -133,8 +120,8 @@ class PluginYagpProfile extends Profile
                 'rights'    => $crud,
                 'itemtype'  => self::getType(),
                 'label'     => __("Ticket"),
-                'field'     => 'plugin_yagp_tickets'
-            ]
+                'field'     => 'plugin_yagp_tickets',
+            ],
         ];
 
         return $rights;
@@ -143,7 +130,7 @@ class PluginYagpProfile extends Profile
     /**
      * showWarning
      *
-     * @param  mixed $event - Events:
+     * @param  string $event - Events:
      * - no_group - User has the allocator profile and is not in any group
      * @return void
      */
@@ -221,13 +208,18 @@ class PluginYagpProfile extends Profile
         return $sql;
     }
 
+    /**
+     * @param Ticket $item
+     *
+     * @return bool
+     */
     public static function checkAllocatorAccess(Ticket $item): bool
     {
         if (self::getAllocatorPermission()) {
             $DB = DBConnection::getReadConnection();
 
             $allocatorSQL = self::getAllocatorSQLTickets();
-            if (!is_null($item) && $items_id = $item->getID()) {
+            if ($items_id = $item->getID()) {
                 $query = "SELECT id FROM glpi_tickets INNER JOIN $allocatorSQL `yagp` ";
                 $query .= "ON `yagp`.`tickets_id` = `glpi_tickets`.`id` ";
                 $query .= "WHERE `glpi_tickets`.`id` = $items_id";
@@ -242,16 +234,15 @@ class PluginYagpProfile extends Profile
     }
 
     /**
-     * uninstall
+     * @param Migration $migration
      *
      * @return void
      */
-    public static function uninstall(): void
+    public static function uninstall(Migration $migration): void
     {
-        global $DB;
-
-        $table = ProfileRight::getTable();
-        $query = "DELETE FROM $table WHERE `name` LIKE '%plugin_yagp%'";
-        $DB->query($query) or die($DB->error());
+        $migration->displayMessage("Removing profile rights");
+        foreach (self::getGeneralRights() as $data) {
+            ProfileRight::deleteProfileRights([$data['field']]);
+        }
     }
 }

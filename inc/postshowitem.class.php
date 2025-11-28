@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,30 +18,26 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
-if (!defined('GLPI_ROOT')) {
-    die("Sorry. You can't access this file directly");
-}
-
+// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpPostshowitem extends CommonDBTM
 {
     /**
-     * pluginYagpPostShowItem
+     * @param  array $params
      *
-     * @param  mixed $params
      * @return bool
      */
-    public static function pluginYagpPostShowItem($params): bool
+    public static function pluginYagpPostShowItem(array $params): bool
     {
         $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
@@ -71,7 +67,6 @@ class PluginYagpPostshowitem extends CommonDBTM
     /**
      * enhancePrivateView
      *
-     * @param  mixed
      * @return void
      */
     public static function enhancePrivateView(): void
@@ -110,6 +105,7 @@ JAVASCRIPT;
 
         switch ($item->getType()) {
             case Ticket::class:
+                /** @var Ticket $item */
                 $config = PluginYagpConfig::getInstance();
                 if (
                     Session::haveRight('transfer', READ)
@@ -127,7 +123,7 @@ JAVASCRIPT;
                     ) {
                         $entity_name = Dropdown::getDropdownName(
                             'glpi_entities',
-                            $config->fields['transfer_entity']
+                            $config->fields['transfer_entity'],
                         );
                         $ajax_title .= " $entity_name";
                     }
@@ -153,8 +149,8 @@ JAVASCRIPT;
                             'title'         => $ajax_title,
                             'width'         => '500',
                             'height'        => '500',
-                            'reloadonclose' => true
-                        ]
+                            'reloadonclose' => true,
+                        ],
                     );
                     echo Html::scriptBlock($script);
                 }
@@ -164,14 +160,21 @@ JAVASCRIPT;
         return true;
     }
 
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
     public static function showSatisfactionModal(array $params): bool
     {
         $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
         }
+
         switch ($item->getType()) {
             case Ticket::class:
+                /** @var Ticket $item */
                 $ticket_status = $item->fields['status'];
                 $ticket_entity = $item->fields['entities_id'];
                 if ($ticket_status != Ticket::CLOSED) {
@@ -202,7 +205,7 @@ JAVASCRIPT;
                                         'width'         => '500',
                                         'height'        => '500',
                                         'reloadonclose' => true,
-                                    ]
+                                    ],
                                 );
 
                                 echo "<script>
@@ -225,10 +228,11 @@ JAVASCRIPT;
         return true;
     }
 
-
+    /**
+     * {@inheritdoc}
+     */
     public static function getUsedConfig($fieldref, $entities_id, $fieldval = '', $default_value = -2)
     {
-
         if (empty($fieldval)) {
             $fieldval = $fieldref;
         }
@@ -262,67 +266,71 @@ JAVASCRIPT;
         return $default_value;
     }
 
-    public function showSatisfaction($ID)
+    /**
+     * @param int $ID
+     *
+     * @return void
+     */
+    public function showSatisfaction(int $ID): void
     {
         $satisfaction = new TicketSatisfaction();
-       
-            $satisfaction->getFromDBByCrit(['tickets_id' => $ID]);
-            $ticket = new Ticket();
-            $ticket->getFromDB($ID);
-            $add = true;
-            if ($satisfaction->getField('satisfaction') == null) {
-                $add = false;
-            }
-            $rand = mt_rand();
-            //$out = "<link rel='stylesheet' type='text/css' href='public/lib/jquery.rateit.css'>";
-            $out = "<form name='costentity_form$rand' id='costentity_form$rand' method='post' action='";
-            $out .= self::getFormUrl() . "'>";
-            $out .= "<table class='tab_cadre_fixe'>";
 
-            $out .= "<tr><td colspan='2'>";
-            $out .= "<input type='hidden' name='id' value='$ID'>";
-            $out .= "</td></tr>\n";
-            $out .= "<tr class='tab_bg_2'>";
-            $out .= "<td>";
-            $out .= "<span>" . __('Satisfaction with the resolution of the ticket') . "</span> <br><br>";
-            $out .= "<input type='hidden' name='tickets_id' value='$ID'>";
-            $out .= "<select id='satisfaction_data' name='satisfaction'>";
-            for ($i = 1; $i <= 5; $i++) {
-                $out .= "<option value='$i' " . (($i == $satisfaction->getField('satisfaction')) ? 'selected' : '') .
-                    ">$i</option>";
-            }
-            $out .= "</select>";
-            $out .= "<div class='rateit' id='stars'></div>";
-            $out .=  "<script type='text/javascript'>";
-            $out .=  "$(document).ready(function() {";
-            //$out .= "$(function() {";
-            $out .= "$('#stars').rateit({value: " . (int)$satisfaction->getField('satisfaction') . ",
-                                   min : 1,
-                                   max : 5,
-                                   step: 1,
-                                   backingfld: '#satisfaction_data',
-                                   ispreset: true,
-                                   resetable: false});";
-            $out .= "});</script>";
+        $satisfaction->getFromDBByCrit(['tickets_id' => $ID]);
+        $ticket = new Ticket();
+        $ticket->getFromDB($ID);
+        $add = true;
+        if ($satisfaction->getField('satisfaction') == null) {
+            $add = false;
+        }
+        $rand = mt_rand();
+        //$out = "<link rel='stylesheet' type='text/css' href='public/lib/jquery.rateit.css'>";
+        $out = "<form name='costentity_form$rand' id='costentity_form$rand' method='post' action='";
+        $out .= self::getFormUrl() . "'>";
+        $out .= "<table class='tab_cadre_fixe'>";
 
-            $out .= "</td></tr>";
+        $out .= "<tr><td colspan='2'>";
+        $out .= "<input type='hidden' name='id' value='$ID'>";
+        $out .= "</td></tr>\n";
+        $out .= "<tr class='tab_bg_2'>";
+        $out .= "<td>";
+        $out .= "<span>" . __('Satisfaction with the resolution of the ticket') . "</span> <br><br>";
+        $out .= "<input type='hidden' name='tickets_id' value='$ID'>";
+        $out .= "<select id='satisfaction_data' name='satisfaction'>";
+        for ($i = 1; $i <= 5; $i++) {
+            $out .= "<option value='$i' " . (($i == $satisfaction->getField('satisfaction')) ? 'selected' : '') .
+                ">$i</option>";
+        }
+        $out .= "</select>";
+        $out .= "<div class='rateit' id='stars'></div>";
+        $out .=  "<script type='text/javascript'>";
+        $out .=  "$(document).ready(function() {";
+        //$out .= "$(function() {";
+        $out .= "$('#stars').rateit({value: " . (int) $satisfaction->getField('satisfaction') . ",
+                                    min : 1,
+                                    max : 5,
+                                    step: 1,
+                                    backingfld: '#satisfaction_data',
+                                    ispreset: true,
+                                    resetable: false});";
+        $out .= "});</script>";
 
-            $out .= "<tr class='tab_bg_2'>";
-            $out .= "<td rowspan='1' class='middle'>";
-            $out .= "<span>" . __('Comentarios') . "</span><br><br>";
-            $out .= "<textarea class='form-control' rows='10' cols='100' name='comment'>" . $satisfaction->getField('comment') . "</textarea>";
-            $out .= "</td></tr>";
-            $out .= "</tbody>";
-            $out .= "</table>";
-            if ($ticket->fields['status'] == Ticket::CLOSED) {
-                if ($add == true) {
-                    $out .= "<input type='submit' name='add' value='" . _sx('button', 'Add') . "' class='submit'>";
-                } else {
-                    $out .= "<input type='submit' name='update' value='" . _sx('button', 'Update') . "' class='submit'>";
-                }
+        $out .= "</td></tr>";
+
+        $out .= "<tr class='tab_bg_2'>";
+        $out .= "<td rowspan='1' class='middle'>";
+        $out .= "<span>" . __('Comentarios') . "</span><br><br>";
+        $out .= "<textarea class='form-control' rows='10' cols='100' name='comment'>" . $satisfaction->getField('comment') . "</textarea>";
+        $out .= "</td></tr>";
+        $out .= "</tbody>";
+        $out .= "</table>";
+        if ($ticket->fields['status'] == Ticket::CLOSED) {
+            if ($add == true) {
+                $out .= "<input type='submit' name='add' value='" . _sx('button', 'Add') . "' class='submit'>";
+            } else {
+                $out .= "<input type='submit' name='update' value='" . _sx('button', 'Update') . "' class='submit'>";
             }
-            $out .= Html::closeForm(false);
-            echo $out;
-        
+        }
+        $out .= Html::closeForm(false);
+        echo $out;
     }
 }

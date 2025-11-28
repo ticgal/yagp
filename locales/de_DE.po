@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-04 15:41+0200\n"
+"POT-Creation-Date: 2025-11-12 12:42+0100\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,91 +10,86 @@ msgstr ""
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: front/transfer.form.php:69 ajax/quicktransfer.php:78
+#: front/transfer.form.php:71 ajax/quicktransfer.php:78
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr "Ticket übertragen an %s"
 
-#: front/transfer.form.php:78 front/postshowitem.form.php:54
+#: front/transfer.form.php:80 front/postshowitem.form.php:54
 #: front/postshowitem.form.php:65 front/postshowitem.form.php:74
 #: ajax/quicktransfer.php:87
 msgid "You can close this window"
 msgstr "Du kannst dieses Fenster schließen."
 
-#: hook.php:133
+#: hook.php:123
 msgid "Recategorized"
 msgstr "Neu kategorisiert"
 
-#: hook.php:147
+#: hook.php:137
 msgid "Initial category"
 msgstr "Anfängliche Kategorie"
 
-#: inc/ticket.class.php:44
+#: inc/ticket.class.php:46
 msgid "Expired satisfaction removal"
 msgstr "Expired satisfaction removal"
 
-#: inc/ticket.class.php:74
+#: inc/ticket.class.php:81
 msgid "Satisfaction expired for ticket"
 msgstr "Satisfaction expired for ticket"
 
-#: inc/ticket.class.php:472
+#: inc/ticket.class.php:618
 msgid "You must provide a comment to close the ticket with less than 3 stars"
 msgstr "You must provide a comment to close the ticket with less than 3 stars"
 
-#: inc/contractrenew.class.php:47
-msgid "Renews tacit contracts"
-msgstr "Erneuert stillschweigende Veträge"
-
-#: inc/contractrenew.class.php:81
-#, php-format
-msgid "Renewed Contract id: %s"
-msgstr "ID des erneuerten Vertrages: %s"
-
-#: inc/postshowitem.class.php:119
+#: inc/postshowitem.class.php:115
 msgid "Select an entity to transfer"
 msgstr "Wählen Sie eine zu übertragende Einheit"
 
-#: inc/postshowitem.class.php:123
+#: inc/postshowitem.class.php:119
 msgid "Transfer to"
 msgstr "Transfer an"
 
-#: inc/postshowitem.class.php:195
+#: inc/postshowitem.class.php:198
 msgid "Satisfaction"
 msgstr "Satisfaction"
 
-#: inc/profile.class.php:128 inc/profile.class.php:159
+#: inc/profile.class.php:115 inc/profile.class.php:146
 msgid "See group tickets only"
 msgstr "See group tickets only"
 
-#: inc/profile.class.php:160
+#: inc/profile.class.php:147
 msgid "You are not in any group"
 msgstr "Du bist in keiner Gruppe"
 
-#: inc/preshowtab.class.php:54
+#: inc/preshowtab.class.php:50
 msgid "Current minimum validation"
 msgstr "Aktuelle Validierung des Minimums"
 
-#: inc/ticketsolveddate.class.php:56
+#: inc/ticketsolveddate.class.php:54
 msgid "Change date"
 msgstr "Datum ändern"
 
-#: inc/ticketsolveddate.class.php:57
+#: inc/ticketsolveddate.class.php:55
 msgid "Number of tickets"
 msgstr "Anzahl Tickets"
 
-#: entrada estándar:50
+#: inc/transfer.class.php:441 inc/transfer.class.php:450
+msgid "Invalid transfer list"
+msgstr "Invalid transfer list"
+
+#: entrada estándar:49
 msgid "Display an input to quickly access a ticket"
 msgstr "Display an input to quickly access a ticket"
 
-#: entrada estándar:57
+#: entrada estándar:56
 msgid "Block opening date"
 msgstr "Eröffnungsdatum sperren"
 
-#: entrada estándar:64
+#: entrada estándar:63
 msgid "Enable re-categorization tracking"
 msgstr "Nachverfolgung der Neukategorisierung aktivieren"
 
-#: entrada estándar:71
+#: entrada estándar:70
 msgid "Hide historical tab to post-only users"
 msgstr "Ausblenden der Registerkarte \"Verlauf\" für \"Post-Only\"-Benutzer"
 
@@ -102,59 +97,63 @@ msgstr "Ausblenden der Registerkarte \"Verlauf\" für \"Post-Only\"-Benutzer"
 msgid "Default Satisfaction"
 msgstr "Default Satisfaction"
 
-#: entrada estándar:87
+#: entrada estándar:93
 msgid "Change ticket solved date to last task end time"
 msgstr ""
 "Ändere das Schlussdatum des Tickets in die End-Zeit der letzten Aufgabe"
 
-#: entrada estándar:94
+#: entrada estándar:100
 msgid "Auto-closing of rejected tickets"
 msgstr "Automatisches Schließen abgelehnter Tickets"
 
-#: entrada estándar:102
+#: entrada estándar:108
 msgid "Solution types for close tickets automatically"
 msgstr "Solution types for close tickets automatically"
 
-#: entrada estándar:109
+#: entrada estándar:120
 msgid "Display satisfaction in a modal window after closing a ticket"
 msgstr "Display satisfaction in a modal window after closing a ticket"
 
-#: entrada estándar:115
+#: entrada estándar:126
 msgid "Related to tickets"
 msgstr "Related to tickets"
 
-#: entrada estándar:121
+#: entrada estándar:132
 msgid "Enhance Private task/followup view"
 msgstr "Private Aufgaben-/Follow-up-Ansicht verbessern"
 
-#: entrada estándar:130
+#: entrada estándar:139
+msgid "Observers have an effect on pending tickets"
+msgstr "Observers have an effect on pending tickets"
+
+#: entrada estándar:148
 msgid "Replace ticket requester (mailcollector)"
 msgstr "Ticketanforderer ersetzen (mailcollector)"
 
-#: entrada estándar:138
+#: entrada estándar:156
 msgid "Allow anonymous requester"
 msgstr "Allow anonymous requester"
 
-#: entrada estándar:145
+#: entrada estándar:163
 msgid "Tag to search"
 msgstr "Zu suchendes Tag"
 
-#: entrada estándar:155
+#: entrada estándar:173
 msgid "Change default minimum validation required"
 msgstr "Ändern der standardmäßigen Mindestvalidierung erforderlich"
 
-#: entrada estándar:170
+#: entrada estándar:188
 msgid "Minimum validation"
 msgstr "Minimum validation"
 
-#: entrada estándar:180
+#: entrada estándar:198
 msgid "Enable quick transfer for tickets"
 msgstr "Aktivieren Sie die schnelle Übertragung von Tickets"
 
-#: entrada estándar:187
+#: entrada estándar:205
 msgid "Enable automatic transfer"
 msgstr "Aktiviere die automatische Übertragung"
 
-#: entrada estándar:196
+#: entrada estándar:214
 msgid "Transfer destination"
 msgstr "Übertragungsziel"

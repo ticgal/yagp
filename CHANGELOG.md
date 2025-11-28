@@ -1,6 +1,14 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 2.5.0 - 2024-06-09
+## 2.6.0 - 2025-08-20
+### Features
+- New config option: Observers have an effect on pending tickets
+- Self Service users doesn't have gototicket function
+
+### Bugfixes
+- Check items before transferring them
+
+## 2.5.0 - 2025-06-09
 ### Features
 - Display modal window after the ticket is closed to complete the satisfaction survey
 

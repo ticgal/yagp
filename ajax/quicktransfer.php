@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2024 by the TICgal Team.
+ * Copyright (C) 2019-2025 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -18,15 +18,15 @@
  * GNU General Public License for more details.
  * You should have received a copy of the GNU General Public License
  * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
- * --------------------------------------------------------------------------
- * @package   YAGP
- * @author    the TICgal team
- * @copyright Copyright (c) 2019-2024 TICgal team
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
- * @link      https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * @link      https://www.tic.gal
  * @since     2019
- * ----------------------------------------------------------------------
+ * -------------------------------------------------------------------------
  */
 
 include("../../../inc/includes.php");
@@ -48,7 +48,7 @@ if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
     $transfer->showForm(1, [
         'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
         'display'       => false,
-        'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions()
+        'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions(),
     ]);
 }
 
@@ -72,13 +72,13 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         $glpitransfer->moveItems(
             $transferlist,
             $config->fields['transfer_entity'],
-            PluginYagpTransfer::getCompleteTransferOptions()
+            PluginYagpTransfer::getCompleteTransferOptions(),
         );
 
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
             $msg,
-            Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity'])
+            Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity']),
         );
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
