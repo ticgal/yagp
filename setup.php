@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.6.0');
+define('PLUGIN_YAGP_VERSION', '3.0.0-beta.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "11.0");
 // Maximum GLPI version, exclusive
@@ -69,8 +69,6 @@ function plugin_init_yagp(): void
 {
     /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
-
-    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['yagp'] = true;
 
     if (Session::haveRightsOr("config", [READ, UPDATE])) {
         Plugin::registerClass('PluginYagpConfig', ['addtabon' => 'Config']);
