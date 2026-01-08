@@ -400,6 +400,7 @@ JAVASCRIPT;
             $pr_criteria = [
                 'itemtype'          => $parent_item::getType(),
                 'items_id'          => $parent_item->getID(),
+                'pendingreasons_id' => ['>', 0],
             ];
             if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
                 // TODO: count followups since the pending reason creation

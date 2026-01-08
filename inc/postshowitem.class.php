@@ -193,6 +193,9 @@ JAVASCRIPT;
                             if ($ticket_satisfaction->fields['satisfaction'] != null) {
                                 return false;
                             } else {
+                                if($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
+                                    return false;
+                                }
                                 $ajax_id = 'ajax_satisfaction';
                                 $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
                                 $ajax_title = __('Satisfaction', 'yagp');
