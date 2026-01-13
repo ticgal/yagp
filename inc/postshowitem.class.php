@@ -202,22 +202,22 @@ JAVASCRIPT;
                                     || (time() - $date2) <= $duration * DAY_TIMESTAMP
                                 ) {
                                     // Meter codigo
-                                     $ajax_id = 'ajax_satisfaction';
-                            $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
-                            $ajax_title = __('Satisfaction', 'yagp');
+                                    $ajax_id = 'ajax_satisfaction';
+                                    $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
+                                    $ajax_title = __('Satisfaction', 'yagp');
 
-                            Ajax::createIframeModalWindow(
-                                $ajax_id,
-                                $ajax_url,
-                                [
-                                    'title'         => $ajax_title,
-                                    'width'         => '500',
-                                    'height'        => '500',
-                                    'reloadonclose' => true,
-                                ],
-                            );
+                                    Ajax::createIframeModalWindow(
+                                        $ajax_id,
+                                        $ajax_url,
+                                        [
+                                            'title'         => $ajax_title,
+                                            'width'         => '500',
+                                            'height'        => '500',
+                                            'reloadonclose' => true,
+                                        ],
+                                    );
 
-                            echo "<script>
+                                    echo "<script>
             $(document).ready(function() {
                 var test_inteval = setInterval(function() {
                     if ($('#ajax_satisfaction').length > 0) {
