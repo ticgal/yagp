@@ -177,6 +177,12 @@ JAVASCRIPT;
                 /** @var Ticket $item */
                 $ticket_status = $item->fields['status'];
                 $ticket_entity = $item->fields['entities_id'];
+                $ticket_satisfaction = new TicketSatisfaction();
+                if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+                    return false;
+                }
+                $duration = (int) self::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration', -2);
+                $date2    = strtotime($ticket_satisfaction->fields['date_begin']);
                 if ($ticket_status != Ticket::CLOSED) {
                     return false;
                 } else {
@@ -184,34 +190,34 @@ JAVASCRIPT;
                     if ($entity_config != 0) {
                         return false;
                     } else {
-                        $ticket_satisfaction = new TicketSatisfaction();
-                        if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+
+                        if ($ticket_satisfaction->fields['satisfaction'] != null) {
                             return false;
                         } else {
-                            $ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']]);
-
-                            if ($ticket_satisfaction->fields['satisfaction'] != null) {
+                            if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
                                 return false;
                             } else {
-                                if($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
-                                    return false;
-                                }
-                                $ajax_id = 'ajax_satisfaction';
-                                $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
-                                $ajax_title = __('Satisfaction', 'yagp');
+                                if (
+                                    ($duration == 0)
+                                    || (time() - $date2) <= $duration * DAY_TIMESTAMP
+                                ) {
+                                    // Meter codigo
+                                     $ajax_id = 'ajax_satisfaction';
+                            $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
+                            $ajax_title = __('Satisfaction', 'yagp');
 
-                                Ajax::createIframeModalWindow(
-                                    $ajax_id,
-                                    $ajax_url,
-                                    [
-                                        'title'         => $ajax_title,
-                                        'width'         => '500',
-                                        'height'        => '500',
-                                        'reloadonclose' => true,
-                                    ],
-                                );
+                            Ajax::createIframeModalWindow(
+                                $ajax_id,
+                                $ajax_url,
+                                [
+                                    'title'         => $ajax_title,
+                                    'width'         => '500',
+                                    'height'        => '500',
+                                    'reloadonclose' => true,
+                                ],
+                            );
 
-                                echo "<script>
+                            echo "<script>
             $(document).ready(function() {
                 var test_inteval = setInterval(function() {
                     if ($('#ajax_satisfaction').length > 0) {
@@ -222,8 +228,11 @@ JAVASCRIPT;
             });
         </script>";
 
-                                break;
+                                } else {
+                                    return false;
+                                }
                             }
+                            break;
                         }
                     }
                 }
