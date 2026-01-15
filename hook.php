@@ -214,11 +214,11 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
 function plugin_yagp_pre_show_tab(array $params): void
 {
     $config = PluginYagpConfig::getInstance();
-
+/*
     if ($config->fields['change_df_min_val']) {
         PluginYagpPreshowtab::preShowTab($params);
     }
-
+*/
     if ($config->fields['hide_historical']) {
         PluginYagpPreshowtab::plugin_yagp_preShowTab($params);
     }
@@ -229,11 +229,14 @@ function plugin_yagp_pre_show_tab(array $params): void
  *
  * @return void
  */
+// Deprecated function, now in GLPI 11
+/*
 function plugin_yagp_post_show_tab(array $params): void
 {
+*/
     /** @var \DBmysql $DB */
-    global $DB;
-
+ //   global $DB;
+/*
     $config = PluginYagpConfig::getInstance();
 
     if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
@@ -243,8 +246,9 @@ function plugin_yagp_post_show_tab(array $params): void
             && isset($params['options']['tabnum'])
             && $params['options']['tabnum'] == 3
         ) {
+            */
             /** @var Ticket $item */
-            $query = [
+            /* $query = [
                 'FROM' => TicketSatisfaction::getTable(),
                 'WHERE' => [
                     'tickets_id' => $item->getID(),
@@ -264,3 +268,4 @@ function plugin_yagp_post_show_tab(array $params): void
         }
     }
 }
+*/

@@ -37,6 +37,7 @@ class PluginYagpPreshowtab extends CommonDBTM
      *
      * @return void
      */
+    /*
     public static function preShowTab(array $params = []): void
     {
         $config = PluginYagpConfig::getInstance();
@@ -62,7 +63,7 @@ JAVASCRIPT;
                 break;
         }
     }
-
+*/
     /**
      * @param  array $params
      *

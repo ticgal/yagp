@@ -78,10 +78,10 @@ class PluginYagpPostshowitem extends CommonDBTM
                 "color":"#d63939",
                 "font-weight":"500"
             });
-            $("span.is-private").parent().parent().parent().css({
+            $("span.is-private").parent().parent().parent().parent().css({
                 "border-style":"dashed",
                 "border-color":"black",
-                "border-width":"0.143em",
+                "border-width":"0.22em",
                 "border-radius":"3px"
             });
         });
