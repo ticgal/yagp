@@ -168,7 +168,7 @@ JAVASCRIPT;
     public static function showSatisfactionModal(array $params): bool
     {
         global $CFG_GLPI;
-        
+
         $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
@@ -201,13 +201,13 @@ JAVASCRIPT;
                             if ($ticket_satisfaction->fields['satisfaction'] != null) {
                                 return false;
                             } else {
-                                  if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
-                                return false;
-                            }else{
-                                if ($expired) {
+                                if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
                                     return false;
+                                } else {
+                                    if ($expired) {
+                                        return false;
+                                    }
                                 }
-                            }
                                 $ajax_id = 'ajax_satisfaction';
                                 $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
                                 $ajax_title = __('Satisfaction', 'yagp');

@@ -246,7 +246,7 @@ class PluginYagpConfig extends CommonDBTM
              * `contractrenew` TINYINT(1) NOT NULL DEFAULT '0',
              * `default_satisfaction` INT {$default_key_sign} NOT NULL DEFAULT '3',
              * `change_df_min_val` TINYINT(1) NOT NULL DEFAULT '0',
-             * `df_min_validation` INT(11) NOT NULL DEFAULT '0', 
+             * `df_min_validation` INT(11) NOT NULL DEFAULT '0',
              */
 
             $DB->doQuery($query);
