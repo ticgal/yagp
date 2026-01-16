@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 3.0.0 - 2025-01-16
+### Features
+- GLPI 11 support
+
 ## 2.6.0 - 2025-08-20
 ### Features
 - New config option: Observers have an effect on pending tickets
