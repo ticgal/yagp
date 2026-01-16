@@ -39,6 +39,7 @@ if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
 }
 
 Session::checkLoginUser();
+global $CFG_GLPI;
 
 $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
@@ -46,7 +47,7 @@ Html::header('yagp');
 $transfer = new PluginYagpTransfer();
 if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
     $transfer->showForm(1, [
-        'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
+        'target'        => $CFG_GLPI['root_doc'] . "/plugins/yagp/front/transfer.form.php",
         'display'       => false,
         'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions(),
     ]);

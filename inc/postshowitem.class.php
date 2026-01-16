@@ -167,6 +167,8 @@ JAVASCRIPT;
      */
     public static function showSatisfactionModal(array $params): bool
     {
+        global $CFG_GLPI;
+        
         $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
@@ -177,6 +179,12 @@ JAVASCRIPT;
                 /** @var Ticket $item */
                 $ticket_status = $item->fields['status'];
                 $ticket_entity = $item->fields['entities_id'];
+                $ticket_satisfaction = new TicketSatisfaction();
+                if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+                    return false;
+                }
+                $duration = (int) Entity::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration');
+                $expired = $duration !== 0 && (time() - strtotime($ticket_satisfaction->fields['date_begin'])) > $duration * DAY_TIMESTAMP;
                 if ($ticket_status != Ticket::CLOSED) {
                     return false;
                 } else {
@@ -193,8 +201,15 @@ JAVASCRIPT;
                             if ($ticket_satisfaction->fields['satisfaction'] != null) {
                                 return false;
                             } else {
+                                  if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
+                                return false;
+                            }else{
+                                if ($expired) {
+                                    return false;
+                                }
+                            }
                                 $ajax_id = 'ajax_satisfaction';
-                                $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
+                                $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
                                 $ajax_title = __('Satisfaction', 'yagp');
 
                                 Ajax::createIframeModalWindow(
