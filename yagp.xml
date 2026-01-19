@@ -1,16 +1,15 @@
 <root>
    <name>YAGP</name>
    <key>yagp</key>
-   <state>stable</state> <!-- stable | unstable | beta | alpha -->
+   <state>stable</state> 
    <logo>https://raw.githubusercontent.com/ticgal/yagp/multimedia/yagp.png</logo>
    <description>
       <short>
-		<en>Yet Another GLPI Plugin</en>
-		<es>Yet Another GLPI Plugin</es>
+         <en>Yet Another GLPI Plugin</en>
+         <es>Yet Another GLPI Plugin</es>
       </short>
       <long>
-		<en>YAGP is the home for those small GLPI tweaks that don't quite justify a full-fledged plugin. We've gathered more than a dozen enhancements designed to refine and elevate your GLPI experience.
-        </en>
+         <en>YAGP is the home for those small GLPI tweaks that don't quite justify a full-fledged plugin. We've gathered more than a dozen enhancements designed to refine and elevate your GLPI experience.</en>
       </long>
    </description>
    <homepage>https://tic.gal/en/project/yagp-yet-another-glpi-plugin/</homepage>
@@ -22,65 +21,64 @@
    </authors>
    <versions>
       <version>
-        <num>3.0.0</num>
-        <compatibility>~11.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/3.0.0/glpi-yagp-3.0.0.tar.bz2</download_url>      
-   </version>	
-   <versions>
-      <version>
-        <num>2.3.1</num>
-        <compatibility>~10.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/2.3.1/glpi-yagp-2.3.1.tar.tgz</download_url>      
+         <num>3.0.0</num>
+         <compatibility>~11.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/3.0.0/glpi-yagp-3.0.0.tar.bz2</download_url>
       </version>
       <version>
-        <num>2.2.2</num>
-        <compatibility>~10.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/2.2.2/glpi-yagp-2.2.2.tar.tgz</download_url>      
+         <num>2.3.1</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/2.3.1/glpi-yagp-2.3.1.tar.tgz</download_url>
       </version>
       <version>
-        <num>2.2.1</num>
-        <compatibility>~10.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/2.2.1/glpi-yagp-2.2.1.tar.tgz</download_url>      
+         <num>2.2.2</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/2.2.2/glpi-yagp-2.2.2.tar.tgz</download_url>
       </version>
       <version>
-        <num>2.2.0</num>
-        <compatibility>~10.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/2.2.0/glpi-yagp-2.2.0.tar.tgz</download_url>      
+         <num>2.2.1</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/2.2.1/glpi-yagp-2.2.1.tar.tgz</download_url>
       </version>
       <version>
-        <num>2.1.1</num>
-        <compatibility>~10.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/2.1.1/glpi-yagp-2.1.1.tar.tgz</download_url>      
+         <num>2.2.0</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/2.2.0/glpi-yagp-2.2.0.tar.tgz</download_url>
       </version>
       <version>
-        <num>2.0.0</num>
-        <compatibility>~10.0.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/2.0.0/glpi-yagp-2.0.0.tar.tgz</download_url>      
+         <num>2.1.1</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/2.1.1/glpi-yagp-2.1.1.tar.tgz</download_url>
       </version>
       <version>
-        <num>1.4.0</num>
-        <compatibility>~9.5.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/1.4.0/glpi-yagp-1.4.0.tar.tgz</download_url>      
+         <num>2.0.0</num>
+         <compatibility>~10.0.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/2.0.0/glpi-yagp-2.0.0.tar.tgz</download_url>
       </version>
       <version>
-        <num>1.2.0</num>
-        <compatibility>~9.5.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/1.2.0/glpi-yagp-1.2.0.tar.tgz</download_url>      
+         <num>1.4.0</num>
+         <compatibility>~9.5.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/1.4.0/glpi-yagp-1.4.0.tar.tgz</download_url>
       </version>
       <version>
-        <num>1.1.1</num>
-        <compatibility>~9.5.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/1.1.1/glpi-yagp-1.1.1.tar.tgz</download_url>      
+         <num>1.2.0</num>
+         <compatibility>~9.5.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/1.2.0/glpi-yagp-1.2.0.tar.tgz</download_url>
       </version>
       <version>
-        <num>1.1.0</num>
-        <compatibility>~9.5.0</compatibility>
-	<download_url>https://github.com/ticgal/yagp/releases/download/1.1.0/glpi-yagp-1.1.0.tar.tgz</download_url>      
+         <num>1.1.1</num>
+         <compatibility>~9.5.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/1.1.1/glpi-yagp-1.1.1.tar.tgz</download_url>
       </version>
       <version>
-        <num>1.0.1</num>
-        <compatibility>9.3</compatibility>
-        <compatibility>9.4</compatibility>
+         <num>1.1.0</num>
+         <compatibility>~9.5.0</compatibility>
+         <download_url>https://github.com/ticgal/yagp/releases/download/1.1.0/glpi-yagp-1.1.0.tar.tgz</download_url>
+      </version>
+      <version>
+         <num>1.0.1</num>
+         <compatibility>9.3</compatibility>
+         <compatibility>9.4</compatibility>
       </version>
    </versions>
    <langs>
@@ -92,14 +90,14 @@
    </langs>
    <license>AGPL v3+</license>
    <tags>
-      	<en>
-		<tag>Ticket</tag>
-    	<tag>Task</tag>
-		<tag>Contract</tag>
-		<tag>Import</tag>		
-		<tag>Mail</tag>		
-		<tag>Satisfaction</tag>					
-	</en>
+      <en>
+         <tag>Ticket</tag>
+         <tag>Task</tag>
+         <tag>Contract</tag>
+         <tag>Import</tag>
+         <tag>Mail</tag>
+         <tag>Satisfaction</tag>
+      </en>
    </tags>
    <screenshots>
       <screenshot>https://raw.githubusercontent.com/ticgal/yagp/multimedia/YAGP-GLPI-Plugin-1.png</screenshot>
