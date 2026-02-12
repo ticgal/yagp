@@ -163,14 +163,12 @@ function Plugin_Yagp_addDefaultJoin($in): array
         return [$itemtype, $out];
     }
 
-    if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
-        if (
-            isset($in[1]) &&
-            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
-                preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
-        ) {
+    if (isset($in[0]) && $in[0] == Ticket::class) {
+        $uri = $_SERVER['REQUEST_URI'] ?? '';
+        if (preg_match('/\/front\/ticket/', $uri) || preg_match('/\/ajax\/search.*itemtype=Ticket/', $uri)) {
             $new_condition = PluginYagpProfile::getAllocatorSQLTickets();
-            $out .= " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id`";
+            $current_out = is_array($out) ? implode(" ", $out) : (string)$out;
+            $out = $current_out . " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id` ";
         }
     }
 

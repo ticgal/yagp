@@ -29,7 +29,16 @@
  * -------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+if (!defined('GLPI_ROOT')) {
+    $current_dir = __DIR__;
+    while (!file_exists($current_dir . '/inc/includes.php') && $current_dir !== dirname($current_dir)) {
+        $current_dir = dirname($current_dir);
+    }
+    define('GLPI_ROOT', $current_dir);
+}
+
+include_once (GLPI_ROOT . "/inc/includes.php");
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
