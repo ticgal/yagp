@@ -130,10 +130,16 @@ class PluginYagpConfig extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string|array
     {
         if ($item->getType() == 'Config') {
-            return "YAGP";
+            //return "YAGP";
+            return self::createTabEntry(self::getTypeName(1));    
         }
 
         return '';
+    }
+
+    public static function getIcon(): string
+    {
+        return "ti ti-letter-y";
     }
 
     /**
