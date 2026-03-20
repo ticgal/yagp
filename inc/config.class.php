@@ -131,7 +131,7 @@ class PluginYagpConfig extends CommonDBTM
     {
         if ($item->getType() == 'Config') {
             //return "YAGP";
-            return self::createTabEntry(self::getTypeName(1));    
+            return self::createTabEntry(self::getTypeName(1));
         }
 
         return '';
