@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 3.0.1 - 2025-03-20
+### Bugfixes
+- GLPI 11 deprecate see group tickets only
+
 ## 3.0.0 - 2025-01-16
 ### Features
 - GLPI 11 support
