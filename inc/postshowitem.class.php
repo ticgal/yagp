@@ -192,13 +192,11 @@ JAVASCRIPT;
                     if ($entity_config != 0) {
                         return false;
                     } else {
-                        $ticket_satisfaction = new TicketSatisfaction();
-                        if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+
+                        if ($ticket_satisfaction->fields['satisfaction'] != null) {
                             return false;
                         } else {
-                            $ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']]);
-
-                            if ($ticket_satisfaction->fields['satisfaction'] != null) {
+                            if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
                                 return false;
                             } else {
                                 if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
@@ -212,18 +210,18 @@ JAVASCRIPT;
                                 $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
                                 $ajax_title = __('Satisfaction', 'yagp');
 
-                                Ajax::createIframeModalWindow(
-                                    $ajax_id,
-                                    $ajax_url,
-                                    [
-                                        'title'         => $ajax_title,
-                                        'width'         => '500',
-                                        'height'        => '500',
-                                        'reloadonclose' => true,
-                                    ],
-                                );
+                                    Ajax::createIframeModalWindow(
+                                        $ajax_id,
+                                        $ajax_url,
+                                        [
+                                            'title'         => $ajax_title,
+                                            'width'         => '500',
+                                            'height'        => '500',
+                                            'reloadonclose' => true,
+                                        ],
+                                    );
 
-                                echo "<script>
+                                    echo "<script>
             $(document).ready(function() {
                 var test_inteval = setInterval(function() {
                     if ($('#ajax_satisfaction').length > 0) {
@@ -234,8 +232,11 @@ JAVASCRIPT;
             });
         </script>";
 
-                                break;
+                                } else {
+                                    return false;
+                                }
                             }
+                            break;
                         }
                     }
                 }
