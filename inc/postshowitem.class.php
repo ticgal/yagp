@@ -78,10 +78,10 @@ class PluginYagpPostshowitem extends CommonDBTM
                 "color":"#d63939",
                 "font-weight":"500"
             });
-            $("span.is-private").parent().parent().parent().css({
+            $("span.is-private").parent().parent().parent().parent().css({
                 "border-style":"dashed",
                 "border-color":"black",
-                "border-width":"0.143em",
+                "border-width":"0.22em",
                 "border-radius":"3px"
             });
         });
@@ -114,7 +114,7 @@ JAVASCRIPT;
                 ) {
                     $entity_name = __("Select an entity to transfer", "yagp");
                     $ajax_id = 'ajax_playground';
-                    $ajax_url = Plugin::getWebDir('yagp') . '/ajax/quicktransfer.php';
+                    $ajax_url = '/plugins/yagp/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
                     $ajax_title = __("Transfer to", "yagp");
                     if (
@@ -139,7 +139,7 @@ JAVASCRIPT;
                     $append .= "</div>";
 
                     $script = <<<JAVASCRIPT
-                    $('div#item-main .form-field').first().append("{$append}");
+                    $('section#item-main .form-field').first().append("{$append}");
 JAVASCRIPT;
 
                     Ajax::createIframeModalWindow(
@@ -167,6 +167,8 @@ JAVASCRIPT;
      */
     public static function showSatisfactionModal(array $params): bool
     {
+        global $CFG_GLPI;
+
         $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
@@ -181,8 +183,8 @@ JAVASCRIPT;
                 if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
                     return false;
                 }
-                $duration = (int) self::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration', -2);
-                $date2    = strtotime($ticket_satisfaction->fields['date_begin']);
+                $duration = (int) Entity::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration');
+                $expired = $duration !== 0 && (time() - strtotime($ticket_satisfaction->fields['date_begin'])) > $duration * DAY_TIMESTAMP;
                 if ($ticket_status != Ticket::CLOSED) {
                     return false;
                 } else {
@@ -197,14 +199,16 @@ JAVASCRIPT;
                             if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
                                 return false;
                             } else {
-                                if (
-                                    ($duration == 0)
-                                    || (time() - $date2) <= $duration * DAY_TIMESTAMP
-                                ) {
-                                    // Meter codigo
-                                    $ajax_id = 'ajax_satisfaction';
-                                    $ajax_url = Plugin::getWebDir('yagp') . '/ajax/satisfaction.php?id=' . $item->fields['id'];
-                                    $ajax_title = __('Satisfaction', 'yagp');
+                                if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
+                                    return false;
+                                } else {
+                                    if ($expired) {
+                                        return false;
+                                    }
+                                }
+                                $ajax_id = 'ajax_satisfaction';
+                                $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
+                                $ajax_title = __('Satisfaction', 'yagp');
 
                                     Ajax::createIframeModalWindow(
                                         $ajax_id,

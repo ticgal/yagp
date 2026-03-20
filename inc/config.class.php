@@ -92,13 +92,14 @@ class PluginYagpConfig extends CommonDBTM
         $used = is_null($config->fields['solutiontypes'])
             ? []
             : importArrayFromDB($config->fields['solutiontypes']);
-        $iterator = $DB->request(['table' => SolutionType::getTable()]);
+        $iterator = $DB->request(['FROM' => SolutionType::getTable()]);
         foreach ($iterator as $data) {
             $solutiontypes[$data['id']] = $data['name'];
         }
-
+        $twig = TemplateRenderer::getInstance();
+        $twig->getEnvironment()->enableAutoReload();
         $template = "@yagp/config.html.twig";
-        TemplateRenderer::getInstance()->display($template, [
+        echo $twig->render($template, [
             'item'                  => $config,
             'solutiontypes'         => $solutiontypes,
             'used_solutiontypes'    => $used,
@@ -129,10 +130,16 @@ class PluginYagpConfig extends CommonDBTM
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string|array
     {
         if ($item->getType() == 'Config') {
-            return "YAGP";
+            //return "YAGP";
+            return self::createTabEntry(self::getTypeName(1));
         }
 
         return '';
+    }
+
+    public static function getIcon(): string
+    {
+        return "ti ti-letter-y";
     }
 
     /**
@@ -224,8 +231,6 @@ class PluginYagpConfig extends CommonDBTM
                 `findrequest` TINYINT(1) NOT NULL DEFAULT '0',
                 `allow_anonymous_requester` TINYINT(1) NOT NULL DEFAULT '0',
                 `requestlabel` VARCHAR(255) DEFAULT NULL,
-                `change_df_min_val` TINYINT(1) NOT NULL DEFAULT '0',
-                `df_min_validation` INT(11) NOT NULL DEFAULT '0',
                 `recategorization` TINYINT(1) NOT NULL DEFAULT '0',
                 `hide_historical` TINYINT(1) NOT NULL DEFAULT '0',
                 `private_view` TINYINT(1) NOT NULL DEFAULT '0',
@@ -236,7 +241,6 @@ class PluginYagpConfig extends CommonDBTM
                 `solutiontypes` TEXT DEFAULT NULL,
                 `solutiontypes_id_rejected` INT {$default_key_sign} NOT NULL DEFAULT '0',
                 `requesttypes_id_reopen` INT {$default_key_sign} NOT NULL DEFAULT '0',
-                `default_satisfaction` INT {$default_key_sign} NOT NULL DEFAULT '3',
                 `modal_satisfaction` TINYINT(1) NOT NULL DEFAULT '0',
                 `observers_affect_status` TINYINT(1) NOT NULL DEFAULT '0',
                 PRIMARY KEY  (`id`)
@@ -246,6 +250,9 @@ class PluginYagpConfig extends CommonDBTM
             /**
              * Deprecated
              * `contractrenew` TINYINT(1) NOT NULL DEFAULT '0',
+             * `default_satisfaction` INT {$default_key_sign} NOT NULL DEFAULT '3',
+             * `change_df_min_val` TINYINT(1) NOT NULL DEFAULT '0',
+             * `df_min_validation` INT(11) NOT NULL DEFAULT '0',
              */
 
             $DB->doQuery($query);
@@ -276,6 +283,10 @@ class PluginYagpConfig extends CommonDBTM
             $migration->addField($table, 'modal_satisfaction', 'boolean', ['value' => 0]);
             // * 2.6.0
             $migration->addField($table, 'observers_affect_status', 'boolean', ['value' => 0]);
+            // * 3.0.0
+            $migration->dropField($table, 'default_satisfaction');
+            $migration->dropField($table, 'change_df_min_val');
+            $migration->dropField($table, 'df_min_validation');
 
             $migration->migrationOneTable($table);
         }

@@ -48,7 +48,7 @@ Html::popHeader(
     PluginYagpPostshowitem::getType(),
 );
 Html::requireJs('rateit');
-echo '<link rel="stylesheet" type="text/css" href="/public/lib/jquery.rateit.css">';
+echo '<link rel="stylesheet" type="text/css" href="/lib/jquery.rateit.css">';
 // Indicar que el contenido se carga en un modal
 $_REQUEST['_in_modal'] = 1;
 $id = $_GET['id'];

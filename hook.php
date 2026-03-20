@@ -157,6 +157,9 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
  */
 function Plugin_Yagp_addDefaultJoin($in): array
 {
+    // Deprecated in GLPI 11:
+    // ticket visibility filtering is now native in GLPI.
+    /*
     list($itemtype, $out) = $in;
 
     if (!PluginYagpProfile::getAllocatorPermission()) {
@@ -175,6 +178,8 @@ function Plugin_Yagp_addDefaultJoin($in): array
     }
 
     return [$itemtype, $out];
+    */
+    return $in;
 }
 
 /**
@@ -185,6 +190,9 @@ function Plugin_Yagp_addDefaultJoin($in): array
  */
 function Plugin_Yagp_addDefaultWhere(array $in): array
 {
+    // Deprecated in GLPI 11:
+    // ticket visibility filtering is now native in GLPI.
+    /*
     if (!PluginYagpProfile::getAllocatorPermission()) {
         return $in;
     }
@@ -204,6 +212,8 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
     }
 
     return $in;
+    */
+    return $in;
 }
 
 /**
@@ -214,11 +224,11 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
 function plugin_yagp_pre_show_tab(array $params): void
 {
     $config = PluginYagpConfig::getInstance();
-
-    if ($config->fields['change_df_min_val']) {
-        PluginYagpPreshowtab::preShowTab($params);
-    }
-
+    /*
+        if ($config->fields['change_df_min_val']) {
+            PluginYagpPreshowtab::preShowTab($params);
+        }
+    */
     if ($config->fields['hide_historical']) {
         PluginYagpPreshowtab::plugin_yagp_preShowTab($params);
     }
@@ -229,11 +239,14 @@ function plugin_yagp_pre_show_tab(array $params): void
  *
  * @return void
  */
+// Deprecated function, now in GLPI 11
+/*
 function plugin_yagp_post_show_tab(array $params): void
 {
-    /** @var \DBmysql $DB */
-    global $DB;
-
+*/
+/** @var \DBmysql $DB */
+//   global $DB;
+/*
     $config = PluginYagpConfig::getInstance();
 
     if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
@@ -243,24 +256,26 @@ function plugin_yagp_post_show_tab(array $params): void
             && isset($params['options']['tabnum'])
             && $params['options']['tabnum'] == 3
         ) {
-            /** @var Ticket $item */
-            $query = [
-                'FROM' => TicketSatisfaction::getTable(),
-                'WHERE' => [
-                    'tickets_id' => $item->getID(),
-                    'date_answered' => null,
-                ],
-            ];
-            $req = $DB->request($query);
-            if (count($req) == 1) {
-                $minstart = $config->fields['default_satisfaction'];
-                $script = <<<JAVASCRIPT
-                    $(document).ready(function() {
-                        $('#stars').rateit('value', {$minstart});
-                    });
+            */
+/** @var Ticket $item */
+/* $query = [
+    'FROM' => TicketSatisfaction::getTable(),
+    'WHERE' => [
+        'tickets_id' => $item->getID(),
+        'date_answered' => null,
+    ],
+];
+$req = $DB->request($query);
+if (count($req) == 1) {
+    $minstart = $config->fields['default_satisfaction'];
+    $script = <<<JAVASCRIPT
+        $(document).ready(function() {
+            $('#stars').rateit('value', {$minstart});
+        });
     JAVASCRIPT;
-                echo Html::scriptBlock($script);
-            }
+    echo Html::scriptBlock($script);
+}
         }
     }
 }
+*/

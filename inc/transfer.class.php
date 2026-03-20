@@ -364,7 +364,7 @@ class PluginYagpTransfer extends CommonDBTM
             $transfer->showForm(
                 1,
                 [
-                    'target'        => Plugin::getWebDir('yagp') . "/front/transfer.form.php",
+                    'target'        => "/plugins/yagp/front/transfer.form.php",
                     'display'       => $display,
                     'transferlist'  => $transferlist,
                 ],

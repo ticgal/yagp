@@ -31,11 +31,11 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.6.1');
+define('PLUGIN_YAGP_VERSION', '3.0.1');
 // Minimal GLPI version, inclusive
-define("PLUGIN_YAGP_MIN_GLPI", "10.0");
+define("PLUGIN_YAGP_MIN_GLPI", "11.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_YAGP_MAX_GLPI", "11.0");
+define("PLUGIN_YAGP_MAX_GLPI", "12.0");
 
 /**
  * plugin_version_yagp
@@ -70,8 +70,6 @@ function plugin_init_yagp(): void
     /** @var array $PLUGIN_HOOKS */
     global $PLUGIN_HOOKS;
 
-    $PLUGIN_HOOKS[Hooks::CSRF_COMPLIANT]['yagp'] = true;
-
     if (Session::haveRightsOr("config", [READ, UPDATE])) {
         Plugin::registerClass('PluginYagpConfig', ['addtabon' => 'Config']);
         $PLUGIN_HOOKS['config_page']['yagp'] = 'front/config.form.php';
@@ -84,17 +82,19 @@ function plugin_init_yagp(): void
 
     $plugin = new Plugin();
     if ($plugin->isActivated('yagp')) {
-        Plugin::registerClass(PluginYagpProfile::class, ['addtabon' => Profile::class]);
+        // Deprecated in GLPI 11:
+        // this tab only exposed "See group tickets only" plugin-specific right.
+        // Plugin::registerClass(PluginYagpProfile::class, ['addtabon' => Profile::class]);
 
         $config = PluginYagpConfig::getInstance();
         if ($config->fields['gototicket']) {
             if (Session::getCurrentInterface() != "helpdesk") {
-                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/gototicket.js';
+                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'public/gototicket.js';
             }
         }
 
         if ($config->fields['blockdate']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/blockdate.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'public/blockdate.js';
         }
 
         if ($config->fields['findrequest']) {
@@ -158,14 +158,18 @@ function plugin_init_yagp(): void
             ];
         }
 
+        // Deprecated in GLPI 11:
+        // "See group tickets only" is now handled by native GLPI permissions.
+        /*
         $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
             PluginYagpProfile::class, 'checkAllocatorAccess',
         ];
 
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
+        */
 
-        CronTask::register(
+        CronTask::Register(
             'PluginYagpTicket',
             'pluginyagpticketsatisfaction',
             DAY_TIMESTAMP,
