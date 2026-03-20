@@ -34,18 +34,16 @@ class PluginYagpProfile extends Profile
 {
     public static $rightname = "profile";
 
-    public const SEE_GROUP_TICKETS_ONLY = 1;
+    // Deprecated in GLPI 11 (native behavior available in core).
+    // public const SEE_GROUP_TICKETS_ONLY = 1;
 
     /**
      * {@inheritdoc}
      */
     public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string|array
     {
-        switch ($item->getType()) {
-            case 'Profile':
-                return self::createTabEntry('YAGP');
-        }
-
+        // Deprecated in GLPI 11:
+        // do not add YAGP profile tab.
         return '';
     }
 
@@ -54,13 +52,8 @@ class PluginYagpProfile extends Profile
      */
     public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
     {
-        switch ($item->getType()) {
-            case 'Profile':
-                /** @var Profile $item */
-                $profile = new self();
-                return $profile->showForm($item->getID());
-        }
-
+        // Deprecated in GLPI 11:
+        // do not render YAGP profile tab content.
         return false;
     }
 
@@ -69,39 +62,9 @@ class PluginYagpProfile extends Profile
      */
     public function showForm($ID, $options = []): bool
     {
-        if (!Session::haveRight("profile", READ)) {
-            return false;
-        }
-        $canedit = Session::haveRight("profile", UPDATE);
-
-        $profile = new Profile();
-        $profile->getFromDB($ID);
-
-        echo "<form action='" . Profile::getFormUrl() . "' method='post'>";
-
-        $general_rights = self::getGeneralRights();
-        $matrix_options = [
-            'canedit'       => $canedit,
-            'default_class' => 'tab_bg_2',
-            'title'         => 'Yet Another GLPI Plugin',
-        ];
-
-        $profile->displayRightsChoiceMatrix($general_rights, $matrix_options);
-        $profile->showLegend();
-
-        if ($canedit) {
-            echo "<div class='center'>";
-            echo Html::hidden('id', ['value' => $ID]);
-            echo Html::submit("<i class='fas fa-save'></i><span>" . _sx('button', 'Save') . "</span>", [
-                'class' => 'btn btn-primary mt-2',
-                'name'  => 'update',
-            ]);
-            echo "</div>\n";
-            Html::closeForm();
-        }
-        echo "</div>";
-
-        return true;
+        // Deprecated in GLPI 11:
+        // remove YAGP profile rights UI (See group tickets only).
+        return false;
     }
 
     /**
@@ -111,6 +74,9 @@ class PluginYagpProfile extends Profile
      */
     public static function getGeneralRights(): array
     {
+        // Deprecated in GLPI 11:
+        // "See group tickets only" is now a native GLPI capability.
+        /*
         $crud = [
             self::SEE_GROUP_TICKETS_ONLY => __("See group tickets only", 'yagp'),
         ];
@@ -125,6 +91,8 @@ class PluginYagpProfile extends Profile
         ];
 
         return $rights;
+        */
+        return [];
     }
 
     /**
@@ -136,6 +104,8 @@ class PluginYagpProfile extends Profile
      */
     public static function showWarning(string $event): void
     {
+        // Deprecated in GLPI 11 with allocator filter removal.
+        /*
         // save messages
         $msg_copy = $_SESSION['MESSAGE_AFTER_REDIRECT'];
         $_SESSION['MESSAGE_AFTER_REDIRECT'] = [];
@@ -154,6 +124,7 @@ class PluginYagpProfile extends Profile
 
         // restore messages
         $_SESSION['MESSAGE_AFTER_REDIRECT'] = $msg_copy;
+        */
     }
 
     /**
@@ -163,6 +134,9 @@ class PluginYagpProfile extends Profile
      */
     public static function getAllocatorPermission(): bool
     {
+        // Deprecated in GLPI 11:
+        // use GLPI native permissioning instead of plugin-specific right.
+        /*
         if (
             !Session::haveRight('ticket', Ticket::READALL) &&
             Session::haveRight('ticket', Ticket::ASSIGN) &&
@@ -170,7 +144,7 @@ class PluginYagpProfile extends Profile
         ) {
             return true;
         }
-
+        */
         return false;
     }
 
@@ -181,6 +155,8 @@ class PluginYagpProfile extends Profile
      */
     public static function getAllocatorSQLTickets(): string
     {
+        // Deprecated in GLPI 11 with allocator filter removal.
+        /*
         $group_user = new Group_User();
         $grouplist = array_column($group_user->find(['users_id' => Session::getLoginUserID()]), 'groups_id');
 
@@ -206,6 +182,8 @@ class PluginYagpProfile extends Profile
         $sql .= ")";
 
         return $sql;
+        */
+        return '';
     }
 
     /**
@@ -215,6 +193,9 @@ class PluginYagpProfile extends Profile
      */
     public static function checkAllocatorAccess(Ticket $item): bool
     {
+        // Deprecated in GLPI 11:
+        // access control is delegated to native GLPI permissions.
+        /*
         if (self::getAllocatorPermission()) {
             $DB = DBConnection::getReadConnection();
 
@@ -229,7 +210,7 @@ class PluginYagpProfile extends Profile
                 }
             }
         }
-
+        */
         return true;
     }
 

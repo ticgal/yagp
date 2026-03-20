@@ -82,7 +82,9 @@ function plugin_init_yagp(): void
 
     $plugin = new Plugin();
     if ($plugin->isActivated('yagp')) {
-        Plugin::registerClass(PluginYagpProfile::class, ['addtabon' => Profile::class]);
+        // Deprecated in GLPI 11:
+        // this tab only exposed "See group tickets only" plugin-specific right.
+        // Plugin::registerClass(PluginYagpProfile::class, ['addtabon' => Profile::class]);
 
         $config = PluginYagpConfig::getInstance();
         if ($config->fields['gototicket']) {
@@ -156,12 +158,16 @@ function plugin_init_yagp(): void
             ];
         }
 
+        // Deprecated in GLPI 11:
+        // "See group tickets only" is now handled by native GLPI permissions.
+        /*
         $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
             PluginYagpProfile::class, 'checkAllocatorAccess',
         ];
 
         $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
         $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
+        */
 
         CronTask::Register(
             'PluginYagpTicket',

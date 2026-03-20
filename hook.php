@@ -157,6 +157,9 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
  */
 function Plugin_Yagp_addDefaultJoin($in): array
 {
+    // Deprecated in GLPI 11:
+    // ticket visibility filtering is now native in GLPI.
+    /*
     list($itemtype, $out) = $in;
 
     if (!PluginYagpProfile::getAllocatorPermission()) {
@@ -175,6 +178,8 @@ function Plugin_Yagp_addDefaultJoin($in): array
     }
 
     return [$itemtype, $out];
+    */
+    return $in;
 }
 
 /**
@@ -185,6 +190,9 @@ function Plugin_Yagp_addDefaultJoin($in): array
  */
 function Plugin_Yagp_addDefaultWhere(array $in): array
 {
+    // Deprecated in GLPI 11:
+    // ticket visibility filtering is now native in GLPI.
+    /*
     if (!PluginYagpProfile::getAllocatorPermission()) {
         return $in;
     }
@@ -203,6 +211,8 @@ function Plugin_Yagp_addDefaultWhere(array $in): array
         }
     }
 
+    return $in;
+    */
     return $in;
 }
 
