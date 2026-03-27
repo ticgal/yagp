@@ -28,7 +28,7 @@
  */
 
 $(document).ready(function() {
-    if (window.location.href.indexOf("/front/ticket.form.php?id=") > -1) {
+    if (window.location.href.indexOf("/front/ticket.form.php") > -1) {
         function blockDateField() {
             var input = $('div#itil-data input[name="date"]').next();
             input.attr('disabled', 'disabled');
