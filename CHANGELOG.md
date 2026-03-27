@@ -1,5 +1,9 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.6.2 - 2026-03-27
+### Bugfixes
+- Fix Blockdate in new ticket
+
 ## 2.6.1 - 2026-01-15
 ### Bugfixes
 - Observers have an effect on pending tickets even with no pending reasons
