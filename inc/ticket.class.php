@@ -541,7 +541,7 @@ $(document).ready(function(){
                 "</label>" +
                 '<div class="col-xxl-8  field-container">' +
                     '<span class="entity-badge" title="techs-tickets">' +
-                    '<span class="text-nowrap">' + "{$cat_name}" + '</span></span>' + 
+                    '<span class="text-nowrap">' + "{$cat_name}" + '</span></span>' +
                 '</div>' +
             "</div>");
     }
@@ -656,5 +656,15 @@ JAVASCRIPT;
                 COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
         }
+    }
+
+    /**
+     * @param  Migration $migration
+     *
+     * @return void
+     */
+    public static function uninstall(Migration $migration): void
+    {
+        $migration->dropTable(self::getTable());
     }
 }
