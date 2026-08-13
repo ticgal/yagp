@@ -122,6 +122,27 @@
         ) }}
 
         <div class="hr-text">
+            <i class="ti ti-lock"></i>
+            <span>{{ __('User profile fields lock', 'yagp') }}</span>
+        </div>
+
+        {{ fields.dropdownYesNo(
+            'lockfields',
+            item.fields['lockfields'],
+            __("Enable locking of user profile fields (configured per profile, in the profile's YAGP tab)", "yagp"),
+            options
+        ) }}
+
+        {% if item.fields['lockfields'] %}
+            {{ fields.dropdownYesNo(
+                'lockfields_auditlog',
+                item.fields['lockfields_auditlog'],
+                __("Log blocked edit attempts (audit trail)", "yagp"),
+                options
+            ) }}
+        {% endif %}
+
+        <div class="hr-text">
             <i class="ti ti-layout-kanban"></i>
             <span>{{ __('Related to tickets', 'yagp') }}</span>
         </div>

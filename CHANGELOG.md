@@ -1,5 +1,10 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 2.7.0 - 2026-08-13
+### Features
+- Per-profile locking of self-editable user profile fields (phone, email, mobile, etc.), enforced server-side and reflected in the UI via JS/CSS
+- Optional audit log for blocked edit attempts
+
 ## 2.6.2 - 2026-03-27
 ### Bugfixes
 - Fix Blockdate in new ticket

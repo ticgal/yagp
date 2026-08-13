@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '2.6.2');
+define('PLUGIN_YAGP_VERSION', '2.7.0');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "10.0");
 // Maximum GLPI version, exclusive
@@ -97,15 +97,28 @@ function plugin_init_yagp(): void
             $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/blockdate.js';
         }
 
+        if ($config->fields['lockfields']) {
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'js/lockfields.js';
+            $PLUGIN_HOOKS[Hooks::ADD_CSS]['yagp'][] = 'css/lockfields.css';
+
+            $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['yagp'][User::class] = [
+                PluginYagpUser::class, 'preItemUpdate',
+            ];
+            $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][UserEmail::class] = [
+                PluginYagpUser::class, 'preItemAddEmail',
+            ];
+            $PLUGIN_HOOKS[Hooks::PRE_ITEM_DELETE]['yagp'][UserEmail::class] = [
+                PluginYagpUser::class, 'preItemDeleteEmail',
+            ];
+        }
+
         if ($config->fields['findrequest']) {
             if (
                 !is_null($config->fields['requestlabel'])
                 && $config->fields['requestlabel'] != ""
             ) {
-                $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'] = [
-                    Ticket::class => [
-                        PluginYagpTicket::class, 'preAddTicket',
-                    ],
+                $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][Ticket::class] = [
+                    PluginYagpTicket::class, 'preAddTicket',
                 ];
             }
         }

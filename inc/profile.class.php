@@ -87,6 +87,16 @@ class PluginYagpProfile extends Profile
         ];
 
         $profile->displayRightsChoiceMatrix($general_rights, $matrix_options);
+
+        echo "<div class='hr-text'><span>" . __("Block user profile fields", 'yagp') . "</span></div>";
+        $lockfields_rights = self::getLockFieldsRights();
+        $lockfields_options = [
+            'canedit'       => $canedit,
+            'default_class' => 'tab_bg_2',
+            'title'         => __("Block user profile fields", 'yagp'),
+        ];
+        $profile->displayRightsChoiceMatrix($lockfields_rights, $lockfields_options);
+
         $profile->showLegend();
 
         if ($canedit) {
@@ -125,6 +135,114 @@ class PluginYagpProfile extends Profile
         ];
 
         return $rights;
+    }
+
+    /**
+     * Catalog of the user's own profile fields (front/preference.php, "My settings")
+     * that can be locked per-profile. Fields already covered by a native GLPI
+     * permission (password via 'password_update', use_mode via Config::canUpdate())
+     * are intentionally left out.
+     *
+     * @return array
+     */
+    public static function getLockFieldsCatalog(): array
+    {
+        return [
+            'firstname'             => [
+                'right' => 'plugin_yagp_lock_firstname',
+                'label' => __('First name'),
+            ],
+            'realname'              => [
+                'right' => 'plugin_yagp_lock_realname',
+                'label' => __('Surname'),
+            ],
+            'phone'                 => [
+                'right' => 'plugin_yagp_lock_phone',
+                'label' => Phone::getTypeName(1),
+            ],
+            'phone2'                => [
+                'right' => 'plugin_yagp_lock_phone2',
+                'label' => __('Phone 2'),
+            ],
+            'mobile'                => [
+                'right' => 'plugin_yagp_lock_mobile',
+                'label' => __('Mobile phone'),
+            ],
+            'email'                 => [
+                'right' => 'plugin_yagp_lock_email',
+                'label' => _n('Email', 'Emails', Session::getPluralNumber()),
+            ],
+            'language'              => [
+                'right' => 'plugin_yagp_lock_language',
+                'label' => __('Language'),
+            ],
+            'timezone'              => [
+                'right' => 'plugin_yagp_lock_timezone',
+                'label' => __('Time zone'),
+            ],
+            'registration_number'   => [
+                'right' => 'plugin_yagp_lock_registration_number',
+                'label' => _x('user', 'Administrative number'),
+            ],
+            'locations_id'          => [
+                'right' => 'plugin_yagp_lock_locations_id',
+                'label' => Location::getTypeName(1),
+            ],
+            'nickname'              => [
+                'right' => 'plugin_yagp_lock_nickname',
+                'label' => __('Nickname'),
+            ],
+            'picture'               => [
+                'right' => 'plugin_yagp_lock_picture',
+                'label' => _n('Picture', 'Pictures', 1),
+            ],
+            'profiles_id'           => [
+                'right' => 'plugin_yagp_lock_profiles_id',
+                'label' => __('Default profile'),
+            ],
+            'entities_id'           => [
+                'right' => 'plugin_yagp_lock_entities_id',
+                'label' => __('Default entity'),
+            ],
+        ];
+    }
+
+    /**
+     * Build the matrix rows (one row per lockable field, single "Block" column)
+     * consumed by Profile::displayRightsChoiceMatrix().
+     *
+     * @return array
+     */
+    public static function getLockFieldsRights(): array
+    {
+        $rights = [];
+        foreach (self::getLockFieldsCatalog() as $key => $info) {
+            $rights['yagp_lock_' . $key] = [
+                'rights'    => [1 => __("Block", 'yagp')],
+                'itemtype'  => self::getType(),
+                'label'     => $info['label'],
+                'field'     => $info['right'],
+            ];
+        }
+
+        return $rights;
+    }
+
+    /**
+     * Fields locked for the current session's active profile.
+     *
+     * @return string[] keys from getLockFieldsCatalog()
+     */
+    public static function getLockedFieldsForSession(): array
+    {
+        $locked = [];
+        foreach (self::getLockFieldsCatalog() as $key => $info) {
+            if (Session::haveRight($info['right'], 1)) {
+                $locked[] = $key;
+            }
+        }
+
+        return $locked;
     }
 
     /**
@@ -242,6 +360,9 @@ class PluginYagpProfile extends Profile
     {
         $migration->displayMessage("Removing profile rights");
         foreach (self::getGeneralRights() as $data) {
+            ProfileRight::deleteProfileRights([$data['field']]);
+        }
+        foreach (self::getLockFieldsRights() as $data) {
             ProfileRight::deleteProfileRights([$data['field']]);
         }
     }
