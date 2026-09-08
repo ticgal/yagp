@@ -283,7 +283,10 @@ class PluginYagpTransfer extends CommonDBTM
          */
         global $DB, $CFG_GLPI;
 
-        echo "<div class='d-flex w-100 flex-column'>";
+        // min-height evita que el iframe de la modal (Ajax::createIframeModalWindow)
+        // se congele con una altura demasiado pequeña al medir el contenido inicial,
+        // dejando el dropdown de entidad sin espacio para desplegarse.
+        echo "<div class='d-flex w-100 flex-column' style='min-height: 400px;'>";
         if (isset($transferlist) && count($transferlist)) {
             echo "<div class='my-2 text-center'>";
             echo "<span>" . __('Think of making a backup before transferring items.') . "</span>";

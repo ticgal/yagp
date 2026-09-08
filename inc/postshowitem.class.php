@@ -185,43 +185,44 @@ JAVASCRIPT;
                 }
                 $duration = (int) Entity::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration');
                 $expired = $duration !== 0 && (time() - strtotime($ticket_satisfaction->fields['date_begin'])) > $duration * DAY_TIMESTAMP;
+
                 if ($ticket_status != Ticket::CLOSED) {
                     return false;
-                } else {
-                    $entity_config = self::getUsedConfig('inquest_config', $ticket_entity, 'inquest_delay', -2);
-                    if ($entity_config != 0) {
-                        return false;
-                    } else {
+                }
 
-                        if ($ticket_satisfaction->fields['satisfaction'] != null) {
-                            return false;
-                        } else {
-                            if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
-                                return false;
-                            } else {
-                                if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
-                                    return false;
-                                } else {
-                                    if ($expired) {
-                                        return false;
-                                    }
-                                }
-                                $ajax_id = 'ajax_satisfaction';
-                                $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
-                                $ajax_title = __('Satisfaction', 'yagp');
+                $entity_config = self::getUsedConfig('inquest_config', $ticket_entity, 'inquest_delay', -2);
+                if ($entity_config != 0) {
+                    return false;
+                }
 
-                                    Ajax::createIframeModalWindow(
-                                        $ajax_id,
-                                        $ajax_url,
-                                        [
-                                            'title'         => $ajax_title,
-                                            'width'         => '500',
-                                            'height'        => '500',
-                                            'reloadonclose' => true,
-                                        ],
-                                    );
+                if ($ticket_satisfaction->fields['satisfaction'] != null) {
+                    return false;
+                }
 
-                                    echo "<script>
+                if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
+                    return false;
+                }
+
+                if ($expired) {
+                    return false;
+                }
+
+                $ajax_id = 'ajax_satisfaction';
+                $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
+                $ajax_title = __('Satisfaction', 'yagp');
+
+                Ajax::createIframeModalWindow(
+                    $ajax_id,
+                    $ajax_url,
+                    [
+                        'title'         => $ajax_title,
+                        'width'         => '500',
+                        'height'        => '500',
+                        'reloadonclose' => true,
+                    ],
+                );
+
+                echo "<script>
             $(document).ready(function() {
                 var test_inteval = setInterval(function() {
                     if ($('#ajax_satisfaction').length > 0) {
@@ -232,14 +233,7 @@ JAVASCRIPT;
             });
         </script>";
 
-                                } else {
-                                    return false;
-                                }
-                            }
-                            break;
-                        }
-                    }
-                }
+                break;
         }
         return true;
     }
