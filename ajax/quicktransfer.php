@@ -29,6 +29,8 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+
 include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
@@ -55,14 +57,24 @@ if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
 
 if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     $itemtype = $_GET['itemtype'];
-    $id = $_GET['items_id'];
+    $id = (int) $_GET['items_id'];
+
+    // Quick transfer is only offered on tickets, do not instantiate arbitrary itemtypes.
+    if ($itemtype !== Ticket::class) {
+        throw new AccessDeniedHttpException();
+    }
+
+    $item = new $itemtype();
+    // Refuse ids coming from a creation form (-1) or pointing to a missing ticket,
+    // and make sure the current user is actually allowed to transfer this one.
+    if ($id <= 0 || !$item->getFromDB($id) || !$item->can($id, UPDATE)) {
+        throw new AccessDeniedHttpException();
+    }
 
     $transferlist = [];
     $transferlist[$itemtype][$id] = $id;
 
     $config = PluginYagpConfig::getInstance();
-    $item = new $itemtype();
-    $item->getFromDB($id);
     if (
         isset($config->fields['autotransfer'])
         && $config->fields['autotransfer'] == 1
