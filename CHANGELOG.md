@@ -1,6 +1,6 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 3.0.2-beta.1 - 2026-09-08
+## 3.0.2 - 2026-09-08
 ### Bugfixes
 - Fix syntax error in `showSatisfactionModal()` that prevented the plugin from being installed
 - Fix "Transfer to" modal: entity dropdown was clipped/unusable when the iframe height was calculated too small on load
