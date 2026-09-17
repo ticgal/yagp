@@ -110,6 +110,8 @@ JAVASCRIPT;
                 if (
                     Session::haveRight('transfer', READ)
                     && Session::isMultiEntitiesMode()
+                    && !$item->isNewItem()
+                    && $item->can($item->getID(), UPDATE)
                     && isset($item->fields['entities_id'])
                 ) {
                     $entity_name = __("Select an entity to transfer", "yagp");
