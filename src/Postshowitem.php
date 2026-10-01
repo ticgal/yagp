@@ -1,0 +1,294 @@
+<?php
+
+/**
+ * -------------------------------------------------------------------------
+ * YAGP plugin for GLPI
+ * Copyright (C) 2019-2025 by the TICgal Team.
+ * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * -------------------------------------------------------------------------
+ * LICENSE
+ * This file is part of the YAGP plugin.
+ * YAGP plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * YAGP plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
+ * @license   AGPL License 3.0 or (at your option) any later version
+ *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
+ * @link      https://www.tic.gal
+ * @since     2019
+ * -------------------------------------------------------------------------
+ */
+
+namespace GlpiPlugin\Yagp;
+
+use Ajax;
+use CommonDBTM;
+use Dropdown;
+use Entity;
+use Html;
+use Session;
+use TicketSatisfaction;
+
+class Postshowitem extends CommonDBTM
+{
+    /**
+     * @param  array $params
+     *
+     * @return bool
+     */
+    public static function pluginYagpPostShowItem(array $params): bool
+    {
+        $item = isset($params['item']) ? $params['item'] : null;
+        if (!is_object($item)) {
+            return false;
+        }
+
+        $config = Config::getInstance();
+        switch (get_class($params['item'])) {
+            case 'Ticket':
+                if ($config->fields['private_view'] == 1) {
+                    self::enhancePrivateView();
+                }
+
+                if ($config->fields['quick_transfer'] == 1) {
+                    self::quickTransfer($params);
+                }
+
+                if ($config->fields['modal_satisfaction'] == 1) {
+                    self::showSatisfactionModal($params);
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * enhancePrivateView
+     *
+     * @return void
+     */
+    public static function enhancePrivateView(): void
+    {
+        $script = <<<JAVASCRIPT
+        $(document).ready(function() {
+            $("span.is-private").children("i").css({
+                "font-size":"1.6em",
+                "color":"#d63939",
+                "font-weight":"500"
+            });
+            $("span.is-private").parent().parent().parent().parent().css({
+                "border-style":"dashed",
+                "border-color":"black",
+                "border-width":"0.22em",
+                "border-radius":"3px"
+            });
+        });
+JAVASCRIPT;
+
+        echo Html::scriptBlock($script);
+    }
+
+    /**
+     * quickTransfer
+     *
+     * @param  array $params
+     * @return bool
+     */
+    public static function quickTransfer(array $params): bool
+    {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
+        $item = isset($params['item']) ? $params['item'] : null;
+        if (!is_object($item)) {
+            return false;
+        }
+
+        switch ($item->getType()) {
+            case \Ticket::class:
+                /** @var Ticket $item */
+                $config = Config::getInstance();
+                if (
+                    Session::haveRight('transfer', READ)
+                    && Session::isMultiEntitiesMode()
+                    && !$item->isNewItem()
+                    && $item->can($item->getID(), UPDATE)
+                    && isset($item->fields['entities_id'])
+                ) {
+                    $entity_name = __("Select an entity to transfer", "yagp");
+                    $ajax_id = 'ajax_playground';
+                    $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/quicktransfer.php';
+                    $ajax_url .= '?' . http_build_query(['itemtype' => $item->getType(), 'items_id' => $item->getID()]);
+                    $ajax_title = __("Transfer to", "yagp");
+                    if (
+                        $config->fields['autotransfer'] == 1
+                        && $config->fields['transfer_entity'] != $item->fields['entities_id']
+                    ) {
+                        $entity_name = Dropdown::getDropdownName(
+                            'glpi_entities',
+                            $config->fields['transfer_entity'],
+                        );
+                        $ajax_title .= " $entity_name";
+                    }
+                    $icon = "<i class='ti ti-transfer me-1'></i>";
+                    $btn_attrs = "class='btn col-auto col-xxl-12' data-bs-toggle='modal'";
+
+                    $append = "<label class='col-form-label col-xxl-4 text-xxl-end'></label>";
+                    $append .= "<div class='col-xxl-8 row m-0 field-container'>";
+                    $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}'";
+                    $append .= " data-toggle='tooltip' title='" . htmlescape($entity_name) . "' href='#'>";
+                    $append .= $icon . "<span class='text-truncate'>" . htmlescape($ajax_title) . "</span>";
+                    $append .= "</a>";
+                    $append .= "</div>";
+
+                    $append_js = json_encode($append);
+                    $script = <<<JAVASCRIPT
+                    $('section#item-main .form-field').first().append({$append_js});
+JAVASCRIPT;
+
+                    Ajax::createIframeModalWindow(
+                        $ajax_id,
+                        $ajax_url,
+                        [
+                            'title'         => $ajax_title,
+                            'width'         => '500',
+                            'height'        => '500',
+                            'reloadonclose' => true,
+                        ],
+                    );
+                    echo Html::scriptBlock($script);
+                }
+                break;
+        }
+
+        return true;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return bool
+     */
+    public static function showSatisfactionModal(array $params): bool
+    {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
+        $item = isset($params['item']) ? $params['item'] : null;
+        if (!is_object($item)) {
+            return false;
+        }
+
+        switch ($item->getType()) {
+            case \Ticket::class:
+                /** @var Ticket $item */
+                $ticket_status = $item->fields['status'];
+                $ticket_entity = $item->fields['entities_id'];
+                $ticket_satisfaction = new TicketSatisfaction();
+                if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+                    return false;
+                }
+                $duration = (int) Entity::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration');
+                $expired = $duration !== 0 && (time() - strtotime($ticket_satisfaction->fields['date_begin'])) > $duration * DAY_TIMESTAMP;
+
+                if ($ticket_status != \Ticket::CLOSED) {
+                    return false;
+                }
+
+                $entity_config = self::getUsedConfig('inquest_config', $ticket_entity, 'inquest_delay', -2);
+                if ($entity_config != 0) {
+                    return false;
+                }
+
+                if ($ticket_satisfaction->fields['satisfaction'] != null) {
+                    return false;
+                }
+
+                if ($ticket_satisfaction->fields['satisfaction'] === null && $ticket_satisfaction->fields['date_answered'] != null) {
+                    return false;
+                }
+
+                if ($expired) {
+                    return false;
+                }
+
+                $ajax_id = 'ajax_satisfaction';
+                $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/satisfaction.php?id=' . $item->fields['id'];
+                $ajax_title = __('Satisfaction', 'yagp');
+
+                Ajax::createIframeModalWindow(
+                    $ajax_id,
+                    $ajax_url,
+                    [
+                        'title'         => $ajax_title,
+                        'width'         => '500',
+                        'height'        => '500',
+                        'reloadonclose' => true,
+                    ],
+                );
+
+                echo "<script>
+            $(document).ready(function() {
+                var test_inteval = setInterval(function() {
+                    if ($('#ajax_satisfaction').length > 0) {
+                        $('#ajax_satisfaction').modal('show');
+                        clearInterval(test_inteval);
+                    }
+                }, 100);
+            });
+        </script>";
+
+                break;
+        }
+        return true;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getUsedConfig($fieldref, $entities_id, $fieldval = '', $default_value = -2)
+    {
+        if (empty($fieldval)) {
+            $fieldval = $fieldref;
+        }
+
+        $entity = new Entity();
+        //$entity = new self();
+        // Search in entity data of the current entity
+        if ($entity->getFromDBByCrit(['id' => $entities_id])) {
+            // Value is defined : use it
+            if (isset($entity->fields[$fieldref])) {
+                // Numerical value
+                if (is_numeric($default_value) && ($entity->fields[$fieldref] != Entity::CONFIG_PARENT) && (!empty($entity->fields[$fieldref]))) {
+                    return $entity->fields[$fieldval];
+                }
+                // String value
+                if (!is_numeric($default_value) && $entity->fields[$fieldref]) {
+                    return $entity->fields[$fieldval];
+                }
+            }
+        }
+
+        // Entity data not found or not defined : search in parent one
+        if ($entities_id > 0) {
+            $entity = new Entity();
+            if ($entity->getFromDB($entities_id)) {
+                $ret = self::getUsedConfig($fieldref, $entity->fields['entities_id'], $fieldval, $default_value);
+                return $ret;
+            }
+        }
+
+        return $default_value;
+    }
+}

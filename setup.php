@@ -30,12 +30,15 @@
  */
 
 use Glpi\Plugin\Hooks;
+use GlpiPlugin\Yagp\Config;
+use GlpiPlugin\Yagp\Postshowitem;
+use GlpiPlugin\Yagp\Ticket as PluginTicket;
 
-define('PLUGIN_YAGP_VERSION', '3.0.2');
+define('PLUGIN_YAGP_VERSION', '4.0.0-beta.1');
 // Minimal GLPI version, inclusive
-define("PLUGIN_YAGP_MIN_GLPI", "11.0");
+define("PLUGIN_YAGP_MIN_GLPI", "12.0.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_YAGP_MAX_GLPI", "12.0");
+define("PLUGIN_YAGP_MAX_GLPI", "12.1.0");
 
 /**
  * plugin_version_yagp
@@ -71,30 +74,26 @@ function plugin_init_yagp(): void
     global $PLUGIN_HOOKS;
 
     if (Session::haveRightsOr("config", [READ, UPDATE])) {
-        Plugin::registerClass('PluginYagpConfig', ['addtabon' => 'Config']);
+        Plugin::registerClass(Config::class, ['addtabon' => \Config::class]);
         $PLUGIN_HOOKS['config_page']['yagp'] = 'front/config.form.php';
     }
 
     $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['yagp'] = [
-        PluginYagpConfig::class  => 'plugin_yagp_updateitem',
-        TicketSatisfaction::class  => [PluginYagpTicket::class, 'plugin_yagp_preItemUpdate'],
+        Config::class  => 'plugin_yagp_updateitem',
+        TicketSatisfaction::class  => [PluginTicket::class, 'plugin_yagp_preItemUpdate'],
     ];
 
     $plugin = new Plugin();
     if ($plugin->isActivated('yagp')) {
-        // Deprecated in GLPI 11:
-        // this tab only exposed "See group tickets only" plugin-specific right.
-        // Plugin::registerClass(PluginYagpProfile::class, ['addtabon' => Profile::class]);
-
-        $config = PluginYagpConfig::getInstance();
+        $config = Config::getInstance();
         if ($config->fields['gototicket']) {
             if (Session::getCurrentInterface() != "helpdesk") {
-                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'public/gototicket.js';
+                $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'gototicket.js';
             }
         }
 
         if ($config->fields['blockdate']) {
-            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'public/blockdate.js';
+            $PLUGIN_HOOKS[Hooks::ADD_JAVASCRIPT]['yagp'][] = 'blockdate.js';
         }
 
         if ($config->fields['findrequest']) {
@@ -104,29 +103,28 @@ function plugin_init_yagp(): void
             ) {
                 $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'] = [
                     Ticket::class => [
-                        PluginYagpTicket::class, 'preAddTicket',
+                        PluginTicket::class, 'preAddTicket',
                     ],
                 ];
             }
         }
 
         $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = 'plugin_yagp_pre_show_tab';
-        $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['yagp'] = 'plugin_yagp_post_show_tab';
 
         if ($config->fields['recategorization'] || $config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['yagp'] = [
                 Ticket::class => [
-                    PluginYagpTicket::class, 'pluginYagpItemUpdate',
+                    PluginTicket::class, 'pluginYagpItemUpdate',
                 ],
             ];
             $PLUGIN_HOOKS[Hooks::POST_ITEM_FORM]['yagp'] = [
-                PluginYagpTicket::class, 'plugin_yagp_postItemForm',
+                PluginTicket::class, 'plugin_yagp_postItemForm',
             ];
         }
 
         if ($config->fields['hide_historical']) {
             $PLUGIN_HOOKS[Hooks::PRE_SHOW_ITEM]['yagp'] = [
-                PluginYagpTicket::class, 'plugin_yagp_preShowItem',
+                PluginTicket::class, 'plugin_yagp_preShowItem',
             ];
         }
 
@@ -136,49 +134,26 @@ function plugin_init_yagp(): void
             || $config->fields['modal_satisfaction']
         ) {
             $PLUGIN_HOOKS[Hooks::POST_SHOW_ITEM]['yagp'] = [
-                PluginYagpPostshowitem::class, 'pluginYagpPostShowItem',
+                Postshowitem::class, 'pluginYagpPostShowItem',
             ];
         }
 
         if ($config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginYagpTicket::class, 'pluginYagpItemAdd',
+                PluginTicket::class, 'pluginYagpItemAdd',
             ];
         }
 
         if (!empty($config->fields['solutiontypes'])) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILSolution::class] = [
-                PluginYagpTicket::class, 'pluginYagpItemAdd',
+                PluginTicket::class, 'pluginYagpItemAdd',
             ];
         }
 
         if ($config->fields['observers_affect_status']) {
             $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginYagpTicket::class, 'preItemAdd',
+                PluginTicket::class, 'preItemAdd',
             ];
         }
-
-        // Deprecated in GLPI 11:
-        // "See group tickets only" is now handled by native GLPI permissions.
-        /*
-        $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
-            PluginYagpProfile::class, 'checkAllocatorAccess',
-        ];
-
-        $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
-        $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
-        */
-
-        CronTask::Register(
-            'PluginYagpTicket',
-            'pluginyagpticketsatisfaction',
-            DAY_TIMESTAMP,
-            [
-                'state'     => 0,
-                'mode'      => CronTask::MODE_EXTERNAL,
-                'hourmin'   => 0,
-                'horumax'   => 24,
-            ],
-        );
     }
 }

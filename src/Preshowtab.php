@@ -29,10 +29,39 @@
  * -------------------------------------------------------------------------
  */
 
-/**
- * @deprecated Legacy class name kept for other plugins. Use \GlpiPlugin\Yagp\Profile instead.
- */
+namespace GlpiPlugin\Yagp;
 
-require_once __DIR__ . '/../src/Profile.php';
+use CommonDBTM;
+use Html;
 
-class_alias(\GlpiPlugin\Yagp\Profile::class, 'PluginYagpProfile');
+class Preshowtab extends CommonDBTM
+{
+    /**
+     * @param  array $params
+     *
+     * @return void
+     */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function plugin_yagp_preShowTab(array $params): void
+    {
+        if (
+            isset($_SESSION["glpiactiveprofile"])
+            && isset($_SESSION["glpiactiveprofile"]["interface"])
+            && $_SESSION["glpiactiveprofile"]["interface"] == "helpdesk"
+        ) {
+            $options = $params["options"];
+            switch ($options["itemtype"]) {
+                case "Log":
+                    $script = <<<JAVASCRIPT
+$(document).ready(function() {
+    $("div[id^='tab-Log']").css({display:"none"});
+    $("div[id^='tab--'] div.table-responsive").css({display:"none"});
+});
+JAVASCRIPT;
+
+                    echo Html::scriptBlock($script);
+                    break;
+            }
+        }
+    }
+}

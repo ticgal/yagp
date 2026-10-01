@@ -29,49 +29,35 @@
  * -------------------------------------------------------------------------
  */
 
-include("../../../inc/includes.php");
+use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Yagp\Postshowitem;
+
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-$plugin = new Plugin();
-if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
-    Html::displayNotFoundError();
+if (!Plugin::isPluginActive('yagp')) {
+    throw new NotFoundHttpException();
 }
 
 Session::checkLoginUser();
-Html::popHeader(
-    PluginYagpPostshowitem::getTypeName(1),
-    $_SERVER['PHP_SELF'],
-    false,
-    '',
-    '',
-    PluginYagpPostshowitem::getType(),
-);
-Html::requireJs('rateit');
-echo '<link rel="stylesheet" type="text/css" href="/lib/jquery.rateit.css">';
-// Indicar que el contenido se carga en un modal
-$_REQUEST['_in_modal'] = 1;
-$id = $_GET['id'];
+
+$id = (int) ($_GET['id'] ?? 0);
 $ticket = new Ticket();
-$ticket->getFromDB($id);
+if ($id <= 0 || !$ticket->getFromDB($id)) {
+    throw new NotFoundHttpException();
+}
+if (!$ticket->canViewItem()) {
+    throw new AccessDeniedHttpException();
+}
 $ts = new TicketSatisfaction();
-$ts->getFromDBByCrit(['tickets_id' => $id]);
-$ts->fields['name'] = $ticket->fields['name'];
-$satisfaction = new PluginYagpPostshowitem();
-$ts->showSatisactionForm($ticket);
-//$satisfaction->showSatisfaction($id);
-// Contenido del modal
-if (!$ts->fields['date_answered']) {
-    echo <<<HTML
-<script>
-$(document).ready(function () {
-   setTimeout(() => {
-    var rateitpreset = $(".rateit-preset");
-    rateitpreset.attr('style','height: 16px; width: 0px;');
-   }, timeout = 10);
-});
-</script>
-HTML;
+if (!$ts->getFromDBByCrit(['tickets_id' => $id])) {
+    throw new NotFoundHttpException();
 }
 
+// Content is displayed in a modal
+$_REQUEST['_in_modal'] = 1;
+Html::popHeader(Postshowitem::getTypeName(1));
+$ts->fields['name'] = $ticket->fields['name'];
+$ts->showSatisfactionForm($ticket);
 Html::popFooter();

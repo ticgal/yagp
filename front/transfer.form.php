@@ -29,58 +29,50 @@
  * -------------------------------------------------------------------------
  */
 
-include('../../../inc/includes.php');
+use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Yagp\Transfer;
 
 if (!Plugin::isPluginActive('yagp')) {
-    Html::displayNotFoundError();
+    throw new NotFoundHttpException();
 }
 
 Session::checkRight("transfer", READ);
 
-if (empty($_GET["id"])) {
-    $_GET["id"] = "";
+$items = [];
+$to_entity = -1;
+if (isset($_POST['transfer'], $_POST['transferlist'])) {
+    $to_entity = (int) ($_POST['to_entity'] ?? -1);
+    if ($to_entity < 0 || !Session::haveAccessToEntity($to_entity)) {
+        throw new AccessDeniedHttpException();
+    }
+    $items = Transfer::validateTransferList(json_decode((string) $_POST['transferlist'], true));
 }
-
-$transfer = new Transfer();
 
 $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
-if (isset($_POST['transfer'])) {
-    if (isset($_POST['transferlist'])) {
-        if (!Session::haveAccessToEntity($_POST['to_entity'])) {
-            Html::displayRightError();
-        }
-
-        $default = PluginYagpTransfer::getCompleteTransferOptions();
-        foreach ($default as $k => $v) {
-            $_POST[$k] = isset($_POST[$k]) ? $_POST[$k] : $v;
-        }
-
-        $items = json_decode(stripslashes($_POST['transferlist']), true);
-        PluginYagpTransfer::validateTransferList($items);
-        $transfer->moveItems(
-            $items,
-            $_POST['to_entity'],
-            $_POST,
-        );
-
-        $entity = new Entity();
-        $entity->getFromDB($_POST['to_entity']);
-
-        $msg = __("Ticket transferred to %s", 'yagp');
-        $sprintf = sprintf(
-            $msg,
-            Dropdown::getDropdownName('glpi_entities', $_POST['to_entity']),
-        );
-
-        echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
-        echo "<div class='alert alert-info mt-4'>";
-        echo "<h3>" . $sprintf . "</h3>";
-        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
-        echo "</div>";
-        echo "</div>";
-
-        exit();
+if ($items !== []) {
+    $options = $_POST;
+    foreach (Transfer::getCompleteTransferOptions() as $k => $v) {
+        $options[$k] ??= $v;
     }
+
+    $transfer = new \Transfer();
+    $transfer->moveItems($items, $to_entity, $options);
+
+    $msg = __("Ticket transferred to %s", 'yagp');
+    $sprintf = sprintf(
+        $msg,
+        Dropdown::getDropdownName('glpi_entities', $to_entity),
+    );
+
+    echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
+    echo "<div class='alert alert-info mt-4'>";
+    echo "<h3>" . htmlescape($sprintf) . "</h3>";
+    echo "<span class='text-muted'>" . htmlescape(__('You can close this window', 'yagp')) . "</span>";
+    echo "</div>";
+    echo "</div>";
 }
+
+Html::footer();

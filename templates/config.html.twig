@@ -33,7 +33,7 @@
 {% set options = {} %}
 {% endif %}
 
-{{ include('components/form/header.html.twig', {'in_twig': true, 'no_header': true}) }}
+{{ include('components/form/header.html.twig', {'in_twig': true, 'no_header': true, 'params': options}) }}
 
 <div class="row">
     <div class="row ps-4">
@@ -220,4 +220,4 @@
     </div>
 </div>
 
-{{ include('components/form/buttons.html.twig') }}
+{{ include('components/form/buttons.html.twig', {'params': options}) }}

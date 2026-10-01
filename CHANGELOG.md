@@ -1,5 +1,27 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 4.0.0-beta.1 - Unreleased
+### Features
+- GLPI 12 support (GLPI 11 is no longer supported by this branch)
+- Classes moved to `src/` with the `GlpiPlugin\Yagp` namespace. The legacy `PluginYagp*` names are kept as deprecated aliases
+- YAGP configuration requires re-authentication, like the GLPI configuration
+
+### Security
+- Quick transfer form only accepts tickets the user can update (any item type could be transferred before)
+- Automatic transfer is refused for requests not coming from GLPI itself
+- Quick transfer requires the transfer right
+- Satisfaction modal checks that the user can view the ticket
+- Remove `front/postshowitem.form.php`, which allowed updating any satisfaction survey
+- Plugin tables can no longer be edited through the generic GLPI forms (`/plugins/yagp/front/ticket.form.php`)
+- Escape category and entity names injected in the ticket form
+
+### Bugfixes
+- Uninstall removes the plugin tables and automatic actions
+- Remove the "See group tickets only" profile right left by 2.3.0 - 3.0.0
+- Disabling "Change solved date" only removes its own automatic action
+- Configuration fields added by a migration are available during the same upgrade
+- URLs work when GLPI is installed in a subdirectory
+
 ## 3.0.2 - 2026-09-08
 ### Bugfixes
 - Fix syntax error in `showSatisfactionModal()` that prevented the plugin from being installed

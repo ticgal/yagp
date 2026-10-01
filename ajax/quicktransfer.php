@@ -30,31 +30,23 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Yagp\Config;
+use GlpiPlugin\Yagp\Transfer;
 
-include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-$plugin = new Plugin();
-if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
-    Html::displayNotFoundError();
+if (!Plugin::isPluginActive('yagp')) {
+    throw new NotFoundHttpException();
 }
 
-Session::checkLoginUser();
-global $CFG_GLPI;
+Session::checkRight('transfer', READ);
 
 $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
-$transfer = new PluginYagpTransfer();
-if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
-    $transfer->showForm(1, [
-        'target'        => $CFG_GLPI['root_doc'] . "/plugins/yagp/front/transfer.form.php",
-        'display'       => false,
-        'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions(),
-    ]);
-}
-
+$transfer = new Transfer();
 if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     $itemtype = $_GET['itemtype'];
     $id = (int) $_GET['items_id'];
@@ -74,18 +66,24 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
     $transferlist = [];
     $transferlist[$itemtype][$id] = $id;
 
-    $config = PluginYagpConfig::getInstance();
+    $config = Config::getInstance();
     if (
         isset($config->fields['autotransfer'])
         && $config->fields['autotransfer'] == 1
         && isset($item->fields['entities_id'])
         && $item->fields['entities_id'] != $config->fields['transfer_entity']
     ) {
-        $glpitransfer = new Transfer();
+        // The automatic transfer changes data on a GET request (the modal iframe URL):
+        // refuse it when the browser says the request does not come from GLPI itself.
+        if (($_SERVER['HTTP_SEC_FETCH_SITE'] ?? 'same-origin') !== 'same-origin') {
+            throw new AccessDeniedHttpException();
+        }
+
+        $glpitransfer = new \Transfer();
         $glpitransfer->moveItems(
             $transferlist,
-            $config->fields['transfer_entity'],
-            PluginYagpTransfer::getCompleteTransferOptions(),
+            (int) $config->fields['transfer_entity'],
+            Transfer::getCompleteTransferOptions(),
         );
 
         $msg = __("Ticket transferred to %s", 'yagp');
@@ -96,8 +94,8 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
         echo "<div class='alert alert-info mt-4'>";
-        echo "<h3>" . $sprintf . "</h3>";
-        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
+        echo "<h3>" . htmlescape($sprintf) . "</h3>";
+        echo "<span class='text-muted'>" . htmlescape(__('You can close this window', 'yagp')) . "</span>";
         echo "</div>";
         echo "</div>";
     } else {

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-11-12 12:42+0100\n"
+"POT-Creation-Date: 2026-10-01 15:14+0200\n"
 "Language: hu_HU\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,150 +10,145 @@ msgstr ""
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: front/transfer.form.php:71 ajax/quicktransfer.php:78
+#: front/transfer.form.php:64 ajax/quicktransfer.php:89
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr "Jegy átvitt %s"
 
-#: front/transfer.form.php:80 front/postshowitem.form.php:54
-#: front/postshowitem.form.php:65 front/postshowitem.form.php:74
-#: ajax/quicktransfer.php:87
+#: front/transfer.form.php:73 ajax/quicktransfer.php:98
 msgid "You can close this window"
 msgstr "Bezárhatja ezt az ablakot"
 
-#: hook.php:123
+#: hook.php:108
 msgid "Recategorized"
 msgstr "Átkategorizált"
 
-#: hook.php:137
+#: hook.php:122 src/Ticket.php:567
 msgid "Initial category"
 msgstr "Kezdeti kategória"
 
-#: inc/ticket.class.php:46
-msgid "Expired satisfaction removal"
-msgstr "Expired satisfaction removal"
-
-#: inc/ticket.class.php:81
-msgid "Satisfaction expired for ticket"
-msgstr "Satisfaction expired for ticket"
-
-#: inc/ticket.class.php:618
-msgid "You must provide a comment to close the ticket with less than 3 stars"
-msgstr "You must provide a comment to close the ticket with less than 3 stars"
-
-#: inc/postshowitem.class.php:115
+#: src/Postshowitem.php:129
 msgid "Select an entity to transfer"
 msgstr "Válasszon ki egy átviendő entitást"
 
-#: inc/postshowitem.class.php:119
+#: src/Postshowitem.php:133
 msgid "Transfer to"
 msgstr "Átutalás ide"
 
-#: inc/postshowitem.class.php:198
+#: src/Postshowitem.php:228
 msgid "Satisfaction"
 msgstr "Satisfaction"
 
-#: inc/profile.class.php:115 inc/profile.class.php:146
-msgid "See group tickets only"
-msgstr "See group tickets only"
+#: src/Ticket.php:96
+msgid "Expired satisfaction removal"
+msgstr "Expired satisfaction removal"
 
-#: inc/profile.class.php:147
-msgid "You are not in any group"
-msgstr "You are not in any group"
+#: src/Ticket.php:131
+msgid "Satisfaction expired for ticket"
+msgstr "Satisfaction expired for ticket"
 
-#: inc/preshowtab.class.php:50
-msgid "Current minimum validation"
-msgstr "Jelenlegi minimális érvényesítés"
+#: src/Ticket.php:628
+msgid "You must provide a comment to close the ticket with less than 3 stars"
+msgstr "You must provide a comment to close the ticket with less than 3 stars"
 
-#: inc/ticketsolveddate.class.php:54
+#: src/Ticketsolveddate.php:102
 msgid "Change date"
 msgstr "Dátum módosítása"
 
-#: inc/ticketsolveddate.class.php:55
+#: src/Ticketsolveddate.php:103
 msgid "Number of tickets"
 msgstr "Jegyek száma"
 
-#: inc/transfer.class.php:441 inc/transfer.class.php:450
+#: src/Transfer.php:442 src/Transfer.php:452
 msgid "Invalid transfer list"
 msgstr "Invalid transfer list"
 
-#: entrada estándar:49
+#: templates/config.html.twig:49
 msgid "Display an input to quickly access a ticket"
 msgstr "Display an input to quickly access a ticket"
 
-#: entrada estándar:56
+#: templates/config.html.twig:56
 msgid "Block opening date"
 msgstr "Nyitás dátumának blokkolása"
 
-#: entrada estándar:63
+#: templates/config.html.twig:63
 msgid "Enable re-categorization tracking"
 msgstr "Engedélyezze az újbóli kategorizálási"
 
-#: entrada estándar:70
+#: templates/config.html.twig:70
 msgid "Hide historical tab to post-only users"
 msgstr "Történelmi lap elrejtése csak posztolási felhasználók számára"
 
-#: entrada estándar:78
+#: templates/config.html.twig:79
 msgid "Default Satisfaction"
 msgstr "Default Satisfaction"
 
-#: entrada estándar:93
+#: templates/config.html.twig:94
 msgid "Change ticket solved date to last task end time"
 msgstr ""
 "A jegy megoldott dátumának módosítása az utolsó feladat befejezési idejére"
 
-#: entrada estándar:100
+#: templates/config.html.twig:101
 msgid "Auto-closing of rejected tickets"
 msgstr "Az elutasított jegyek automatikus bezárása"
 
-#: entrada estándar:108
+#: templates/config.html.twig:109
 msgid "Solution types for close tickets automatically"
 msgstr "Solution types for close tickets automatically"
 
-#: entrada estándar:120
+#: templates/config.html.twig:121
 msgid "Display satisfaction in a modal window after closing a ticket"
 msgstr "Display satisfaction in a modal window after closing a ticket"
 
-#: entrada estándar:126
+#: templates/config.html.twig:127
 msgid "Related to tickets"
 msgstr "Related to tickets"
 
-#: entrada estándar:132
+#: templates/config.html.twig:133
 msgid "Enhance Private task/followup view"
 msgstr "Privát feladat/nyomon követési nézet javítása"
 
-#: entrada estándar:139
+#: templates/config.html.twig:140
 msgid "Observers have an effect on pending tickets"
 msgstr "Observers have an effect on pending tickets"
 
-#: entrada estándar:148
+#: templates/config.html.twig:149
 msgid "Replace ticket requester (mailcollector)"
 msgstr "Jegykérő cseréje (mailgyűjtő)"
 
-#: entrada estándar:156
+#: templates/config.html.twig:157
 msgid "Allow anonymous requester"
 msgstr "Allow anonymous requester"
 
-#: entrada estándar:163
+#: templates/config.html.twig:164
 msgid "Tag to search"
 msgstr "Címke a kereséshez"
 
-#: entrada estándar:173
+#: templates/config.html.twig:174
 msgid "Change default minimum validation required"
 msgstr "Az alapértelmezett minimális érvényesítés módosítása"
 
-#: entrada estándar:188
+#: templates/config.html.twig:189
 msgid "Minimum validation"
 msgstr "Minimum validation"
 
-#: entrada estándar:198
+#: templates/config.html.twig:199
 msgid "Enable quick transfer for tickets"
 msgstr "A jegyek gyors transzferének engedélyezése"
 
-#: entrada estándar:205
+#: templates/config.html.twig:206
 msgid "Enable automatic transfer"
 msgstr "Enable automatic transfer"
 
-#: entrada estándar:214
+#: templates/config.html.twig:215
 msgid "Transfer destination"
 msgstr "Transfer destination"
+
+#~ msgid "See group tickets only"
+#~ msgstr "See group tickets only"
+
+#~ msgid "You are not in any group"
+#~ msgstr "You are not in any group"
+
+#~ msgid "Current minimum validation"
+#~ msgstr "Jelenlegi minimális érvényesítés"

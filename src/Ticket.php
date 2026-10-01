@@ -1,0 +1,699 @@
+<?php
+
+/**
+ * -------------------------------------------------------------------------
+ * YAGP plugin for GLPI
+ * Copyright (C) 2019-2025 by the TICgal Team.
+ * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * -------------------------------------------------------------------------
+ * LICENSE
+ * This file is part of the YAGP plugin.
+ * YAGP plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * YAGP plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2025 TICGAL team
+ * @license   AGPL License 3.0 or (at your option) any later version
+ *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
+ * @link      https://www.tic.gal
+ * @since     2019
+ * -------------------------------------------------------------------------
+ */
+
+namespace GlpiPlugin\Yagp;
+
+use CommonDBTM;
+use CommonITILActor;
+use CommonITILValidation;
+use CronTask;
+use DBConnection;
+use Dropdown;
+use Entity;
+use Html;
+use ITILCategory;
+use ITILFollowup;
+use ITILSolution;
+use Migration;
+use PendingReason_Item;
+use RuleMailCollectorCollection;
+use Session;
+use TicketSatisfaction;
+use User;
+
+class Ticket extends CommonDBTM
+{
+    public static string $rightname = 'ticket';
+
+    /**
+     * Rows are only written by the plugin hooks (initial category of recategorized tickets).
+     *
+     * GLPI routes /plugins/yagp/front/ticket(.form).php to its generic list/form controllers
+     * for any CommonDBTM class: forbid them, the table has no entity and must not be edited by hand.
+     */
+    public static function canView(): bool
+    {
+        return false;
+    }
+
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    public static function canUpdate(): bool
+    {
+        return false;
+    }
+
+    public static function canDelete(): bool
+    {
+        return false;
+    }
+
+    public static function canPurge(): bool
+    {
+        return false;
+    }
+
+    /**
+     * @param string $name
+     *
+     * @return array
+     */
+    public static function cronInfo(string $name): array
+    {
+        switch ($name) {
+            case 'pluginyagpticketsatisfaction':
+                return ['description' => __('Expired satisfaction removal', 'yagp')];
+        }
+
+        return [];
+    }
+
+    /**
+     * @param CronTask $task
+     *
+     * @return int
+     */
+    public static function cronPluginYagpTicketSatisfaction(CronTask $task): int
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        $tot = 0;
+
+        $iterator = $DB->request([
+            'FROM' => TicketSatisfaction::getTable(),
+            'WHERE' => [
+                'date_answered' => null,
+            ],
+        ]);
+        foreach ($iterator as $data) {
+            $ticket = new \Ticket();
+            $ticket->getFromDB($data['tickets_id']);
+
+            $duration = (int) Entity::getUsedConfig('inquest_duration', $ticket->fields['entities_id']);
+            if ((time() - strtotime($data['date_begin'])) > $duration * DAY_TIMESTAMP) {
+                $DB->update(TicketSatisfaction::getTable(), [
+                    'date_answered' => date('Y-m-d H:i:s'),
+                ], [
+                    'id' => $data['id'],
+                ]);
+                $task->log(__("Satisfaction expired for ticket", 'yagp') . ' ' . $ticket->fields['id']);
+                $tot++;
+            }
+        }
+
+        $task->setVolume($tot);
+        return ($tot > 0 ? 1 : 0);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSpecificValueToDisplay($field, $values, array $options = []): string
+    {
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+        switch ($field) {
+            case 'is_recategorized':
+                $ticket = new \Ticket();
+                $ticket->getFromDB($options["raw_data"]["id"]);
+
+                $ticket_cat = new self();
+                $ticket_cat->getFromDBByCrit(["tickets_id" => $options["raw_data"]["id"]]);
+                if (empty($ticket_cat->fields)) {
+                    return __("No");
+                }
+                return __("Yes");
+            case 'plugin_yagp_itilcategories_id':
+                $ticket = new \Ticket();
+                $ticket->getFromDB($options["raw_data"]["id"]);
+                $ticket_cat = new self();
+                $ticket_cat->getFromDBByCrit(["tickets_id" => $options["raw_data"]["id"]]);
+                if (!empty($ticket_cat->fields)) {
+                    if ($ticket_cat->fields["plugin_yagp_itilcategories_id"] == 0) {
+                        return " ";
+                    } else {
+                        $cat = new ITILCategory();
+                        $cat->getFromDB($ticket_cat->fields["plugin_yagp_itilcategories_id"]);
+                        if (!empty($ticket_cat->fields)) {
+                            return (string) $cat->fields["completename"];
+                        }
+                    }
+                }
+                break;
+        }
+
+        return parent::getSpecificValueToDisplay($field, $values, $options);
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function getSpecificValueToSelect($field, $name = '', $values = '', array $options = []): string
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        if (!is_array($values)) {
+            $values = [$field => $values];
+        }
+
+        switch ($field) {
+            case 'is_recategorized':
+                $values = [
+                    0 => __("No"),
+                    1 => __("Yes"),
+                ];
+
+                return (string) Dropdown::showFromArray($name, $values, $options);
+            case 'plugin_yagp_itilcategories_id':
+                $query = [
+                    "SELECT"    => "plugin_yagp_itilcategories_id",
+                    "DISTINCT"  => true,
+                    "FROM"      => Ticket::getTable(),
+                    "GROUPBY"   => 'plugin_yagp_itilcategories_id',
+                ];
+
+                $values = [];
+                foreach ($DB->request($query) as $row) {
+                    $cat = new ITILCategory();
+                    $cat->getFromDB($row["plugin_yagp_itilcategories_id"]);
+                    if ($row["plugin_yagp_itilcategories_id"] !== 0) {
+                        $values[$row["plugin_yagp_itilcategories_id"]] = $cat->fields["completename"];
+                    }
+                }
+                $values[0] = __("without");
+                return (string) Dropdown::showFromArray($name, $values, $options);
+        }
+
+        return parent::getSpecificValueToSelect($field, $name, $values, $options);
+    }
+
+    /**
+     * preAddTicket
+     *
+     * @param  \Ticket $ticket
+     * @return \Ticket
+     */
+    public static function preAddTicket(\Ticket $ticket): \Ticket
+    {
+        $config = Config::getInstance();
+        // allow white spaces after and before the email
+        $emailpattern = "\s*\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*";
+        $pattern = "/" . $config->fields['requestlabel'] . $emailpattern . $config->fields['requestlabel'] . "/i";
+
+        if (isset($ticket->input['_message'])) {
+            $mail = $ticket->input['_message'];
+            if ($mail instanceof \Laminas\Mail\Storage\Message) {
+                $content = $mail->getContent();
+            } else {
+                $content = $mail;
+            }
+            if (mb_detect_encoding($content) == 'ASCII') {
+                $content = quoted_printable_decode($content);
+            }
+            // check if $content is a string in base64
+            if (base64_encode(base64_decode($content, true)) === $content) {
+                $content = base64_decode($content);
+            }
+
+            if (preg_match_all($pattern, $content, $matches)) {
+                $string = $matches[0];
+                $useremail = str_replace($config->fields['requestlabel'], "", $string);
+                $useremail = str_replace(" ", "", $useremail); // remove possible spaces
+                $user = new User();
+                if (isset($useremail[0]) && filter_var($useremail[0], FILTER_VALIDATE_EMAIL)) {
+                    if ($user->getFromDBbyEmail($useremail[0])) {
+                        $ticket->input['_users_id_requester'] = $user->fields['id'];
+                    } elseif ($config->fields['allow_anonymous_requester']) {
+                        $ticket->input['_users_id_requester'] = 0;
+                        $ticket->input['_actors']['requester'][0]['itemtype']          = User::class;
+                        $ticket->input['_actors']['requester'][0]['items_id']          = 0;
+                        $ticket->input['_actors']['requester'][0]['use_notification']  = 1;
+                        $ticket->input['_actors']['requester'][0]['alternative_email'] = $useremail[0];
+                    } else {
+                        return $ticket;
+                    }
+
+                    //$mailgate = new MailCollector();
+                    //$mailgate->getFromDB($ticket->input['_mailgate']);
+                    $rule_options['ticket']              = $ticket->input;
+                    //$rule_options['headers']             = $mailgate->getHeaders($ticket->input['_message']);
+                    $rule_options['headers']             = $ticket->input['_head'];
+                    $rule_options['mailcollector']       = $ticket->input['_mailgate'];
+                    $rule_options['_users_id_requester'] = $ticket->input['_users_id_requester'];
+                    $rulecollection                      = new RuleMailCollectorCollection();
+                    $output                              = $rulecollection->processAllRules(
+                        [],
+                        [],
+                        $rule_options,
+                    );
+                    foreach ($output as $key => $value) {
+                        $ticket->input[$key] = $value;
+                    }
+                }
+            }
+        }
+
+        return $ticket;
+    }
+
+    /**
+     * @param  CommonDBTM $item
+     *
+     * @return void
+     */
+    public static function pluginYagpItemUpdate(CommonDBTM $item): void
+    {
+        $config = Config::getInstance();
+
+        switch ($item::class) {
+            case \Ticket::class:
+                /** @var \Ticket $item */
+                if ($config->fields['recategorization']) {
+                    self::ticketRecategorization($item);
+                }
+                break;
+        }
+    }
+
+    /**
+     * itemAdd
+     *
+     * @param  CommonDBTM $item
+     * @return void
+     */
+    public static function pluginYagpItemAdd(CommonDBTM $item): void
+    {
+        $config = Config::getInstance();
+
+        switch ($item::class) {
+            case ITILFollowup::class:
+                /** @var ITILFollowup $item */
+                if ($config->fields['autoclose_rejected_tickets']) {
+                    self::autocloseRejectedTickets($item);
+                }
+                if ($config->fields['observers_affect_status']) {
+                    self::observersAffectStatus($item);
+                }
+                break;
+            case ITILSolution::class:
+                /** @var ITILSolution $item */
+                $solutiontypes = importArrayFromDB($config->fields['solutiontypes']);
+                if (in_array($item->fields['solutiontypes_id'], $solutiontypes)) {
+                    self::autocloseTicket($item);
+                }
+                break;
+        }
+    }
+
+    /**
+     * @param CommonDBTM $item
+     *
+     * @return CommonDBTM
+     */
+    public static function preItemAdd(CommonDBTM $item): CommonDBTM
+    {
+        $config = Config::getInstance();
+
+        switch ($item::class) {
+            case ITILFollowup::class:
+                /** @var ITILFollowup $item */
+                if ($config->fields['observers_affect_status']) {
+                    self::observersAffectStatus($item);
+                }
+                break;
+        }
+
+        return $item;
+    }
+
+
+    /**
+     * @param  \Ticket $ticket
+     *
+     * @return void
+     */
+    public static function ticketRecategorization(\Ticket $ticket): void
+    {
+        if (isset($ticket->oldvalues["itilcategories_id"])) {
+            $ticket_cat = new self();
+            $ticket_cat->getFromDBByCrit(["tickets_id" => $ticket->fields["id"]]);
+            if (empty($ticket_cat->fields)) {
+                $ticket_cat->add([
+                    "tickets_id"                    => $ticket->fields["id"],
+                    "plugin_yagp_itilcategories_id" => $ticket->oldvalues["itilcategories_id"],
+                ]);
+            }
+        }
+    }
+
+    /**
+     * @param ITILFollowup &$followup
+     *
+     * @return void
+     */
+    public static function observersAffectStatus(ITILFollowup &$followup): void
+    {
+        $parent     = $followup->input['itemtype'] ?? '';
+        $parents_id = $followup->input['items_id'] ?? 0;
+        $users_id   = Session::getLoginUserID();
+
+        if (
+            $parent !== \Ticket::class
+            || $parents_id <= 0
+            || $users_id <= 0
+        ) {
+            return;
+        }
+
+        $is_pending = $followup->input['pending'] ?? 0;
+        $is_private = $followup->input['is_private'] ?? 0;
+
+        if ($is_pending || $is_private) {
+            return;
+        }
+
+        $parent_item = $parent::getById($parents_id);
+        /** @var \Ticket $parent_item */
+        if ($parent_item->fields['status'] == \Ticket::WAITING) {
+            $observers = $parent_item->getActorsForType(CommonITILActor::OBSERVER);
+            $observers_row_id = 0;
+            // TODO: maybe check groups too in the future
+            foreach ($observers as $observer) {
+                if ($observer['itemtype'] == User::class && $observer['items_id'] == $users_id) {
+                    $observers_row_id = $observer['id'];
+                    break;
+                }
+            }
+
+            if (!$observers_row_id) {
+                return;
+            }
+
+            $pendingreason_item = new PendingReason_Item();
+            $pr_criteria = [
+                'itemtype'          => $parent_item::getType(),
+                'items_id'          => $parent_item->getID(),
+                'pendingreasons_id' => ['>', 0],
+            ];
+            if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
+                // TODO: count followups since the pending reason creation
+                // TODO: for pending reasons with followups_before_resolution over 1
+                if ($pendingreason_item->fields['followups_before_resolution'] >= 1) {
+                    $pendingreason_item->delete(['id' => $pendingreason_item->getID()], true);
+                    $old_value = $parent_item->fields['status'];
+                    $new_value = $pendingreason_item->fields['previous_status'];
+                    $parent_item->fields['status'] = $new_value;
+                    $updated = $parent_item->updateInDB(
+                        ['status'],
+                        ['status' => $old_value],
+                    );
+                }
+            } else {
+                $old_value = $parent_item->fields['status'];
+                $parent_item->fields['status'] = \Ticket::ASSIGNED;
+                $parent_item->updateInDB(
+                    ['status'],
+                    ['status' => $old_value],
+                );
+            }
+        }
+    }
+
+    /**
+     * autocloseRejectedTickets
+     *
+     * @param  ITILFollowup $item
+     * @return bool
+     */
+    public static function autocloseRejectedTickets(ITILFollowup $item): bool
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        if (isset($item->input['_close']) && $item->input['_close'] == 0) {
+            $parentItemtype = isset($item->fields['itemtype']) ? $item->fields['itemtype'] : null;
+            $parentItemsId  = isset($item->fields['items_id']) ? $item->fields['items_id'] : null;
+
+            $config = Config::getInstance();
+
+            $is_table = ITILSolution::getTable();
+            $query = [
+                'FROM' => $is_table,
+                'WHERE' => [
+                    //'solutiontypes_id'  => $config->fields['solutiontypes_id_rejected'],
+                    'itemtype'          => $parentItemtype,
+                    'items_id'          => $parentItemsId,
+                    //'status'            => CommonITILValidation::REFUSED
+                ],
+                'ORDER' => 'id DESC',
+                'LIMIT' => '1',
+            ];
+
+            $iterator = $DB->request($query);
+            $solution = $iterator->current();
+            if (
+                isset($item->input['requesttypes_id']) &&
+                $item->input['requesttypes_id'] != $config->fields['requesttypes_id_reopen'] &&
+                count($iterator) > 0 &&
+                $solution['solutiontypes_id'] == $config->fields['solutiontypes_id_rejected'] &&
+                $solution['status'] == CommonITILValidation::REFUSED
+            ) {
+                if ($parentItemtype == \Ticket::class) {
+                    $ticket = new $parentItemtype();
+                    $ticket->getFromDB($parentItemsId);
+                    $ticket->update(['id' => $parentItemsId, 'status' => \Ticket::CLOSED]);
+                }
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @param  ITILSolution $solution
+     *
+     * @return bool
+     */
+    public static function autocloseTicket(ITILSolution $solution): bool
+    {
+        $solution->update([
+            'id'                => $solution->fields['id'],
+            'status'            => CommonITILValidation::ACCEPTED,
+            'date_approval'     => date("Y-m-d H:i:s"),
+            'users_id_approval' => $solution->fields['users_id'],
+        ]);
+
+        if ($solution->fields['itemtype'] == \Ticket::class) {
+            $itemtype = new $solution->fields['itemtype']();
+            $itemtype->getFromDB($solution->fields['items_id']);
+            $itemtype->update([
+                'id'     => $solution->fields['items_id'],
+                'status' => \Ticket::CLOSED,
+            ]);
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return void
+     */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function plugin_yagp_postItemForm(array $params): void
+    {
+        if (!isset($params['item']) || !($params['item'] instanceof CommonDBTM)) {
+            return;
+        }
+
+        switch (get_class($params['item'])) {
+            case 'Ticket':
+                $id = $params['item']->getID();
+                if ($id <= 0) {
+                    return;
+                }
+
+                $ticket = $params['item'];
+                $ticket_cat = new self();
+                $ticket_cat->getFromDBByCrit(["tickets_id" => $id]);
+                if (
+                    !empty($ticket_cat->fields)
+                    && $ticket_cat->fields["plugin_yagp_itilcategories_id"] !== $ticket->fields["itilcategories_id"]
+                ) {
+                    $cat = new ITILCategory();
+                    $cat_name = $cat->getFromDB($ticket_cat->fields["plugin_yagp_itilcategories_id"])
+                        ? $cat->fields["name"]
+                        : __("without");
+
+                    $html = "<div id='recategorized' class='form-field row col-12 d-flex align-items-center mb-2'>"
+                        . "<label class='col-form-label col-xxl-4 text-xxl-end'>"
+                        . htmlescape(__("Initial category", "yagp"))
+                        . "</label>"
+                        . "<div class='col-xxl-8 field-container'>"
+                        . "<span class='entity-badge'><span class='text-nowrap'>" . htmlescape($cat_name) . "</span></span>"
+                        . "</div>"
+                        . "</div>";
+                    $html_js = json_encode($html);
+                    $script = <<<JAVASCRIPT
+$(function() {
+    if ($('#recategorized').length == 0) {
+        $("span[id^='category_block_']").after({$html_js});
+    }
+});
+JAVASCRIPT;
+                    echo Html::scriptBlock($script);
+                }
+                break;
+        }
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return void
+     */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function plugin_yagp_preShowItem(array $params): void
+    {
+        $config = Config::getInstance();
+        if (
+            $config->fields['hide_historical'] &&
+            $_SESSION["glpiactiveprofile"]["interface"] == "helpdesk"
+        ) {
+            if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
+                switch (get_class($params['item'])) {
+                    case 'Ticket':
+                        $script = <<<JAVASCRIPT
+$(document).ready(function() {
+    $("a[data-bs-target^='#tab-Log']").css({display:"none"});
+});
+JAVASCRIPT;
+
+                        echo Html::scriptBlock($script);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param TicketSatisfaction $item
+     *
+     * @return false|TicketSatisfaction
+     */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function plugin_yagp_preItemUpdate(TicketSatisfaction $item): false|TicketSatisfaction
+    {
+        $input = $item->input;
+        if (isset($input['satisfaction']) && $input['satisfaction'] < 4) {
+            if (empty($input['comment'])) {
+                $item->input = [];
+                Session::addMessageAfterRedirect(
+                    __('You must provide a comment to close the ticket with less than 3 stars', 'yagp'),
+                    false,
+                    ERROR,
+                );
+                return false;
+            }
+        }
+
+        return $item;
+    }
+
+    /**
+     * @param  Migration $migration
+     *
+     * @return void
+     */
+    public static function install(Migration $migration): void
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        $default_charset = DBConnection::getDefaultCharset();
+        $default_collation = DBConnection::getDefaultCollation();
+        $default_key_sign = DBConnection::getDefaultPrimaryKeySignOption();
+
+        $table = self::getTable();
+        if (!$DB->tableExists($table)) {
+            $migration->displayMessage("Installing $table");
+            $query = "CREATE TABLE IF NOT EXISTS `$table` (
+                `id` INT {$default_key_sign} NOT NULL AUTO_INCREMENT,
+                `tickets_id` INT {$default_key_sign} NOT NULL,
+                `plugin_yagp_itilcategories_id` INT {$default_key_sign} NOT NULL,
+                `is_recategorized` TINYINT NOT NULL DEFAULT '1',
+                PRIMARY KEY (`id`),
+                UNIQUE KEY `unicity` (`tickets_id`),
+                KEY `tickets_id` (`tickets_id`)
+                ) ENGINE=InnoDB DEFAULT CHARSET={$default_charset}
+                COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
+            $DB->doQuery($query);
+        }
+
+        // 4.0.0: classes moved to the GlpiPlugin\Yagp namespace
+        $DB->update(
+            CronTask::getTable(),
+            ['itemtype' => self::class],
+            ['itemtype' => 'PluginYagpTicket'],
+        );
+
+        CronTask::register(
+            self::class,
+            'pluginyagpticketsatisfaction',
+            DAY_TIMESTAMP,
+            [
+                'state'     => CronTask::STATE_DISABLE,
+                'mode'      => CronTask::MODE_EXTERNAL,
+                'hourmin'   => 0,
+                'hourmax'   => 24,
+            ],
+        );
+    }
+
+    /**
+     * @param  Migration $migration
+     *
+     * @return void
+     */
+    public static function uninstall(Migration $migration): void
+    {
+        $migration->displayMessage("Uninstalling " . self::getTable());
+        $migration->dropTable(self::getTable());
+    }
+}

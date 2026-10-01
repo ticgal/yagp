@@ -29,67 +29,10 @@
  * -------------------------------------------------------------------------
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PluginYagpPreshowtab extends CommonDBTM
-{
-    /**
-     * @param  array $params
-     *
-     * @return void
-     */
-    /*
-    public static function preShowTab(array $params = []): void
-    {
-        $config = PluginYagpConfig::getInstance();
-        $options = $params["options"];
-        switch ($options["itemtype"]) {
-            case "TicketValidation":
-                $ticket = new Ticket();
-                $ticket->getFromDB($options["id"]);
-                $validation_percent = $ticket->fields["validation_percent"];
-                $df_min_validation = $config->fields["df_min_validation"];
-                $string = __("Current minimum validation", "yagp");
+/**
+ * @deprecated Legacy class name kept for other plugins. Use \GlpiPlugin\Yagp\Preshowtab instead.
+ */
 
-                $script = <<<JAVASCRIPT
-$(document).ready(function() {
-    $("select[name='validation_percent'] option").attr("value",'{$df_min_validation}');
-    $("select[name='validation_percent'] option").text('{$df_min_validation}%');
-    $(".tab_cadre_fixe tbody:first").append(
-        "<tr><th colspan='2'>{$string}</th><th colspan='2'>{$validation_percent}%</th></tr>"
-    );
-});
-JAVASCRIPT;
-                echo Html::scriptBlock($script);
-                break;
-        }
-    }
-*/
-    /**
-     * @param  array $params
-     *
-     * @return void
-     */
-    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
-    public static function plugin_yagp_preShowTab(array $params): void
-    {
-        if (
-            isset($_SESSION["glpiactiveprofile"])
-            && isset($_SESSION["glpiactiveprofile"]["interface"])
-            && $_SESSION["glpiactiveprofile"]["interface"] == "helpdesk"
-        ) {
-            $options = $params["options"];
-            switch ($options["itemtype"]) {
-                case "Log":
-                    $script = <<<JAVASCRIPT
-$(document).ready(function() {
-    $("div[id^='tab-Log']").css({display:"none"});
-    $("div[id^='tab--'] div.table-responsive").css({display:"none"});
-});
-JAVASCRIPT;
+require_once __DIR__ . '/../src/Preshowtab.php';
 
-                    echo Html::scriptBlock($script);
-                    break;
-            }
-        }
-    }
-}
+class_alias(\GlpiPlugin\Yagp\Preshowtab::class, 'PluginYagpPreshowtab');
