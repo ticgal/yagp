@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -30,6 +30,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
 
 include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
@@ -37,10 +38,12 @@ Html::header_nocache();
 
 $plugin = new Plugin();
 if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
-    Html::displayNotFoundError();
+    throw new NotFoundHttpException();
 }
 
 Session::checkLoginUser();
+Session::checkRight('transfer', READ);
+/** @var array $CFG_GLPI */
 global $CFG_GLPI;
 
 $_REQUEST['_in_modal'] = 1;
@@ -81,6 +84,17 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         && isset($item->fields['entities_id'])
         && $item->fields['entities_id'] != $config->fields['transfer_entity']
     ) {
+        if (!isset($_POST['confirm_transfer'])) {
+            // State change only through a POST (core CSRF check applies), never on a plain GET.
+            echo "<form method='post' action='" . htmlescape($CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/quicktransfer.php')
+                . "?itemtype=" . urlencode($itemtype) . "&items_id=" . $id
+                . "' class='d-flex w-100 justify-content-center mt-4'>";
+            echo "<button type='submit' name='confirm_transfer' value='1' class='btn btn-primary'>"
+                . __('Execute') . "</button>";
+            Html::closeForm();
+            exit();
+        }
+
         $glpitransfer = new Transfer();
         $glpitransfer->moveItems(
             $transferlist,
@@ -91,7 +105,7 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
             $msg,
-            Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity']),
+            htmlescape(Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity'])),
         );
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";

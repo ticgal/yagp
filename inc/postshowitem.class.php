@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -134,14 +134,18 @@ JAVASCRIPT;
 
                     $append = "<label class='col-form-label col-xxl-4 text-xxl-end'></label>";
                     $append .= "<div class='col-xxl-8 row m-0 field-container'>";
-                    $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}'";
-                    $append .= "data-toggle='tooltip' title='{$entity_name}' href='#'>";
-                    $append .= $icon . "<span class='text-truncate'>$ajax_title</span>";
+                    $append .= "<a {$btn_attrs} data-bs-target='#{$ajax_id}' ";
+                    $append .= "data-toggle='tooltip' title='" . htmlescape($entity_name) . "' href='#'>";
+                    $append .= $icon . "<span class='text-truncate'>" . htmlescape($ajax_title) . "</span>";
                     $append .= "</a>";
                     $append .= "</div>";
 
+                    $append_js = json_encode(
+                        $append,
+                        JSON_HEX_TAG | JSON_HEX_AMP | JSON_HEX_APOS | JSON_HEX_QUOT | JSON_UNESCAPED_UNICODE,
+                    );
                     $script = <<<JAVASCRIPT
-                    $('section#item-main .form-field').first().append("{$append}");
+                    $('section#item-main .form-field').first().append({$append_js});
 JAVASCRIPT;
 
                     Ajax::createIframeModalWindow(
@@ -169,6 +173,7 @@ JAVASCRIPT;
      */
     public static function showSatisfactionModal(array $params): bool
     {
+        /** @var array $CFG_GLPI */
         global $CFG_GLPI;
 
         $item = isset($params['item']) ? $params['item'] : null;
@@ -276,73 +281,5 @@ JAVASCRIPT;
         }
 
         return $default_value;
-    }
-
-    /**
-     * @param int $ID
-     *
-     * @return void
-     */
-    public function showSatisfaction(int $ID): void
-    {
-        $satisfaction = new TicketSatisfaction();
-
-        $satisfaction->getFromDBByCrit(['tickets_id' => $ID]);
-        $ticket = new Ticket();
-        $ticket->getFromDB($ID);
-        $add = true;
-        if ($satisfaction->getField('satisfaction') == null) {
-            $add = false;
-        }
-        $rand = mt_rand();
-        //$out = "<link rel='stylesheet' type='text/css' href='public/lib/jquery.rateit.css'>";
-        $out = "<form name='costentity_form$rand' id='costentity_form$rand' method='post' action='";
-        $out .= self::getFormUrl() . "'>";
-        $out .= "<table class='tab_cadre_fixe'>";
-
-        $out .= "<tr><td colspan='2'>";
-        $out .= "<input type='hidden' name='id' value='$ID'>";
-        $out .= "</td></tr>\n";
-        $out .= "<tr class='tab_bg_2'>";
-        $out .= "<td>";
-        $out .= "<span>" . __('Satisfaction with the resolution of the ticket') . "</span> <br><br>";
-        $out .= "<input type='hidden' name='tickets_id' value='$ID'>";
-        $out .= "<select id='satisfaction_data' name='satisfaction'>";
-        for ($i = 1; $i <= 5; $i++) {
-            $out .= "<option value='$i' " . (($i == $satisfaction->getField('satisfaction')) ? 'selected' : '') .
-                ">$i</option>";
-        }
-        $out .= "</select>";
-        $out .= "<div class='rateit' id='stars'></div>";
-        $out .=  "<script type='text/javascript'>";
-        $out .=  "$(document).ready(function() {";
-        //$out .= "$(function() {";
-        $out .= "$('#stars').rateit({value: " . (int) $satisfaction->getField('satisfaction') . ",
-                                    min : 1,
-                                    max : 5,
-                                    step: 1,
-                                    backingfld: '#satisfaction_data',
-                                    ispreset: true,
-                                    resetable: false});";
-        $out .= "});</script>";
-
-        $out .= "</td></tr>";
-
-        $out .= "<tr class='tab_bg_2'>";
-        $out .= "<td rowspan='1' class='middle'>";
-        $out .= "<span>" . __('Comentarios') . "</span><br><br>";
-        $out .= "<textarea class='form-control' rows='10' cols='100' name='comment'>" . $satisfaction->getField('comment') . "</textarea>";
-        $out .= "</td></tr>";
-        $out .= "</tbody>";
-        $out .= "</table>";
-        if ($ticket->fields['status'] == Ticket::CLOSED) {
-            if ($add == true) {
-                $out .= "<input type='submit' name='add' value='" . _sx('button', 'Add') . "' class='submit'>";
-            } else {
-                $out .= "<input type='submit' name='update' value='" . _sx('button', 'Update') . "' class='submit'>";
-            }
-        }
-        $out .= Html::closeForm(false);
-        echo $out;
     }
 }

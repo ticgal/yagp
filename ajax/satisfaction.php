@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -29,13 +29,16 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
+
 include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
 $plugin = new Plugin();
 if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
-    Html::displayNotFoundError();
+    throw new NotFoundHttpException();
 }
 
 Session::checkLoginUser();
@@ -51,11 +54,15 @@ Html::requireJs('rateit');
 echo '<link rel="stylesheet" type="text/css" href="/lib/jquery.rateit.css">';
 // Indicar que el contenido se carga en un modal
 $_REQUEST['_in_modal'] = 1;
-$id = $_GET['id'];
+$id = (int) ($_GET['id'] ?? 0);
 $ticket = new Ticket();
-$ticket->getFromDB($id);
+if ($id <= 0 || !$ticket->getFromDB($id) || !$ticket->canViewItem()) {
+    throw new AccessDeniedHttpException();
+}
 $ts = new TicketSatisfaction();
-$ts->getFromDBByCrit(['tickets_id' => $id]);
+if (!$ts->getFromDBByCrit(['tickets_id' => $id]) || !$ts->canUpdateItem()) {
+    throw new AccessDeniedHttpException();
+}
 $ts->fields['name'] = $ticket->fields['name'];
 $satisfaction = new PluginYagpPostshowitem();
 $ts->showSatisactionForm($ticket);

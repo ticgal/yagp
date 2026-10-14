@@ -31,11 +31,11 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '3.0.2');
+define('PLUGIN_YAGP_VERSION', '3.0.3-beta1');
 // Minimal GLPI version, inclusive
-define("PLUGIN_YAGP_MIN_GLPI", "11.0");
+define("PLUGIN_YAGP_MIN_GLPI", "11.0.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_YAGP_MAX_GLPI", "12.0");
+define("PLUGIN_YAGP_MAX_GLPI", "12.0.0");
 
 /**
  * plugin_version_yagp
@@ -140,7 +140,7 @@ function plugin_init_yagp(): void
             ];
         }
 
-        if ($config->fields['autoclose_rejected_tickets']) {
+        if ($config->fields['autoclose_rejected_tickets'] || $config->fields['observers_affect_status']) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
                 PluginYagpTicket::class, 'pluginYagpItemAdd',
             ];
@@ -149,12 +149,6 @@ function plugin_init_yagp(): void
         if (!empty($config->fields['solutiontypes'])) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILSolution::class] = [
                 PluginYagpTicket::class, 'pluginYagpItemAdd',
-            ];
-        }
-
-        if ($config->fields['observers_affect_status']) {
-            $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginYagpTicket::class, 'preItemAdd',
             ];
         }
 

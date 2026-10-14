@@ -1,5 +1,18 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 3.0.3 - 2026-10-15
+### Bugfixes
+- Observers now lift the waiting status when the pending reason has no automatic closure; the status change now happens after the followup is stored
+- Fix configuration page failing to render with strict Twig variables (missing `params` for the form buttons)
+### Security
+- Transfer: check update rights on every ticket, only allow tickets and stop forwarding request data as transfer options
+- Escape ticket/entity/category names in the transfer modal, transfer result message, ticket form and search results (stored XSS)
+- Satisfaction modal: require view rights on the ticket and update rights on the survey
+- Quick transfer: require the transfer right and confirm the automatic transfer through a POST
+- Remove unused satisfaction form script
+- Category search selector respects entity restrictions
+- Security warning next to the "Replace ticket requester (mailcollector)" option
+
 ## 3.0.2 - 2026-09-08
 ### Bugfixes
 - Fix syntax error in `showSatisfactionModal()` that prevented the plugin from being installed

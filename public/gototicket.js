@@ -50,7 +50,7 @@ $(document).ready(function () {
 		$('#yagp_form').submit(function (e) {
 			e.preventDefault(e);
 			var id = $('#goto').val();
-			window.location.href = CFG_GLPI.url_base + "/index.php?redirect=ticket_" + id + "&noAUTO=1";
+			window.location.href = CFG_GLPI.url_base + "/index.php?redirect=ticket_" + encodeURIComponent(id) + "&noAUTO=1";
 		});
 	}
 
