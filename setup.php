@@ -78,6 +78,7 @@ function plugin_init_yagp(): void
     $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['yagp'] = [
         PluginYagpConfig::class  => 'plugin_yagp_updateitem',
         TicketSatisfaction::class  => [PluginYagpTicket::class, 'plugin_yagp_preItemUpdate'],
+        Ticket::class              => [PluginYagpTicket::class, 'pluginYagpPreTicketUpdate'],
     ];
 
     $plugin = new Plugin();

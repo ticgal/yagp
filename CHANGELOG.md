@@ -12,6 +12,10 @@
 - Remove unused satisfaction form script
 - Category search selector respects entity restrictions
 - Security warning next to the "Replace ticket requester (mailcollector)" option
+- Replace ticket requester: only process real mail collector messages, so other ticket creation paths can no longer re-run the mail rules and change the ticket entity
+- Autoclose rejected tickets: only a followup written by a requester of the ticket closes it
+- Quick transfer: the automatic transfer is only done when the user can access the destination entity
+- Block opening date: the option is now also enforced on the server
 
 ## 3.0.2 - 2026-09-08
 ### Bugfixes

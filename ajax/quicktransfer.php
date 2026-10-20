@@ -83,6 +83,8 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         && $config->fields['autotransfer'] == 1
         && isset($item->fields['entities_id'])
         && $item->fields['entities_id'] != $config->fields['transfer_entity']
+        // Like the core transfer: never move a ticket to an entity the user cannot access.
+        && Session::haveAccessToEntity((int) $config->fields['transfer_entity'])
     ) {
         if (!isset($_POST['confirm_transfer'])) {
             // State change only through a POST (core CSRF check applies), never on a plain GET.

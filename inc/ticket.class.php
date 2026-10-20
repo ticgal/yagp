@@ -226,16 +226,18 @@ JAVASCRIPT;
         $config = PluginYagpConfig::getInstance();
         // allow white spaces after and before the email
         $emailpattern = "\s*\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*";
-        $label = preg_quote($config->fields['requestlabel'], '/');
+        $label = preg_quote((string) $config->fields['requestlabel'], '/');
         $pattern = "/" . $label . $emailpattern . $label . "/i";
 
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
-            if ($mail instanceof \Laminas\Mail\Storage\Message) {
-                $content = $mail->getContent();
-            } else {
-                $content = $mail;
+            // Only the mail collector produces a Message object. Any other
+            // creation path could forge _message and re-run the collector
+            // rules (including entity assignment).
+            if (!($mail instanceof \Laminas\Mail\Storage\Message)) {
+                return $ticket;
             }
+            $content = $mail->getContent();
             if (mb_detect_encoding($content) == 'ASCII') {
                 $content = quoted_printable_decode($content);
             }
@@ -301,6 +303,20 @@ JAVASCRIPT;
                     self::ticketRecategorization($item);
                 }
                 break;
+        }
+    }
+
+    /**
+     * Enforce server-side the "block opening date" option (blockdate.js only disables the field).
+     *
+     * @param  Ticket $item
+     * @return void
+     */
+    public static function pluginYagpPreTicketUpdate(Ticket $item): void
+    {
+        $config = PluginYagpConfig::getInstance();
+        if (!empty($config->fields['blockdate']) && is_array($item->input)) {
+            unset($item->input['date']);
         }
     }
 
@@ -467,8 +483,14 @@ JAVASCRIPT;
             ) {
                 if ($parentItemtype == Ticket::class) {
                     $ticket = new $parentItemtype();
-                    $ticket->getFromDB($parentItemsId);
-                    $ticket->update(['id' => $parentItemsId, 'status' => Ticket::CLOSED]);
+                    // Only the requester refusing the solution may trigger the closure,
+                    // not any user able to add a followup.
+                    if (
+                        $ticket->getFromDB($parentItemsId)
+                        && $ticket->isUser(CommonITILActor::REQUESTER, (int) ($item->fields['users_id'] ?? 0))
+                    ) {
+                        $ticket->update(['id' => $parentItemsId, 'status' => Ticket::CLOSED]);
+                    }
                 }
             }
         }
