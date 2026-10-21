@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '3.0.3-beta2');
+define('PLUGIN_YAGP_VERSION', '3.0.3-beta.2');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "11.0.0");
 // Maximum GLPI version, exclusive
