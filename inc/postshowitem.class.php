@@ -190,6 +190,11 @@ JAVASCRIPT;
                 if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
                     return false;
                 }
+                // Only open it for whoever can answer (requester, 12h window), as ajax/satisfaction.php
+                // does: anyone else would get an access denied modal reopening on every reload.
+                if (!$ticket_satisfaction->canUpdateItem()) {
+                    return false;
+                }
                 $duration = (int) Entity::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration');
                 $expired = $duration !== 0 && (time() - strtotime($ticket_satisfaction->fields['date_begin'])) > $duration * DAY_TIMESTAMP;
 

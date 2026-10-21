@@ -6,13 +6,17 @@
 - Fix configuration page failing to render with strict Twig variables (missing `params` for the form buttons)
 - Automatic transfer: fix misspelled cartridge options and add the missing supplier and location options, which core treated as "delete permanently"
 - Uninstall now drops the plugin tables and removes the old "See group tickets only" profile right
+- Reinstalling reuses the existing "Auto-close rejected tickets" solution type and "Reopen ticket" request type instead of creating duplicates
 - Satisfaction cron task is registered at install instead of on every request
 - Satisfaction modal stylesheet now works when GLPI is served under a sub-path
 - Remove dead code (allocator SQL, unused tab hooks)
+- Satisfaction modal only opens for users who can answer the survey; technicians no longer get an access denied modal that reopens on every reload
+- Invalid transfer lists now return a 400 error page instead of a blank page
 ### Security
 - Quick transfer: the confirmed transfer reads the ticket from the POST body only
 - Transfer: the list sent to the core transfer is rebuilt from the checked integer ids
 - Solved date cron: query built with the query builder instead of raw SQL
+- Re-categorization history can no longer be created, edited or purged from the web (core generic form route); only the plugin writes it
 - Transfer: check update rights on every ticket, only allow tickets and stop forwarding request data as transfer options
 - Escape ticket/entity/category names in the transfer modal, transfer result message, ticket form and search results (stored XSS)
 - Satisfaction modal: require view rights on the ticket and update rights on the survey

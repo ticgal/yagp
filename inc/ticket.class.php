@@ -35,6 +35,41 @@ class PluginYagpTicket extends CommonDBTM
     public static $rightname = 'ticket';
 
     /**
+     * Rows are only written by the plugin hooks (add() does not check rights).
+     * Refuse web writes, e.g. through core's generic plugins/yagp/front/ticket.form.php.
+     *
+     * {@inheritdoc}
+     */
+    public static function canCreate(): bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function canUpdate(): bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function canDelete(): bool
+    {
+        return false;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public static function canPurge(): bool
+    {
+        return false;
+    }
+
+    /**
      * @param string $name
      *
      * @return array

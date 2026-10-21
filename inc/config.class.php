@@ -165,12 +165,28 @@ class PluginYagpConfig extends CommonDBTM
         $solutiontype = new SolutionType();
         if (!$solutiontype->getFromDB($config->fields['solutiontypes_id_rejected'])) {
             $solutionname = "Auto-close rejected tickets";
-            $solution_id = $solutiontype->add([
-                'name'      => $solutionname,
-                'comment'   => __('Solution type for rejected tickets'),
-            ]);
+            // Reuse the one left by a previous install: uninstall drops the config, not the dropdown
+            $solution_id = self::findDropdownByName($solutiontype, $solutionname)
+                ?: $solutiontype->add([
+                    'name'      => $solutionname,
+                    'comment'   => __('Solution type for rejected tickets'),
+                ]);
             $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
         }
+    }
+
+    /**
+     * Oldest dropdown with this name, 0 when there is none
+     *
+     * @param  CommonDropdown $dropdown
+     * @param  string         $name
+     * @return int
+     */
+    private static function findDropdownByName(CommonDropdown $dropdown, string $name): int
+    {
+        $found = $dropdown->find(['name' => $name], ['id ASC'], 1);
+
+        return (int) (array_key_first($found) ?? 0);
     }
 
     /**
@@ -184,10 +200,11 @@ class PluginYagpConfig extends CommonDBTM
         $requesttype = new RequestType();
         if (!$requesttype->getFromDB($config->fields['requesttypes_id_reopen'])) {
             $requestname = "Reopen ticket";
-            $request_id = $requesttype->add([
-                'name'      => $requestname,
-                'comment'   => __('Request type for reopening autoclosed tickets'),
-            ]);
+            $request_id = self::findDropdownByName($requesttype, $requestname)
+                ?: $requesttype->add([
+                    'name'      => $requestname,
+                    'comment'   => __('Request type for reopening autoclosed tickets'),
+                ]);
             $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
         }
     }

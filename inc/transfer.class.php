@@ -29,6 +29,8 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\BadRequestHttpException;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpTransfer extends CommonDBTM
 {
@@ -436,26 +438,18 @@ class PluginYagpTransfer extends CommonDBTM
      * @param array $items
      *
      * @return void
+     *
+     * @throws BadRequestHttpException
      */
     public static function validateTransferList(array $items): void
     {
         foreach ($items as $itemtype => $items_ids) {
             if ($itemtype !== Ticket::class || !is_array($items_ids)) {
-                Session::addMessageAfterRedirect(
-                    __('Invalid transfer list', 'yagp'),
-                    false,
-                    ERROR,
-                );
-                exit;
+                throw new BadRequestHttpException(__('Invalid transfer list', 'yagp'));
             }
             foreach ($items_ids as $items_id) {
                 if (!is_numeric($items_id)) {
-                    Session::addMessageAfterRedirect(
-                        __('Invalid transfer list', 'yagp'),
-                        false,
-                        ERROR,
-                    );
-                    exit;
+                    throw new BadRequestHttpException(__('Invalid transfer list', 'yagp'));
                 }
             }
         }
