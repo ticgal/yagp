@@ -296,4 +296,18 @@ class PluginYagpConfig extends CommonDBTM
         self::addRequestType($config);
         self::disableCronTask();
     }
+
+    /**
+     * @param  Migration $migration
+     *
+     * @return void
+     */
+    public static function uninstall(Migration $migration): void
+    {
+        // Also drop the table name used before 2.x, in case it was never migrated.
+        foreach ([self::getTable(), 'glpi_plugin_yagp_config'] as $table) {
+            $migration->displayMessage("Uninstalling $table");
+            $migration->dropTable($table);
+        }
+    }
 }

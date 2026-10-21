@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '3.0.3-beta1');
+define('PLUGIN_YAGP_VERSION', '3.0.3-beta2');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "11.0.0");
 // Maximum GLPI version, exclusive
@@ -112,7 +112,6 @@ function plugin_init_yagp(): void
         }
 
         $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = 'plugin_yagp_pre_show_tab';
-        $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['yagp'] = 'plugin_yagp_post_show_tab';
 
         if ($config->fields['recategorization'] || $config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['yagp'] = [
@@ -153,27 +152,5 @@ function plugin_init_yagp(): void
             ];
         }
 
-        // Deprecated in GLPI 11:
-        // "See group tickets only" is now handled by native GLPI permissions.
-        /*
-        $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
-            PluginYagpProfile::class, 'checkAllocatorAccess',
-        ];
-
-        $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
-        $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
-        */
-
-        CronTask::Register(
-            'PluginYagpTicket',
-            'pluginyagpticketsatisfaction',
-            DAY_TIMESTAMP,
-            [
-                'state'     => 0,
-                'mode'      => CronTask::MODE_EXTERNAL,
-                'hourmin'   => 0,
-                'horumax'   => 24,
-            ],
-        );
     }
 }

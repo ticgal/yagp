@@ -29,6 +29,9 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\DBAL\QueryExpression;
+use Glpi\DBAL\QuerySubQuery;
+
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpTicketsolveddate extends CommonDBTM
 {
@@ -74,35 +77,71 @@ class PluginYagpTicketsolveddate extends CommonDBTM
         if ($config->fields['ticketsolveddate']) {
             $message = "";
             $ticket = new Ticket();
+            $task_end    = 'MAX(' . $DB->quoteName('end') . ')';
+            $action_end  = 'MAX(ADDDATE(' . $DB->quoteName('date') . ', INTERVAL ' . $DB->quoteName('actiontime') . ' SECOND))';
+
+            // Last task end per ticket: latest of the planned end and date + duration
+            $last_task = new QuerySubQuery([
+                'SELECT'  => [
+                    'tickets_id',
+                    new QueryExpression(
+                        "CASE WHEN $task_end > $action_end THEN $task_end ELSE $action_end END",
+                        'last_task_end',
+                    ),
+                ],
+                'FROM'    => TicketTask::getTable(),
+                'GROUPBY' => 'tickets_id',
+            ], 'task');
+
+            $first_task = new QuerySubQuery([
+                'SELECT'  => [
+                    'tickets_id',
+                    new QueryExpression('MIN(' . $DB->quoteName('begin') . ')', 'first_task_begin'),
+                ],
+                'FROM'    => TicketTask::getTable(),
+                'WHERE'   => ['NOT' => ['begin' => null]],
+                'GROUPBY' => 'tickets_id',
+            ], 'taskstart');
+
+            $minute_format = $DB->quoteValue('%Y-%m-%d %H:%i');
+            $criteria = [
+                'SELECT'     => [
+                    'ticket.id',
+                    'ticket.date',
+                    'ticket.solvedate',
+                    'taskstart.first_task_begin',
+                    'task.last_task_end',
+                ],
+                'FROM'       => Ticket::getTable() . ' AS ticket',
+                'INNER JOIN' => [
+                    [
+                        'TABLE' => $last_task,
+                        'FKEY'  => ['ticket' => 'id', 'task' => 'tickets_id'],
+                    ],
+                ],
+                'LEFT JOIN'  => [
+                    [
+                        'TABLE' => $first_task,
+                        'FKEY'  => ['ticket' => 'id', 'taskstart' => 'tickets_id'],
+                    ],
+                ],
+                'WHERE'      => [
+                    'ticket.status'     => CommonITILObject::SOLVED,
+                    'ticket.is_deleted' => 0,
+                    new QueryExpression(
+                        'DATE_FORMAT(' . $DB->quoteName('ticket.solvedate') . ", $minute_format)"
+                        . ' <> DATE_FORMAT(' . $DB->quoteName('task.last_task_end') . ", $minute_format)",
+                    ),
+                    new QueryExpression(
+                        $DB->quoteName('ticket.date') . ' < ' . $DB->quoteName('task.last_task_end'),
+                    ),
+                ],
+            ];
             if ($task->fields['param'] > 0) {
-                $limit = " LIMIT " . (int) $task->fields['param'];
-            } else {
-                $limit = "";
+                $criteria['LIMIT'] = (int) $task->fields['param'];
             }
 
-            // TODO: transform into array for iterator
-            $query = "SELECT id,date,solvedate,taskstart.first_task_begin,task.last_task_end 
-                FROM glpi_tickets AS ticket
-                INNER JOIN (
-                    SELECT tickets_id,CASE 
-                        WHEN max(end)>max(ADDDATE(date,INTERVAL actiontime SECOND)) THEN max(end)
-                        ELSE max(ADDDATE(date,INTERVAL actiontime SECOND))
-                        END AS last_task_end
-                    FROM glpi_tickettasks
-                    GROUP BY tickets_id) AS task
-                ON ticket.id=task.tickets_id
-                LEFT JOIN (
-                    SELECT tickets_id,min(begin)AS first_task_begin
-                    FROM glpi_tickettasks
-                    WHERE begin IS NOT NULL
-                    GROUP BY tickets_id) AS taskstart
-                ON ticket.id=taskstart.tickets_id
-                WHERE ticket.status=5
-                AND DATE_FORMAT(ticket.solvedate, '%Y-%m-%d %H:%i')<>DATE_FORMAT(task.last_task_end, '%Y-%m-%d %H:%i')
-                AND ticket.is_deleted=0
-            AND ticket.date<task.last_task_end {$limit}";
-
-            foreach ($DB->doQuery($query) as $id => $row) {
+            foreach ($DB->request($criteria) as $row) {
                 if (!is_null($row["first_task_begin"])) {
                     if ($row["date"] > $row["first_task_begin"]) {
                         $newdate = strtotime('-1 hour', strtotime($row["first_task_begin"]));

@@ -51,12 +51,12 @@ Html::popHeader(
     PluginYagpPostshowitem::getType(),
 );
 Html::requireJs('rateit');
-echo '<link rel="stylesheet" type="text/css" href="/lib/jquery.rateit.css">';
+echo Html::css('lib/jquery.rateit.css');
 // Indicar que el contenido se carga en un modal
 $_REQUEST['_in_modal'] = 1;
 $id = (int) ($_GET['id'] ?? 0);
 $ticket = new Ticket();
-if ($id <= 0 || !$ticket->getFromDB($id) || !$ticket->canViewItem()) {
+if ($id <= 0 || !$ticket->can($id, READ)) {
     throw new AccessDeniedHttpException();
 }
 $ts = new TicketSatisfaction();

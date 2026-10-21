@@ -61,10 +61,14 @@ if (isset($_POST['transfer'])) {
         }
         PluginYagpTransfer::validateTransferList($items);
 
+        // Rebuild the list from integer ids only, so moveItems() gets exactly what was checked.
+        $ids   = array_map('intval', array_values($items[Ticket::class] ?? []));
+        $items = [Ticket::class => array_combine($ids, $ids)];
+
         // Same bar as core: the user must be able to update every ticket to move.
-        foreach ($items[Ticket::class] ?? [] as $items_id) {
+        foreach ($ids as $items_id) {
             $ticket = new Ticket();
-            if (!$ticket->getFromDB((int) $items_id) || !$ticket->can((int) $items_id, UPDATE)) {
+            if ($items_id <= 0 || !$ticket->can($items_id, UPDATE)) {
                 throw new AccessDeniedHttpException();
             }
         }

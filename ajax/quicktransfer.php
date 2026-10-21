@@ -50,17 +50,14 @@ $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
 $transfer = new PluginYagpTransfer();
-if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
-    $transfer->showForm(1, [
-        'target'        => $CFG_GLPI['root_doc'] . "/plugins/yagp/front/transfer.form.php",
-        'display'       => false,
-        'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions(),
-    ]);
-}
 
-if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
-    $itemtype = $_GET['itemtype'];
-    $id = (int) $_GET['items_id'];
+// The confirmed transfer only reads POST data (core CSRF check applies); GET only displays.
+$is_confirm = isset($_POST['confirm_transfer']);
+$request    = $is_confirm ? $_POST : $_GET;
+
+if (isset($request['itemtype']) && isset($request['items_id'])) {
+    $itemtype = $request['itemtype'];
+    $id = (int) $request['items_id'];
 
     // Quick transfer is only offered on tickets, do not instantiate arbitrary itemtypes.
     if ($itemtype !== Ticket::class) {
@@ -86,13 +83,14 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         // Like the core transfer: never move a ticket to an entity the user cannot access.
         && Session::haveAccessToEntity((int) $config->fields['transfer_entity'])
     ) {
-        if (!isset($_POST['confirm_transfer'])) {
+        if (!$is_confirm) {
             // State change only through a POST (core CSRF check applies), never on a plain GET.
             echo "<form method='post' action='" . htmlescape($CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/quicktransfer.php')
-                . "?itemtype=" . urlencode($itemtype) . "&items_id=" . $id
                 . "' class='d-flex w-100 justify-content-center mt-4'>";
+            echo Html::hidden('itemtype', ['value' => $itemtype]);
+            echo Html::hidden('items_id', ['value' => $id]);
             echo "<button type='submit' name='confirm_transfer' value='1' class='btn btn-primary'>"
-                . __('Execute') . "</button>";
+                . __s('Execute') . "</button>";
             Html::closeForm();
             exit();
         }
@@ -100,7 +98,7 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         $glpitransfer = new Transfer();
         $glpitransfer->moveItems(
             $transferlist,
-            $config->fields['transfer_entity'],
+            (int) $config->fields['transfer_entity'],
             PluginYagpTransfer::getCompleteTransferOptions(),
         );
 

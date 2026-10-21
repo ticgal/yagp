@@ -681,5 +681,30 @@ JAVASCRIPT;
                 COLLATE={$default_collation} ROW_FORMAT=DYNAMIC;";
             $DB->doQuery($query);
         }
+
+        // Register once at install time (core skips it if it already exists).
+        CronTask::register(
+            self::class,
+            'pluginyagpticketsatisfaction',
+            DAY_TIMESTAMP,
+            [
+                'state'     => CronTask::STATE_DISABLE,
+                'mode'      => CronTask::MODE_EXTERNAL,
+                'hourmin'   => 0,
+                'hourmax'   => 24,
+            ],
+        );
+    }
+
+    /**
+     * @param  Migration $migration
+     *
+     * @return void
+     */
+    public static function uninstall(Migration $migration): void
+    {
+        $table = self::getTable();
+        $migration->displayMessage("Uninstalling $table");
+        $migration->dropTable($table);
     }
 }
