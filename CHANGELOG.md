@@ -1,6 +1,6 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 3.0.3 - 2026-10-15
+## 3.0.3 - 2026-10-23
 ### Bugfixes
 - Observers now lift the waiting status when the pending reason has no automatic closure; the status change now happens after the followup is stored
 - Fix configuration page failing to render with strict Twig variables (missing `params` for the form buttons)
