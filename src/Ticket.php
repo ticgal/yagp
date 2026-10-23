@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -52,6 +52,12 @@ use User;
 class Ticket extends CommonDBTM
 {
     public static string $rightname = 'ticket';
+
+    /**
+     * Set only while the "changeDate" automatic action updates the opening date itself.
+     * A static property, so it cannot be set from request data.
+     */
+    private static bool $opening_date_update_allowed = false;
 
     /**
      * Rows are only written by the plugin hooks (initial category of recategorized tickets).
@@ -168,7 +174,7 @@ class Ticket extends CommonDBTM
                         $cat = new ITILCategory();
                         $cat->getFromDB($ticket_cat->fields["plugin_yagp_itilcategories_id"]);
                         if (!empty($ticket_cat->fields)) {
-                            return (string) $cat->fields["completename"];
+                            return htmlescape((string) $cat->fields["completename"]);
                         }
                     }
                 }
@@ -202,7 +208,17 @@ class Ticket extends CommonDBTM
                 $query = [
                     "SELECT"    => "plugin_yagp_itilcategories_id",
                     "DISTINCT"  => true,
-                    "FROM"      => Ticket::getTable(),
+                    "FROM"      => self::getTable(),
+                    // Only categories of tickets the user can see
+                    "INNER JOIN" => [
+                        \Ticket::getTable() => [
+                            'ON' => [
+                                self::getTable()      => 'tickets_id',
+                                \Ticket::getTable() => 'id',
+                            ],
+                        ],
+                    ],
+                    "WHERE"     => getEntitiesRestrictCriteria(\Ticket::getTable()),
                     "GROUPBY"   => 'plugin_yagp_itilcategories_id',
                 ];
 
@@ -232,15 +248,18 @@ class Ticket extends CommonDBTM
         $config = Config::getInstance();
         // allow white spaces after and before the email
         $emailpattern = "\s*\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*\s*";
-        $pattern = "/" . $config->fields['requestlabel'] . $emailpattern . $config->fields['requestlabel'] . "/i";
+        $label = preg_quote((string) $config->fields['requestlabel'], '/');
+        $pattern = "/" . $label . $emailpattern . $label . "/i";
 
         if (isset($ticket->input['_message'])) {
             $mail = $ticket->input['_message'];
-            if ($mail instanceof \Laminas\Mail\Storage\Message) {
-                $content = $mail->getContent();
-            } else {
-                $content = $mail;
+            // Only the mail collector produces a Message object. Any other
+            // creation path could forge _message and re-run the collector
+            // rules (including entity assignment).
+            if (!($mail instanceof \Laminas\Mail\Storage\Message)) {
+                return $ticket;
             }
+            $content = $mail->getContent();
             if (mb_detect_encoding($content) == 'ASCII') {
                 $content = quoted_printable_decode($content);
             }
@@ -310,6 +329,43 @@ class Ticket extends CommonDBTM
     }
 
     /**
+     * Enforce server-side the "block opening date" option (blockdate.js only disables the field).
+     *
+     * @param  \Ticket $item
+     * @return void
+     */
+    public static function pluginYagpPreTicketUpdate(\Ticket $item): void
+    {
+        if (self::$opening_date_update_allowed) {
+            return;
+        }
+
+        $config = Config::getInstance();
+        if (!empty($config->fields['blockdate']) && is_array($item->input)) {
+            unset($item->input['date']);
+        }
+    }
+
+    /**
+     * Update the opening date of a ticket even when "block opening date" is enabled.
+     * Only for the plugin's own automatic action, never with user input.
+     *
+     * @param  \Ticket $ticket
+     * @param  int     $tickets_id
+     * @param  string  $date
+     * @return bool
+     */
+    public static function updateOpeningDate(\Ticket $ticket, int $tickets_id, string $date): bool
+    {
+        self::$opening_date_update_allowed = true;
+        try {
+            return $ticket->update(['id' => $tickets_id, 'date' => $date]);
+        } finally {
+            self::$opening_date_update_allowed = false;
+        }
+    }
+
+    /**
      * itemAdd
      *
      * @param  CommonDBTM $item
@@ -325,6 +381,7 @@ class Ticket extends CommonDBTM
                 if ($config->fields['autoclose_rejected_tickets']) {
                     self::autocloseRejectedTickets($item);
                 }
+                // Runs once the followup is stored, so a rejected followup never alters the ticket
                 if ($config->fields['observers_affect_status']) {
                     self::observersAffectStatus($item);
                 }
@@ -338,28 +395,6 @@ class Ticket extends CommonDBTM
                 break;
         }
     }
-
-    /**
-     * @param CommonDBTM $item
-     *
-     * @return CommonDBTM
-     */
-    public static function preItemAdd(CommonDBTM $item): CommonDBTM
-    {
-        $config = Config::getInstance();
-
-        switch ($item::class) {
-            case ITILFollowup::class:
-                /** @var ITILFollowup $item */
-                if ($config->fields['observers_affect_status']) {
-                    self::observersAffectStatus($item);
-                }
-                break;
-        }
-
-        return $item;
-    }
-
 
     /**
      * @param  \Ticket $ticket
@@ -431,23 +466,22 @@ class Ticket extends CommonDBTM
             ];
             if ($pendingreason_item->getFromDBByCrit($pr_criteria)) {
                 // TODO: count followups since the pending reason creation
-                // TODO: for pending reasons with followups_before_resolution over 1
-                if ($pendingreason_item->fields['followups_before_resolution'] >= 1) {
-                    $pendingreason_item->delete(['id' => $pendingreason_item->getID()], true);
-                    $old_value = $parent_item->fields['status'];
-                    $new_value = $pendingreason_item->fields['previous_status'];
-                    $parent_item->fields['status'] = $new_value;
-                    $updated = $parent_item->updateInDB(
-                        ['status'],
-                        ['status' => $old_value],
-                    );
-                }
+                // The wait is lifted regardless of followups_before_resolution,
+                // so pending reasons without automatic closure (0) work too.
+                $new_value = $pendingreason_item->fields['previous_status'] ?: \Ticket::ASSIGNED;
+                $pendingreason_item->delete(['id' => $pendingreason_item->getID()], true);
+                $old_value = $parent_item->fields['status'];
+                $parent_item->fields['status'] = $new_value;
+                $parent_item->updateInDB(
+                    ['status'],
+                    ['status' => (string) $old_value],
+                );
             } else {
                 $old_value = $parent_item->fields['status'];
                 $parent_item->fields['status'] = \Ticket::ASSIGNED;
                 $parent_item->updateInDB(
                     ['status'],
-                    ['status' => $old_value],
+                    ['status' => (string) $old_value],
                 );
             }
         }
@@ -494,8 +528,14 @@ class Ticket extends CommonDBTM
             ) {
                 if ($parentItemtype == \Ticket::class) {
                     $ticket = new $parentItemtype();
-                    $ticket->getFromDB($parentItemsId);
-                    $ticket->update(['id' => $parentItemsId, 'status' => \Ticket::CLOSED]);
+                    // Only the requester refusing the solution may trigger the closure,
+                    // not any user able to add a followup.
+                    if (
+                        $ticket->getFromDB($parentItemsId)
+                        && $ticket->isUser(CommonITILActor::REQUESTER, (int) ($item->fields['users_id'] ?? 0))
+                    ) {
+                        $ticket->update(['id' => $parentItemsId, 'status' => \Ticket::CLOSED]);
+                    }
                 }
             }
         }

@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 15:14+0200\n"
+"POT-Creation-Date: 2026-10-23 11:22+0200\n"
 "Language: de_DE\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -10,12 +10,12 @@ msgstr ""
 "X-Generator: Localazy (https://localazy.com)\n"
 "Plural-Forms: nplurals=2; plural=(n==1) ? 0 : 1;\n"
 
-#: front/transfer.form.php:64 ajax/quicktransfer.php:89
+#: front/transfer.form.php:60 ajax/quicktransfer.php:105
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr "Ticket übertragen an %s"
 
-#: front/transfer.form.php:73 ajax/quicktransfer.php:98
+#: front/transfer.form.php:69 ajax/quicktransfer.php:114
 msgid "You can close this window"
 msgstr "Du kannst dieses Fenster schließen."
 
@@ -23,7 +23,7 @@ msgstr "Du kannst dieses Fenster schließen."
 msgid "Recategorized"
 msgstr "Neu kategorisiert"
 
-#: hook.php:122 src/Ticket.php:567
+#: hook.php:122 src/Ticket.php:578
 msgid "Initial category"
 msgstr "Anfängliche Kategorie"
 
@@ -35,7 +35,7 @@ msgstr "Wählen Sie eine zu übertragende Einheit"
 msgid "Transfer to"
 msgstr "Transfer an"
 
-#: src/Postshowitem.php:228
+#: src/Postshowitem.php:233
 msgid "Satisfaction"
 msgstr "Satisfaction"
 
@@ -47,19 +47,19 @@ msgstr "Expired satisfaction removal"
 msgid "Satisfaction expired for ticket"
 msgstr "Satisfaction expired for ticket"
 
-#: src/Ticket.php:628
+#: src/Ticket.php:639
 msgid "You must provide a comment to close the ticket with less than 3 stars"
 msgstr "You must provide a comment to close the ticket with less than 3 stars"
 
-#: src/Ticketsolveddate.php:102
+#: src/Ticketsolveddate.php:104
 msgid "Change date"
 msgstr "Datum ändern"
 
-#: src/Ticketsolveddate.php:103
+#: src/Ticketsolveddate.php:105
 msgid "Number of tickets"
 msgstr "Anzahl Tickets"
 
-#: src/Transfer.php:442 src/Transfer.php:452
+#: src/Transfer.php:445 src/Transfer.php:455
 msgid "Invalid transfer list"
 msgstr "Invalid transfer list"
 
@@ -116,31 +116,40 @@ msgstr "Observers have an effect on pending tickets"
 msgid "Replace ticket requester (mailcollector)"
 msgstr "Ticketanforderer ersetzen (mailcollector)"
 
-#: templates/config.html.twig:157
+#: templates/config.html.twig:155
+msgid ""
+"Security notice: the requester is taken from the tag written in the message "
+"body, not from the real sender. Anyone able to send mail to the collected "
+"mailbox can open tickets on behalf of any user (or of an arbitrary anonymous "
+"requester). Enable this option only on mailboxes that receive mail from "
+"trusted senders."
+msgstr ""
+
+#: templates/config.html.twig:161
 msgid "Allow anonymous requester"
 msgstr "Allow anonymous requester"
 
-#: templates/config.html.twig:164
+#: templates/config.html.twig:168
 msgid "Tag to search"
 msgstr "Zu suchendes Tag"
 
-#: templates/config.html.twig:174
+#: templates/config.html.twig:178
 msgid "Change default minimum validation required"
 msgstr "Ändern der standardmäßigen Mindestvalidierung erforderlich"
 
-#: templates/config.html.twig:189
+#: templates/config.html.twig:193
 msgid "Minimum validation"
 msgstr "Minimum validation"
 
-#: templates/config.html.twig:199
+#: templates/config.html.twig:203
 msgid "Enable quick transfer for tickets"
 msgstr "Aktivieren Sie die schnelle Übertragung von Tickets"
 
-#: templates/config.html.twig:206
+#: templates/config.html.twig:210
 msgid "Enable automatic transfer"
 msgstr "Aktiviere die automatische Übertragung"
 
-#: templates/config.html.twig:215
+#: templates/config.html.twig:219
 msgid "Transfer destination"
 msgstr "Übertragungsziel"
 

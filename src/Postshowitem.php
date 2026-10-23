@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -197,6 +197,11 @@ JAVASCRIPT;
                 $ticket_entity = $item->fields['entities_id'];
                 $ticket_satisfaction = new TicketSatisfaction();
                 if (!$ticket_satisfaction->getFromDBByCrit(['tickets_id' => $item->fields['id']])) {
+                    return false;
+                }
+                // Only open it for whoever can answer (requester, answer window), as ajax/satisfaction.php
+                // does: anyone else would get an access denied modal reopening on every reload.
+                if (!$ticket_satisfaction->canUpdateItem()) {
                     return false;
                 }
                 $duration = (int) Entity::getUsedConfig('inquest_config', $item->fields['entities_id'], 'inquest_duration');

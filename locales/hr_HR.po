@@ -2,7 +2,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: YAGP\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-10-01 15:14+0200\n"
+"POT-Creation-Date: 2026-10-23 11:22+0200\n"
 "Language: hr_HR\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -11,12 +11,12 @@ msgstr ""
 "Plural-Forms: nplurals=3; plural=((n%10==1) && (n%100!=11)) ? 0 : ((n%10>=2 "
 "&& n%10<=4) && ((n%100<12 || n%100>14))) ? 1 : 2;\n"
 
-#: front/transfer.form.php:64 ajax/quicktransfer.php:89
+#: front/transfer.form.php:60 ajax/quicktransfer.php:105
 #, php-format
 msgid "Ticket transferred to %s"
 msgstr "Ticket transferred to %s"
 
-#: front/transfer.form.php:73 ajax/quicktransfer.php:98
+#: front/transfer.form.php:69 ajax/quicktransfer.php:114
 msgid "You can close this window"
 msgstr "You can close this window"
 
@@ -24,7 +24,7 @@ msgstr "You can close this window"
 msgid "Recategorized"
 msgstr "Recategorized"
 
-#: hook.php:122 src/Ticket.php:567
+#: hook.php:122 src/Ticket.php:578
 msgid "Initial category"
 msgstr "Initial category"
 
@@ -36,7 +36,7 @@ msgstr "Select an entity to transfer"
 msgid "Transfer to"
 msgstr "Transfer to"
 
-#: src/Postshowitem.php:228
+#: src/Postshowitem.php:233
 msgid "Satisfaction"
 msgstr "Satisfaction"
 
@@ -48,19 +48,19 @@ msgstr "Expired satisfaction removal"
 msgid "Satisfaction expired for ticket"
 msgstr "Satisfaction expired for ticket"
 
-#: src/Ticket.php:628
+#: src/Ticket.php:639
 msgid "You must provide a comment to close the ticket with less than 3 stars"
 msgstr "You must provide a comment to close the ticket with less than 3 stars"
 
-#: src/Ticketsolveddate.php:102
+#: src/Ticketsolveddate.php:104
 msgid "Change date"
 msgstr "Promijeni datum"
 
-#: src/Ticketsolveddate.php:103
+#: src/Ticketsolveddate.php:105
 msgid "Number of tickets"
 msgstr "Broj naloga"
 
-#: src/Transfer.php:442 src/Transfer.php:452
+#: src/Transfer.php:445 src/Transfer.php:455
 msgid "Invalid transfer list"
 msgstr "Invalid transfer list"
 
@@ -116,31 +116,40 @@ msgstr "Observers have an effect on pending tickets"
 msgid "Replace ticket requester (mailcollector)"
 msgstr "Yagp datum rješavanja naloga"
 
-#: templates/config.html.twig:157
+#: templates/config.html.twig:155
+msgid ""
+"Security notice: the requester is taken from the tag written in the message "
+"body, not from the real sender. Anyone able to send mail to the collected "
+"mailbox can open tickets on behalf of any user (or of an arbitrary anonymous "
+"requester). Enable this option only on mailboxes that receive mail from "
+"trusted senders."
+msgstr ""
+
+#: templates/config.html.twig:161
 msgid "Allow anonymous requester"
 msgstr "Allow anonymous requester"
 
-#: templates/config.html.twig:164
+#: templates/config.html.twig:168
 msgid "Tag to search"
 msgstr "Označite za pretraživanje"
 
-#: templates/config.html.twig:174
+#: templates/config.html.twig:178
 msgid "Change default minimum validation required"
 msgstr "Change default minimum validation required"
 
-#: templates/config.html.twig:189
+#: templates/config.html.twig:193
 msgid "Minimum validation"
 msgstr "Minimum validation"
 
-#: templates/config.html.twig:199
+#: templates/config.html.twig:203
 msgid "Enable quick transfer for tickets"
 msgstr "Enable quick transfer for tickets"
 
-#: templates/config.html.twig:206
+#: templates/config.html.twig:210
 msgid "Enable automatic transfer"
 msgstr "Enable automatic transfer"
 
-#: templates/config.html.twig:215
+#: templates/config.html.twig:219
 msgid "Transfer destination"
 msgstr "Transfer destination"
 

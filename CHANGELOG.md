@@ -1,5 +1,10 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 4.0.0-beta.2 - Unreleased
+### Bugfixes
+- Includes the bug and security fixes from 3.0.3
+- Automatic transfer is confirmed through a POST, which replaces the `Sec-Fetch-Site` check of 4.0.0-beta.1
+
 ## 4.0.0-beta.1 - Unreleased
 ### Features
 - GLPI 12 support (GLPI 11 is no longer supported by this branch)
@@ -21,6 +26,36 @@
 - Disabling "Change solved date" only removes its own automatic action
 - Configuration fields added by a migration are available during the same upgrade
 - URLs work when GLPI is installed in a subdirectory
+
+## 3.0.3 - 2026-10-23
+### Bugfixes
+- Observers now lift the waiting status when the pending reason has no automatic closure; the status change now happens after the followup is stored
+- Fix configuration page failing to render with strict Twig variables (missing `params` for the form buttons)
+- Automatic transfer: fix misspelled cartridge options and add the missing supplier and location options, which core treated as "delete permanently"
+- Uninstall now drops the plugin tables and removes the old "See group tickets only" profile right
+- Reinstalling reuses the existing "Auto-close rejected tickets" solution type and "Reopen ticket" request type instead of creating duplicates
+- Satisfaction cron task is registered at install instead of on every request
+- Satisfaction modal stylesheet now works when GLPI is served under a sub-path
+- Remove dead code (allocator SQL, unused tab hooks)
+- Satisfaction modal only opens for users who can answer the survey; technicians no longer get an access denied modal that reopens on every reload
+- Invalid transfer lists now return a 400 error page instead of a blank page
+- "Change solved date" automatic action adjusts the opening date again: the date was sent without seconds (rejected by GLPI) and was dropped when "Block opening date" was enabled
+### Security
+- Quick transfer: the confirmed transfer reads the ticket from the POST body only
+- Transfer: the list sent to the core transfer is rebuilt from the checked integer ids
+- Solved date cron: query built with the query builder instead of raw SQL
+- Re-categorization history can no longer be created, edited or purged from the web (core generic form route); only the plugin writes it
+- Transfer: check update rights on every ticket, only allow tickets and stop forwarding request data as transfer options
+- Escape ticket/entity/category names in the transfer modal, transfer result message, ticket form and search results (stored XSS)
+- Satisfaction modal: require view rights on the ticket and update rights on the survey
+- Quick transfer: require the transfer right and confirm the automatic transfer through a POST
+- Remove unused satisfaction form script
+- Category search selector respects entity restrictions
+- Security warning next to the "Replace ticket requester (mailcollector)" option
+- Replace ticket requester: only process real mail collector messages, so other ticket creation paths can no longer re-run the mail rules and change the ticket entity
+- Autoclose rejected tickets: only a followup written by a requester of the ticket closes it
+- Quick transfer: the automatic transfer is only done when the user can access the destination entity
+- Block opening date: the option is now also enforced on the server
 
 ## 3.0.2 - 2026-09-08
 ### Bugfixes

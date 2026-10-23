@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -32,6 +32,7 @@
 namespace GlpiPlugin\Yagp;
 
 use CommonDBTM;
+use CommonDropdown;
 use CommonGLPI;
 use CronTask;
 use DBConnection;
@@ -178,12 +179,28 @@ class Config extends CommonDBTM
         $solutiontype = new SolutionType();
         if (!$solutiontype->getFromDB($config->fields['solutiontypes_id_rejected'])) {
             $solutionname = "Auto-close rejected tickets";
-            $solution_id = $solutiontype->add([
-                'name'      => $solutionname,
-                'comment'   => __('Solution type for rejected tickets'),
-            ]);
+            // Reuse the one left by a previous install: uninstall drops the config, not the dropdown
+            $solution_id = self::findDropdownByName($solutiontype, $solutionname)
+                ?: $solutiontype->add([
+                    'name'      => $solutionname,
+                    'comment'   => __('Solution type for rejected tickets'),
+                ]);
             $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
         }
+    }
+
+    /**
+     * Oldest dropdown with this name, 0 when there is none
+     *
+     * @param  CommonDropdown $dropdown
+     * @param  string         $name
+     * @return int
+     */
+    private static function findDropdownByName(CommonDropdown $dropdown, string $name): int
+    {
+        $found = $dropdown->find(['name' => $name], ['id ASC'], 1);
+
+        return (int) (array_key_first($found) ?? 0);
     }
 
     /**
@@ -197,10 +214,11 @@ class Config extends CommonDBTM
         $requesttype = new RequestType();
         if (!$requesttype->getFromDB($config->fields['requesttypes_id_reopen'])) {
             $requestname = "Reopen ticket";
-            $request_id = $requesttype->add([
-                'name'      => $requestname,
-                'comment'   => __('Request type for reopening autoclosed tickets'),
-            ]);
+            $request_id = self::findDropdownByName($requesttype, $requestname)
+                ?: $requesttype->add([
+                    'name'      => $requestname,
+                    'comment'   => __('Request type for reopening autoclosed tickets'),
+                ]);
             $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
         }
     }
@@ -324,7 +342,10 @@ class Config extends CommonDBTM
      */
     public static function uninstall(Migration $migration): void
     {
-        $migration->displayMessage("Uninstalling " . self::getTable());
-        $migration->dropTable(self::getTable());
+        // Also drop the table name used before 2.x, in case it was never migrated
+        foreach ([self::getTable(), 'glpi_plugin_yagp_config'] as $table) {
+            $migration->displayMessage("Uninstalling $table");
+            $migration->dropTable($table);
+        }
     }
 }

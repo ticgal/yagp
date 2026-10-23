@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -53,13 +53,9 @@ $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
 if ($items !== []) {
-    $options = $_POST;
-    foreach (Transfer::getCompleteTransferOptions() as $k => $v) {
-        $options[$k] ??= $v;
-    }
-
+    // Never forward request data as transfer options
     $transfer = new \Transfer();
-    $transfer->moveItems($items, $to_entity, $options);
+    $transfer->moveItems($items, $to_entity, Transfer::getCompleteTransferOptions());
 
     $msg = __("Ticket transferred to %s", 'yagp');
     $sprintf = sprintf(

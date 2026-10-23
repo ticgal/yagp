@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -34,7 +34,7 @@ use GlpiPlugin\Yagp\Config;
 use GlpiPlugin\Yagp\Postshowitem;
 use GlpiPlugin\Yagp\Ticket as PluginTicket;
 
-define('PLUGIN_YAGP_VERSION', '4.0.0-beta.1');
+define('PLUGIN_YAGP_VERSION', '4.0.0-beta.2');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "12.0.0");
 // Maximum GLPI version, exclusive
@@ -81,6 +81,7 @@ function plugin_init_yagp(): void
     $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['yagp'] = [
         Config::class  => 'plugin_yagp_updateitem',
         TicketSatisfaction::class  => [PluginTicket::class, 'plugin_yagp_preItemUpdate'],
+        Ticket::class              => [PluginTicket::class, 'pluginYagpPreTicketUpdate'],
     ];
 
     $plugin = new Plugin();
@@ -138,7 +139,7 @@ function plugin_init_yagp(): void
             ];
         }
 
-        if ($config->fields['autoclose_rejected_tickets']) {
+        if ($config->fields['autoclose_rejected_tickets'] || $config->fields['observers_affect_status']) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
                 PluginTicket::class, 'pluginYagpItemAdd',
             ];
@@ -147,12 +148,6 @@ function plugin_init_yagp(): void
         if (!empty($config->fields['solutiontypes'])) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILSolution::class] = [
                 PluginTicket::class, 'pluginYagpItemAdd',
-            ];
-        }
-
-        if ($config->fields['observers_affect_status']) {
-            $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginTicket::class, 'preItemAdd',
             ];
         }
     }
