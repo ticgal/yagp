@@ -145,8 +145,9 @@ class PluginYagpTicketsolveddate extends CommonDBTM
                 if (!is_null($row["first_task_begin"])) {
                     if ($row["date"] > $row["first_task_begin"]) {
                         $newdate = strtotime('-1 hour', strtotime($row["first_task_begin"]));
-                        $newdate = date('Y-m-d H:i', $newdate);
-                        $ticket->update(['id' => $row["id"], 'date' => $newdate]);
+                        $newdate = date('Y-m-d H:i:s', $newdate);
+                        // Bypasses "block opening date": this action is meant to adjust it
+                        PluginYagpTicket::updateOpeningDate($ticket, (int) $row["id"], $newdate);
                         $task->addVolume(1);
                         $task->log("Updated Ticket open date id: " . $row["id"]);
                     }

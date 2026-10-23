@@ -35,6 +35,14 @@ class PluginYagpTicket extends CommonDBTM
     public static $rightname = 'ticket';
 
     /**
+     * Set only while the "changeDate" automatic action updates the opening date itself.
+     * A static property, so it cannot be set from request data.
+     *
+     * @var bool
+     */
+    private static $opening_date_update_allowed = false;
+
+    /**
      * Rows are only written by the plugin hooks (add() does not check rights).
      * Refuse web writes, e.g. through core's generic plugins/yagp/front/ticket.form.php.
      *
@@ -349,9 +357,32 @@ JAVASCRIPT;
      */
     public static function pluginYagpPreTicketUpdate(Ticket $item): void
     {
+        if (self::$opening_date_update_allowed) {
+            return;
+        }
+
         $config = PluginYagpConfig::getInstance();
         if (!empty($config->fields['blockdate']) && is_array($item->input)) {
             unset($item->input['date']);
+        }
+    }
+
+    /**
+     * Update the opening date of a ticket even when "block opening date" is enabled.
+     * Only for the plugin's own automatic action, never with user input.
+     *
+     * @param  Ticket $ticket
+     * @param  int    $tickets_id
+     * @param  string $date
+     * @return bool
+     */
+    public static function updateOpeningDate(Ticket $ticket, int $tickets_id, string $date): bool
+    {
+        self::$opening_date_update_allowed = true;
+        try {
+            return $ticket->update(['id' => $tickets_id, 'date' => $date]);
+        } finally {
+            self::$opening_date_update_allowed = false;
         }
     }
 

@@ -12,6 +12,7 @@
 - Remove dead code (allocator SQL, unused tab hooks)
 - Satisfaction modal only opens for users who can answer the survey; technicians no longer get an access denied modal that reopens on every reload
 - Invalid transfer lists now return a 400 error page instead of a blank page
+- "Change solved date" automatic action adjusts the opening date again: the date was sent without seconds (rejected by GLPI) and was dropped when "Block opening date" was enabled
 ### Security
 - Quick transfer: the confirmed transfer reads the ticket from the POST body only
 - Transfer: the list sent to the core transfer is rebuilt from the checked integer ids
