@@ -34,7 +34,7 @@ use GlpiPlugin\Yagp\Config;
 use GlpiPlugin\Yagp\Postshowitem;
 use GlpiPlugin\Yagp\Ticket as PluginTicket;
 
-define('PLUGIN_YAGP_VERSION', '4.0.0-beta.2');
+define('PLUGIN_YAGP_VERSION', '4.0.0-beta.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "12.0.0");
 // Maximum GLPI version, exclusive
