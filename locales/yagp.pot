@@ -140,6 +140,10 @@ msgstr ""
 msgid "Allow anonymous requester"
 msgstr ""
 
+#: templates/config.html.twig
+msgid "Security notice: the requester is taken from the tag written in the message body, not from the real sender. Anyone able to send mail to the collected mailbox can open tickets on behalf of any user (or of an arbitrary anonymous requester). Enable this option only on mailboxes that receive mail from trusted senders."
+msgstr ""
+
 #: entrada estándar:163
 msgid "Tag to search"
 msgstr ""

@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -30,6 +30,7 @@
  */
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
 
 include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
@@ -37,27 +38,26 @@ Html::header_nocache();
 
 $plugin = new Plugin();
 if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
-    Html::displayNotFoundError();
+    throw new NotFoundHttpException();
 }
 
 Session::checkLoginUser();
+Session::checkRight('transfer', READ);
+/** @var array $CFG_GLPI */
 global $CFG_GLPI;
 
 $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
 $transfer = new PluginYagpTransfer();
-if (isset($_POST["id"]) && ($_POST["id"] > 0)) {
-    $transfer->showForm(1, [
-        'target'        => $CFG_GLPI['root_doc'] . "/plugins/yagp/front/transfer.form.php",
-        'display'       => false,
-        'transferlist'  => PluginYagpTransfer::getCompleteTransferOptions(),
-    ]);
-}
 
-if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
-    $itemtype = $_GET['itemtype'];
-    $id = (int) $_GET['items_id'];
+// The confirmed transfer only reads POST data (core CSRF check applies); GET only displays.
+$is_confirm = isset($_POST['confirm_transfer']);
+$request    = $is_confirm ? $_POST : $_GET;
+
+if (isset($request['itemtype']) && isset($request['items_id'])) {
+    $itemtype = $request['itemtype'];
+    $id = (int) $request['items_id'];
 
     // Quick transfer is only offered on tickets, do not instantiate arbitrary itemtypes.
     if ($itemtype !== Ticket::class) {
@@ -80,18 +80,32 @@ if (isset($_GET['itemtype']) && isset($_GET['items_id'])) {
         && $config->fields['autotransfer'] == 1
         && isset($item->fields['entities_id'])
         && $item->fields['entities_id'] != $config->fields['transfer_entity']
+        // Like the core transfer: never move a ticket to an entity the user cannot access.
+        && Session::haveAccessToEntity((int) $config->fields['transfer_entity'])
     ) {
+        if (!$is_confirm) {
+            // State change only through a POST (core CSRF check applies), never on a plain GET.
+            echo "<form method='post' action='" . htmlescape($CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/quicktransfer.php')
+                . "' class='d-flex w-100 justify-content-center mt-4'>";
+            echo Html::hidden('itemtype', ['value' => $itemtype]);
+            echo Html::hidden('items_id', ['value' => $id]);
+            echo "<button type='submit' name='confirm_transfer' value='1' class='btn btn-primary'>"
+                . __s('Execute') . "</button>";
+            Html::closeForm();
+            exit();
+        }
+
         $glpitransfer = new Transfer();
         $glpitransfer->moveItems(
             $transferlist,
-            $config->fields['transfer_entity'],
+            (int) $config->fields['transfer_entity'],
             PluginYagpTransfer::getCompleteTransferOptions(),
         );
 
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
             $msg,
-            Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity']),
+            htmlescape(Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity'])),
         );
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";

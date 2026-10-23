@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -150,73 +150,6 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
 }
 
 /**
- * Plugin_Yagp_addDefaultJoin
- *
- * @param  mixed $in
- * @return array
- */
-function Plugin_Yagp_addDefaultJoin($in): array
-{
-    // Deprecated in GLPI 11:
-    // ticket visibility filtering is now native in GLPI.
-    /*
-    list($itemtype, $out) = $in;
-
-    if (!PluginYagpProfile::getAllocatorPermission()) {
-        return [$itemtype, $out];
-    }
-
-    if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
-        if (
-            isset($in[1]) &&
-            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
-                preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
-        ) {
-            $new_condition = PluginYagpProfile::getAllocatorSQLTickets();
-            $out .= " INNER JOIN $new_condition `yagp` ON `yagp`.`tickets_id` = `glpi_tickets`.`id`";
-        }
-    }
-
-    return [$itemtype, $out];
-    */
-    return $in;
-}
-
-/**
- * Plugin_Yagp_addDefaultWhere
- *
- * @param  array $in
- * @return array
- */
-function Plugin_Yagp_addDefaultWhere(array $in): array
-{
-    // Deprecated in GLPI 11:
-    // ticket visibility filtering is now native in GLPI.
-    /*
-    if (!PluginYagpProfile::getAllocatorPermission()) {
-        return $in;
-    }
-
-    if (isset($in[0]) && $in[0] == Ticket::class && isset($_SERVER['REQUEST_URI'])) {
-        if (
-            isset($in[1]) &&
-            (preg_match('/\/front\/ticket/', $_SERVER['REQUEST_URI']) ||
-                preg_match('/\/ajax\/search.*itemtype=Ticket/', $_SERVER['REQUEST_URI']))
-        ) {
-            $condition = "`glpi_tickets`.`status`='1'";
-            $new_condition = "(`glpi_tickets`.`status`='1' AND `yagp`.`assoc` IS NOT NULL)";
-            // replace condition
-            $in[1] = str_replace($condition, $new_condition, $in[1]);
-            $in[1] .= " AND `yagp`.`assoc` IS NOT NULL";
-        }
-    }
-
-    return $in;
-    */
-    return $in;
-}
-
-/**
  * @param array $params
  *
  * @return void
@@ -233,49 +166,3 @@ function plugin_yagp_pre_show_tab(array $params): void
         PluginYagpPreshowtab::plugin_yagp_preShowTab($params);
     }
 }
-
-/**
- * @param array $params
- *
- * @return void
- */
-// Deprecated function, now in GLPI 11
-/*
-function plugin_yagp_post_show_tab(array $params): void
-{
-*/
-/** @var \DBmysql $DB */
-//   global $DB;
-/*
-    $config = PluginYagpConfig::getInstance();
-
-    if (isset($params['item']) && $params['item'] instanceof CommonDBTM) {
-        $item = $params['item'];
-        if (
-            $item->getType() == 'Ticket'
-            && isset($params['options']['tabnum'])
-            && $params['options']['tabnum'] == 3
-        ) {
-            */
-/** @var Ticket $item */
-/* $query = [
-    'FROM' => TicketSatisfaction::getTable(),
-    'WHERE' => [
-        'tickets_id' => $item->getID(),
-        'date_answered' => null,
-    ],
-];
-$req = $DB->request($query);
-if (count($req) == 1) {
-    $minstart = $config->fields['default_satisfaction'];
-    $script = <<<JAVASCRIPT
-        $(document).ready(function() {
-            $('#stars').rateit('value', {$minstart});
-        });
-    JAVASCRIPT;
-    echo Html::scriptBlock($script);
-}
-        }
-    }
-}
-*/

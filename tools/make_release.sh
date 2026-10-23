@@ -170,7 +170,10 @@ done
 # if exist composer.json, use composer install --no-dev
 if [ -f composer.json ]; then
     echo "Removing development dependencies"
-    composer install --no-dev --quiet
+    composer install --no-dev --quiet || {
+        echo "composer install --no-dev failed, aborting release" >&2
+        exit 1
+    }
 fi
 
 cd ..
@@ -182,7 +185,7 @@ else
     echo "Creating private release"
     PACKAGE_NAME="$PLUGINNAME-$RELEASE"
 fi
-tar cjf "$PACKAGE_NAME.tar.bz2" $PLUGINNAME
+tar cjf "glpi-$PACKAGE_NAME.tar.bz2" $PLUGINNAME
 
 cd $INIT_PWD
 

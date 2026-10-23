@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,13 +21,15 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
  * @since     2019
  * -------------------------------------------------------------------------
  */
+
+use Glpi\Exception\Http\BadRequestHttpException;
 
 // phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
 class PluginYagpTransfer extends CommonDBTM
@@ -45,13 +47,13 @@ class PluginYagpTransfer extends CommonDBTM
             $params['readonly'] = true;
         }
 
-        echo "<form method='post' name=form action='" . $options['target'] . "'>";
+        echo "<form method='post' name=form action='" . htmlescape($options['target']) . "'>";
         echo "<div class='center' id='tabsbody' >";
         echo "<table class='tab_cadre_fixe'>";
 
         echo "<tr><td class='tab_bg_2 top' colspan='4'>";
         echo "<div class='center'>";
-        echo "<input type='hidden' name='transferlist' value='" . json_encode($options['transferlist']) . "'>";
+        echo "<input type='hidden' name='transferlist' value='" . htmlescape(json_encode($options['transferlist'])) . "'>";
         Entity::dropdown(['name' => 'to_entity']);
         echo "&nbsp;<input type='submit' name='transfer' value=\"" . __s('Execute') . "\"
                 class='btn btn-primary'></div>";
@@ -302,9 +304,7 @@ class PluginYagpTransfer extends CommonDBTM
             /** @var class-string<CommonDBTM> $itemtype */
             foreach ($transferlist as $itemtype => $tab) {
                 if (count($tab)) {
-                    if (!($item = getItemForItemtype($itemtype))) {
-                        continue;
-                    }
+                    $item = getItemForItemtype($itemtype);
                     $table = $itemtype::getTable();
 
                     $iterator = $DB->request([
@@ -331,12 +331,12 @@ class PluginYagpTransfer extends CommonDBTM
                     if (count($iterator)) {
                         echo '<div class="d-flex justify-content-around py-2">';
                         foreach ($iterator as $data) {
-                            echo '<span>' . $item->getTypeName() . '</span>';
+                            echo '<span>' . htmlescape($item->getTypeName()) . '</span>';
                             if ($entID != $data['entID']) {
                                 $entID = $data['entID'];
-                                echo "<span>" . $data['locname'] . "</span>";
+                                echo "<span>" . htmlescape($data['locname']) . "</span>";
                             }
-                            echo "<span>" . ($data['name'] ? $data['name'] : "(" . $data['id'] . ")") . "</span>";
+                            echo "<span>" . htmlescape($data['name'] ?: "(" . $data['id'] . ")") . "</span>";
                         }
                         echo '</div>';
                     }
@@ -401,6 +401,7 @@ class PluginYagpTransfer extends CommonDBTM
             'keep_reservation'      => 1,
             'keep_device'           => 1,
             'keep_history'          => 1,
+            'keep_location'         => 1,
             'keep_infocom'          => 1,
             'keep_dc_monitor'       => 1,
             'clean_dc_monitor'      => 1,
@@ -418,9 +419,11 @@ class PluginYagpTransfer extends CommonDBTM
             'clean_software'        => 1,
             'keep_document'         => 1,
             'clean_document'        => 1,
-            'keep_cartidgeitem'     => 1,
-            'clean_cartidgeitem'    => 1,
-            'keep_cartidge'         => 1,
+            'keep_cartridgeitem'    => 1,
+            'clean_cartridgeitem'   => 1,
+            'keep_cartridge'        => 1,
+            'keep_supplier'         => 1,
+            'clean_supplier'        => 0,
             'keep_consumable'       => 1,
             'keep_disk'             => 1,
             'keep_certificate'      => 1,
@@ -435,26 +438,18 @@ class PluginYagpTransfer extends CommonDBTM
      * @param array $items
      *
      * @return void
+     *
+     * @throws BadRequestHttpException
      */
     public static function validateTransferList(array $items): void
     {
         foreach ($items as $itemtype => $items_ids) {
-            if (!is_string($itemtype) || !is_array($items_ids)) {
-                Session::addMessageAfterRedirect(
-                    __('Invalid transfer list', 'yagp'),
-                    false,
-                    ERROR,
-                );
-                exit;
+            if ($itemtype !== Ticket::class || !is_array($items_ids)) {
+                throw new BadRequestHttpException(__('Invalid transfer list', 'yagp'));
             }
             foreach ($items_ids as $items_id) {
                 if (!is_numeric($items_id)) {
-                    Session::addMessageAfterRedirect(
-                        __('Invalid transfer list', 'yagp'),
-                        false,
-                        ERROR,
-                    );
-                    exit;
+                    throw new BadRequestHttpException(__('Invalid transfer list', 'yagp'));
                 }
             }
         }

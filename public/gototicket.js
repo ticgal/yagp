@@ -1,7 +1,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -19,7 +19,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -50,7 +50,7 @@ $(document).ready(function () {
 		$('#yagp_form').submit(function (e) {
 			e.preventDefault(e);
 			var id = $('#goto').val();
-			window.location.href = CFG_GLPI.url_base + "/index.php?redirect=ticket_" + id + "&noAUTO=1";
+			window.location.href = CFG_GLPI.url_base + "/index.php?redirect=ticket_" + encodeURIComponent(id) + "&noAUTO=1";
 		});
 	}
 

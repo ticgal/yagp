@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -31,11 +31,11 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '3.0.2');
+define('PLUGIN_YAGP_VERSION', '3.0.3');
 // Minimal GLPI version, inclusive
-define("PLUGIN_YAGP_MIN_GLPI", "11.0");
+define("PLUGIN_YAGP_MIN_GLPI", "11.0.0");
 // Maximum GLPI version, exclusive
-define("PLUGIN_YAGP_MAX_GLPI", "12.0");
+define("PLUGIN_YAGP_MAX_GLPI", "12.0.0");
 
 /**
  * plugin_version_yagp
@@ -78,6 +78,7 @@ function plugin_init_yagp(): void
     $PLUGIN_HOOKS[Hooks::PRE_ITEM_UPDATE]['yagp'] = [
         PluginYagpConfig::class  => 'plugin_yagp_updateitem',
         TicketSatisfaction::class  => [PluginYagpTicket::class, 'plugin_yagp_preItemUpdate'],
+        Ticket::class              => [PluginYagpTicket::class, 'pluginYagpPreTicketUpdate'],
     ];
 
     $plugin = new Plugin();
@@ -111,7 +112,6 @@ function plugin_init_yagp(): void
         }
 
         $PLUGIN_HOOKS[Hooks::PRE_SHOW_TAB]['yagp'] = 'plugin_yagp_pre_show_tab';
-        $PLUGIN_HOOKS[Hooks::POST_SHOW_TAB]['yagp'] = 'plugin_yagp_post_show_tab';
 
         if ($config->fields['recategorization'] || $config->fields['autoclose_rejected_tickets']) {
             $PLUGIN_HOOKS[Hooks::ITEM_UPDATE]['yagp'] = [
@@ -140,7 +140,7 @@ function plugin_init_yagp(): void
             ];
         }
 
-        if ($config->fields['autoclose_rejected_tickets']) {
+        if ($config->fields['autoclose_rejected_tickets'] || $config->fields['observers_affect_status']) {
             $PLUGIN_HOOKS[Hooks::ITEM_ADD]['yagp'][ITILFollowup::class] = [
                 PluginYagpTicket::class, 'pluginYagpItemAdd',
             ];
@@ -152,33 +152,5 @@ function plugin_init_yagp(): void
             ];
         }
 
-        if ($config->fields['observers_affect_status']) {
-            $PLUGIN_HOOKS[Hooks::PRE_ITEM_ADD]['yagp'][ITILFollowup::class] = [
-                PluginYagpTicket::class, 'preItemAdd',
-            ];
-        }
-
-        // Deprecated in GLPI 11:
-        // "See group tickets only" is now handled by native GLPI permissions.
-        /*
-        $PLUGIN_HOOKS[Hooks::ITEM_CAN]['yagp'][Ticket::class] = [
-            PluginYagpProfile::class, 'checkAllocatorAccess',
-        ];
-
-        $PLUGIN_HOOKS['add_default_join']['yagp'] = "Plugin_Yagp_addDefaultJoin";
-        $PLUGIN_HOOKS['add_default_where']['yagp'] = "Plugin_Yagp_addDefaultWhere";
-        */
-
-        CronTask::Register(
-            'PluginYagpTicket',
-            'pluginyagpticketsatisfaction',
-            DAY_TIMESTAMP,
-            [
-                'state'     => 0,
-                'mode'      => CronTask::MODE_EXTERNAL,
-                'hourmin'   => 0,
-                'horumax'   => 24,
-            ],
-        );
     }
 }

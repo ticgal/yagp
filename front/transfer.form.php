@@ -3,7 +3,7 @@
 /**
  * -------------------------------------------------------------------------
  * YAGP plugin for GLPI
- * Copyright (C) 2019-2025 by the TICgal Team.
+ * Copyright (C) 2019-2026 by the TICgal Team.
  * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
  * -------------------------------------------------------------------------
  * LICENSE
@@ -21,7 +21,7 @@
  * -------------------------------------------------------------------------
  * @package   yagp
  * @author    the TICGAL team
- * @copyright Copyright (c) 2025 TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
  * @license   AGPL License 3.0 or (at your option) any later version
  *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
  * @link      https://www.tic.gal
@@ -29,10 +29,13 @@
  * -------------------------------------------------------------------------
  */
 
+use Glpi\Exception\Http\AccessDeniedHttpException;
+use Glpi\Exception\Http\NotFoundHttpException;
+
 include('../../../inc/includes.php');
 
 if (!Plugin::isPluginActive('yagp')) {
-    Html::displayNotFoundError();
+    throw new NotFoundHttpException();
 }
 
 Session::checkRight("transfer", READ);
@@ -48,30 +51,42 @@ Html::header('yagp');
 
 if (isset($_POST['transfer'])) {
     if (isset($_POST['transferlist'])) {
-        if (!Session::haveAccessToEntity($_POST['to_entity'])) {
-            Html::displayRightError();
+        if (!Session::haveAccessToEntity((int) $_POST['to_entity'])) {
+            throw new AccessDeniedHttpException();
         }
 
-        $default = PluginYagpTransfer::getCompleteTransferOptions();
-        foreach ($default as $k => $v) {
-            $_POST[$k] = isset($_POST[$k]) ? $_POST[$k] : $v;
+        $items = json_decode($_POST['transferlist'], true);
+        if (!is_array($items)) {
+            throw new AccessDeniedHttpException();
         }
-
-        $items = json_decode(stripslashes($_POST['transferlist']), true);
         PluginYagpTransfer::validateTransferList($items);
+
+        // Rebuild the list from integer ids only, so moveItems() gets exactly what was checked.
+        $ids   = array_map('intval', array_values($items[Ticket::class] ?? []));
+        $items = [Ticket::class => array_combine($ids, $ids)];
+
+        // Same bar as core: the user must be able to update every ticket to move.
+        foreach ($ids as $items_id) {
+            $ticket = new Ticket();
+            if ($items_id <= 0 || !$ticket->can($items_id, UPDATE)) {
+                throw new AccessDeniedHttpException();
+            }
+        }
+
+        // Never forward request data as transfer options.
         $transfer->moveItems(
             $items,
-            $_POST['to_entity'],
-            $_POST,
+            (int) $_POST['to_entity'],
+            PluginYagpTransfer::getCompleteTransferOptions(),
         );
 
         $entity = new Entity();
-        $entity->getFromDB($_POST['to_entity']);
+        $entity->getFromDB((int) $_POST['to_entity']);
 
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
             $msg,
-            Dropdown::getDropdownName('glpi_entities', $_POST['to_entity']),
+            htmlescape(Dropdown::getDropdownName('glpi_entities', (int) $_POST['to_entity'])),
         );
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
