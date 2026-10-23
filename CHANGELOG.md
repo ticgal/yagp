@@ -1,15 +1,12 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 4.0.0-beta.2 - Unreleased
-### Bugfixes
-- Includes the bug and security fixes from 3.0.3
-- Automatic transfer is confirmed through a POST, which replaces the `Sec-Fetch-Site` check of 4.0.0-beta.1
-
 ## 4.0.0-beta.1 - Unreleased
 ### Features
 - GLPI 12 support (GLPI 11 is no longer supported by this branch)
 - Classes moved to `src/` with the `GlpiPlugin\Yagp` namespace. The legacy `PluginYagp*` names are kept as deprecated aliases
 - YAGP configuration requires re-authentication, like the GLPI configuration
+- Includes the bug and security fixes from 3.0.3
+- Automatic transfer is confirmed through a POST, which replaces the `Sec-Fetch-Site` check of 4.0.0-beta.1
 
 ### Security
 - Quick transfer form only accepts tickets the user can update (any item type could be transferred before)
