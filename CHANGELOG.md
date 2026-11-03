@@ -1,16 +1,15 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 4.0.0-beta.1 - Unreleased
+## 4.0.0 - 2026-11-03
 ### Features
 - GLPI 12 support (GLPI 11 is no longer supported by this branch)
 - Classes moved to `src/` with the `GlpiPlugin\Yagp` namespace. The legacy `PluginYagp*` names are kept as deprecated aliases
 - YAGP configuration requires re-authentication, like the GLPI configuration
 - Includes the bug and security fixes from 3.0.3
-- Automatic transfer is confirmed through a POST, which replaces the `Sec-Fetch-Site` check of 4.0.0-beta.1
 
 ### Security
 - Quick transfer form only accepts tickets the user can update (any item type could be transferred before)
-- Automatic transfer is refused for requests not coming from GLPI itself
+- Automatic transfer must be confirmed with a button (POST) and only moves the ticket to an entity the user can access
 - Quick transfer requires the transfer right
 - Satisfaction modal checks that the user can view the ticket
 - Remove `front/postshowitem.form.php`, which allowed updating any satisfaction survey
