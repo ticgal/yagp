@@ -31,8 +31,7 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
-
-include('../../../inc/includes.php');
+use GlpiPlugin\Yagp\Transfer;
 
 if (!Plugin::isPluginActive('yagp')) {
     throw new NotFoundHttpException();
@@ -40,62 +39,36 @@ if (!Plugin::isPluginActive('yagp')) {
 
 Session::checkRight("transfer", READ);
 
-if (empty($_GET["id"])) {
-    $_GET["id"] = "";
+$items = [];
+$to_entity = -1;
+if (isset($_POST['transfer'], $_POST['transferlist'])) {
+    $to_entity = (int) ($_POST['to_entity'] ?? -1);
+    if ($to_entity < 0 || !Session::haveAccessToEntity($to_entity)) {
+        throw new AccessDeniedHttpException();
+    }
+    $items = Transfer::validateTransferList(json_decode((string) $_POST['transferlist'], true));
 }
-
-$transfer = new Transfer();
 
 $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
-if (isset($_POST['transfer'])) {
-    if (isset($_POST['transferlist'])) {
-        if (!Session::haveAccessToEntity((int) $_POST['to_entity'])) {
-            throw new AccessDeniedHttpException();
-        }
+if ($items !== []) {
+    // Never forward request data as transfer options
+    $transfer = new \Transfer();
+    $transfer->moveItems($items, $to_entity, Transfer::getCompleteTransferOptions());
 
-        $items = json_decode($_POST['transferlist'], true);
-        if (!is_array($items)) {
-            throw new AccessDeniedHttpException();
-        }
-        PluginYagpTransfer::validateTransferList($items);
+    $msg = __("Ticket transferred to %s", 'yagp');
+    $sprintf = sprintf(
+        $msg,
+        Dropdown::getDropdownName('glpi_entities', $to_entity),
+    );
 
-        // Rebuild the list from integer ids only, so moveItems() gets exactly what was checked.
-        $ids   = array_map('intval', array_values($items[Ticket::class] ?? []));
-        $items = [Ticket::class => array_combine($ids, $ids)];
-
-        // Same bar as core: the user must be able to update every ticket to move.
-        foreach ($ids as $items_id) {
-            $ticket = new Ticket();
-            if ($items_id <= 0 || !$ticket->can($items_id, UPDATE)) {
-                throw new AccessDeniedHttpException();
-            }
-        }
-
-        // Never forward request data as transfer options.
-        $transfer->moveItems(
-            $items,
-            (int) $_POST['to_entity'],
-            PluginYagpTransfer::getCompleteTransferOptions(),
-        );
-
-        $entity = new Entity();
-        $entity->getFromDB((int) $_POST['to_entity']);
-
-        $msg = __("Ticket transferred to %s", 'yagp');
-        $sprintf = sprintf(
-            $msg,
-            htmlescape(Dropdown::getDropdownName('glpi_entities', (int) $_POST['to_entity'])),
-        );
-
-        echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
-        echo "<div class='alert alert-info mt-4'>";
-        echo "<h3>" . $sprintf . "</h3>";
-        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
-        echo "</div>";
-        echo "</div>";
-
-        exit();
-    }
+    echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
+    echo "<div class='alert alert-info mt-4'>";
+    echo "<h3>" . htmlescape($sprintf) . "</h3>";
+    echo "<span class='text-muted'>" . htmlescape(__('You can close this window', 'yagp')) . "</span>";
+    echo "</div>";
+    echo "</div>";
 }
+
+Html::footer();

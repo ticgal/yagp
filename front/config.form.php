@@ -30,16 +30,17 @@
  */
 
 use Glpi\Exception\Http\NotFoundHttpException;
-
-include("../../../inc/includes.php");
+use GlpiPlugin\Yagp\Config;
 
 if (!Plugin::isPluginActive('yagp')) {
     throw new NotFoundHttpException();
 }
 
-$config = new PluginYagpConfig();
+Config::checkReAuthenticationOrRedirect();
+
+$config = new Config();
 if (isset($_POST["update"])) {
-    $config->check($_POST['id'], UPDATE);
+    $config->check((int) $_POST['id'], UPDATE);
     $config->update($_POST);
     Html::back();
 }
@@ -48,5 +49,5 @@ if (isset($_POST["update"])) {
 global $CFG_GLPI;
 
 $redirect = $CFG_GLPI["root_doc"] . "/front/config.form.php";
-$redirect .= "?forcetab=" . urlencode('PluginYagpConfig$1');
+$redirect .= "?forcetab=" . urlencode(Config::class . '$1');
 Html::redirect($redirect);

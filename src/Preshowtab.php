@@ -1,0 +1,67 @@
+<?php
+
+/**
+ * -------------------------------------------------------------------------
+ * YAGP plugin for GLPI
+ * Copyright (C) 2019-2026 by the TICgal Team.
+ * https://tic.gal/en/project/yagp-yet-another-glpi-plugin/
+ * -------------------------------------------------------------------------
+ * LICENSE
+ * This file is part of the YAGP plugin.
+ * YAGP plugin is free software; you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation; either version 3 of the License, or
+ * (at your option) any later version.
+ * YAGP plugin is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ * You should have received a copy of the GNU General Public License
+ * along with YAGP. If not, see <http://www.gnu.org/licenses/>.
+ * -------------------------------------------------------------------------
+ * @package   yagp
+ * @author    the TICGAL team
+ * @copyright Copyright (c) 2026 TICGAL team
+ * @license   AGPL License 3.0 or (at your option) any later version
+ *            http://www.gnu.org/licenses/agpl-3.0-standalone.html
+ * @link      https://www.tic.gal
+ * @since     2019
+ * -------------------------------------------------------------------------
+ */
+
+namespace GlpiPlugin\Yagp;
+
+use CommonDBTM;
+use Html;
+
+class Preshowtab extends CommonDBTM
+{
+    /**
+     * @param  array $params
+     *
+     * @return void
+     */
+    // phpcs:ignore PSR1.Methods.CamelCapsMethodName.NotCamelCaps
+    public static function plugin_yagp_preShowTab(array $params): void
+    {
+        if (
+            isset($_SESSION["glpiactiveprofile"])
+            && isset($_SESSION["glpiactiveprofile"]["interface"])
+            && $_SESSION["glpiactiveprofile"]["interface"] == "helpdesk"
+        ) {
+            $options = $params["options"];
+            switch ($options["itemtype"]) {
+                case "Log":
+                    $script = <<<JAVASCRIPT
+$(document).ready(function() {
+    $("div[id^='tab-Log']").css({display:"none"});
+    $("div[id^='tab--'] div.table-responsive").css({display:"none"});
+});
+JAVASCRIPT;
+
+                    echo Html::scriptBlock($script);
+                    break;
+            }
+        }
+    }
+}

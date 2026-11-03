@@ -31,25 +31,25 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Yagp\Config;
+use GlpiPlugin\Yagp\Transfer;
 
-include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-$plugin = new Plugin();
-if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
+if (!Plugin::isPluginActive('yagp')) {
     throw new NotFoundHttpException();
 }
 
-Session::checkLoginUser();
 Session::checkRight('transfer', READ);
+
 /** @var array $CFG_GLPI */
 global $CFG_GLPI;
 
 $_REQUEST['_in_modal'] = 1;
 Html::header('yagp');
 
-$transfer = new PluginYagpTransfer();
+$transfer = new Transfer();
 
 // The confirmed transfer only reads POST data (core CSRF check applies); GET only displays.
 $is_confirm = isset($_POST['confirm_transfer']);
@@ -74,7 +74,7 @@ if (isset($request['itemtype']) && isset($request['items_id'])) {
     $transferlist = [];
     $transferlist[$itemtype][$id] = $id;
 
-    $config = PluginYagpConfig::getInstance();
+    $config = Config::getInstance();
     if (
         isset($config->fields['autotransfer'])
         && $config->fields['autotransfer'] == 1
@@ -92,26 +92,26 @@ if (isset($request['itemtype']) && isset($request['items_id'])) {
             echo "<button type='submit' name='confirm_transfer' value='1' class='btn btn-primary'>"
                 . __s('Execute') . "</button>";
             Html::closeForm();
-            exit();
+            return;
         }
 
-        $glpitransfer = new Transfer();
+        $glpitransfer = new \Transfer();
         $glpitransfer->moveItems(
             $transferlist,
             (int) $config->fields['transfer_entity'],
-            PluginYagpTransfer::getCompleteTransferOptions(),
+            Transfer::getCompleteTransferOptions(),
         );
 
         $msg = __("Ticket transferred to %s", 'yagp');
         $sprintf = sprintf(
             $msg,
-            htmlescape(Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity'])),
+            Dropdown::getDropdownName('glpi_entities', $config->fields['transfer_entity']),
         );
 
         echo "<div class='d-flex w-100 justify-content-center align-items-center'>";
         echo "<div class='alert alert-info mt-4'>";
-        echo "<h3>" . $sprintf . "</h3>";
-        echo "<span class='text-muted'>" . __('You can close this window', 'yagp') . "</span>";
+        echo "<h3>" . htmlescape($sprintf) . "</h3>";
+        echo "<span class='text-muted'>" . htmlescape(__('You can close this window', 'yagp')) . "</span>";
         echo "</div>";
         echo "</div>";
     } else {

@@ -29,82 +29,10 @@
  * -------------------------------------------------------------------------
  */
 
-// phpcs:ignore PSR1.Classes.ClassDeclaration.MissingNamespace
-class PluginYagpProfile extends Profile
-{
-    public static $rightname = "profile";
+/**
+ * @deprecated Legacy class name kept for other plugins. Use \GlpiPlugin\Yagp\Profile instead.
+ */
 
-    // Deprecated in GLPI 11 (native behavior available in core).
-    // public const SEE_GROUP_TICKETS_ONLY = 1;
+require_once __DIR__ . '/../src/Profile.php';
 
-    /**
-     * {@inheritdoc}
-     */
-    public function getTabNameForItem(CommonGLPI $item, $withtemplate = 0): string|array
-    {
-        // Deprecated in GLPI 11:
-        // do not add YAGP profile tab.
-        return '';
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public static function displayTabContentForItem(CommonGLPI $item, $tabnum = 1, $withtemplate = 0): bool
-    {
-        // Deprecated in GLPI 11:
-        // do not render YAGP profile tab content.
-        return false;
-    }
-
-    /**
-     * {@inheritdoc}
-     */
-    public function showForm($ID, $options = []): bool
-    {
-        // Deprecated in GLPI 11:
-        // remove YAGP profile rights UI (See group tickets only).
-        return false;
-    }
-
-    /**
-     * getGeneralRights
-     *
-     * @return array
-     */
-    public static function getGeneralRights(): array
-    {
-        // Deprecated in GLPI 11:
-        // "See group tickets only" is now a native GLPI capability.
-        /*
-        $crud = [
-            self::SEE_GROUP_TICKETS_ONLY => __("See group tickets only", 'yagp'),
-        ];
-
-        $rights = [
-            'yagp' => [
-                'rights'    => $crud,
-                'itemtype'  => self::getType(),
-                'label'     => __("Ticket"),
-                'field'     => 'plugin_yagp_tickets',
-            ],
-        ];
-
-        return $rights;
-        */
-        return [];
-    }
-
-    /**
-     * @param Migration $migration
-     *
-     * @return void
-     */
-    public static function uninstall(Migration $migration): void
-    {
-        // getGeneralRights() is empty since 3.0.1, but installs from older
-        // versions still hold the "See group tickets only" right.
-        $migration->displayMessage("Removing profile rights");
-        ProfileRight::deleteProfileRights(['plugin_yagp_tickets']);
-    }
-}
+class_alias(\GlpiPlugin\Yagp\Profile::class, 'PluginYagpProfile');

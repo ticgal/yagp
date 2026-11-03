@@ -29,6 +29,12 @@
  * -------------------------------------------------------------------------
  */
 
+use GlpiPlugin\Yagp\Config;
+use GlpiPlugin\Yagp\Preshowtab;
+use GlpiPlugin\Yagp\Profile;
+use GlpiPlugin\Yagp\Ticket as PluginTicket;
+use GlpiPlugin\Yagp\Ticketsolveddate;
+
 /**
  * Install all necessary elements for the plugin
  *
@@ -38,18 +44,10 @@ function plugin_yagp_install(): bool
 {
     $migration = new Migration(PLUGIN_YAGP_VERSION);
 
-    // Parse inc directory
-    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-        // Load *.class.php files and get the class name
-        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-            $classname = 'PluginYagp' . ucfirst($matches[1]);
-            include_once($filepath);
-            // If the install method exists, load it
-            if (method_exists($classname, 'install')) {
-                $classname::install($migration);
-            }
-        }
-    }
+    Config::install($migration);
+    PluginTicket::install($migration);
+    Ticketsolveddate::install($migration);
+    Profile::install($migration);
 
     return true;
 }
@@ -63,18 +61,10 @@ function plugin_yagp_uninstall(): bool
 {
     $migration = new Migration(PLUGIN_YAGP_VERSION);
 
-    // Parse inc directory
-    foreach (glob(dirname(__FILE__) . '/inc/*') as $filepath) {
-        // Load *.class.php files and get the class name
-        if (preg_match("/inc.(.+)\.class.php/", $filepath, $matches)) {
-            $classname = 'PluginYagp' . ucfirst($matches[1]);
-            include_once($filepath);
-            // If the install method exists, load it
-            if (method_exists($classname, 'uninstall')) {
-                $classname::uninstall($migration);
-            }
-        }
-    }
+    Profile::uninstall($migration);
+    PluginTicket::uninstall($migration);
+    Config::uninstall($migration);
+    CronTask::unregister('yagp');
 
     return true;
 }
@@ -87,16 +77,11 @@ function plugin_yagp_uninstall(): bool
  */
 function plugin_yagp_updateitem(CommonDBTM $item): void
 {
-    if ($item::getType() == "PluginYagpConfig") {
-        /** @var PluginYagpConfig $item */
-        $input = $item->input;
-        if ($input["ticketsolveddate"] == 1) {
-            CronTask::register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
-                'state' => 1,
-                'mode'  => CronTask::MODE_EXTERNAL,
-            ]);
-        } elseif ($input["ticketsolveddate"] == 0) {
-            CronTask::unregister("YagpTicketsolveddate");
+    if ($item instanceof Config && isset($item->input['ticketsolveddate'])) {
+        if ($item->input['ticketsolveddate'] == 1) {
+            Ticketsolveddate::registerCronTask();
+        } elseif ($item->input['ticketsolveddate'] == 0) {
+            Ticketsolveddate::unregisterCronTask();
         }
     }
 }
@@ -109,7 +94,7 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
  */
 function plugin_yagp_getAddSearchOptions($itemtype): array
 {
-    $config = PluginYagpConfig::getInstance();
+    $config = Config::getInstance();
 
     $sopt = [];
     if ($config->fields['recategorization']) {
@@ -118,7 +103,7 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
                 $sopt['yagp'] = ['name' => 'YAGP'];
 
                 $sopt[9021321] = [
-                    'table'                 => PluginYagpTicket::getTable(),
+                    'table'                 => PluginTicket::getTable(),
                     'field'                 => 'is_recategorized',
                     'name'                  => __('Recategorized', 'yagp'),
                     'searchtype'            => ['equals', 'notequals'],
@@ -132,7 +117,7 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
                 ];
 
                 $sopt[9021322] = [
-                    'table'                 => PluginYagpTicket::getTable(),
+                    'table'                 => PluginTicket::getTable(),
                     'field'                 => 'plugin_yagp_itilcategories_id',
                     'name'                  => __('Initial category', 'yagp'),
                     'searchtype'            => ['equals', 'notequals'],
@@ -156,13 +141,8 @@ function plugin_yagp_getAddSearchOptions($itemtype): array
  */
 function plugin_yagp_pre_show_tab(array $params): void
 {
-    $config = PluginYagpConfig::getInstance();
-    /*
-        if ($config->fields['change_df_min_val']) {
-            PluginYagpPreshowtab::preShowTab($params);
-        }
-    */
+    $config = Config::getInstance();
     if ($config->fields['hide_historical']) {
-        PluginYagpPreshowtab::plugin_yagp_preShowTab($params);
+        Preshowtab::plugin_yagp_preShowTab($params);
     }
 }

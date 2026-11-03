@@ -31,54 +31,37 @@
 
 use Glpi\Exception\Http\AccessDeniedHttpException;
 use Glpi\Exception\Http\NotFoundHttpException;
+use GlpiPlugin\Yagp\Postshowitem;
 
-include("../../../inc/includes.php");
 header("Content-Type: text/html; charset=UTF-8");
 Html::header_nocache();
 
-$plugin = new Plugin();
-if (!$plugin->isInstalled('yagp') || !$plugin->isActivated('yagp')) {
+if (!Plugin::isPluginActive('yagp')) {
     throw new NotFoundHttpException();
 }
 
 Session::checkLoginUser();
-Html::popHeader(
-    PluginYagpPostshowitem::getTypeName(1),
-    $_SERVER['PHP_SELF'],
-    false,
-    '',
-    '',
-    PluginYagpPostshowitem::getType(),
-);
-Html::requireJs('rateit');
-echo Html::css('lib/jquery.rateit.css');
-// Indicar que el contenido se carga en un modal
-$_REQUEST['_in_modal'] = 1;
+
 $id = (int) ($_GET['id'] ?? 0);
 $ticket = new Ticket();
-if ($id <= 0 || !$ticket->can($id, READ)) {
+if ($id <= 0 || !$ticket->getFromDB($id)) {
+    throw new NotFoundHttpException();
+}
+if (!$ticket->canViewItem()) {
     throw new AccessDeniedHttpException();
 }
 $ts = new TicketSatisfaction();
-if (!$ts->getFromDBByCrit(['tickets_id' => $id]) || !$ts->canUpdateItem()) {
+if (!$ts->getFromDBByCrit(['tickets_id' => $id])) {
+    throw new NotFoundHttpException();
+}
+// Only whoever can answer the survey (requester, within the answer window)
+if (!$ts->canUpdateItem()) {
     throw new AccessDeniedHttpException();
 }
-$ts->fields['name'] = $ticket->fields['name'];
-$satisfaction = new PluginYagpPostshowitem();
-$ts->showSatisactionForm($ticket);
-//$satisfaction->showSatisfaction($id);
-// Contenido del modal
-if (!$ts->fields['date_answered']) {
-    echo <<<HTML
-<script>
-$(document).ready(function () {
-   setTimeout(() => {
-    var rateitpreset = $(".rateit-preset");
-    rateitpreset.attr('style','height: 16px; width: 0px;');
-   }, timeout = 10);
-});
-</script>
-HTML;
-}
 
+// Content is displayed in a modal
+$_REQUEST['_in_modal'] = 1;
+Html::popHeader(Postshowitem::getTypeName(1));
+$ts->fields['name'] = $ticket->fields['name'];
+$ts->showSatisfactionForm($ticket);
 Html::popFooter();
