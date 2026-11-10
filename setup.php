@@ -31,7 +31,7 @@
 
 use Glpi\Plugin\Hooks;
 
-define('PLUGIN_YAGP_VERSION', '3.0.3');
+define('PLUGIN_YAGP_VERSION', '3.0.4-beta.1');
 // Minimal GLPI version, inclusive
 define("PLUGIN_YAGP_MIN_GLPI", "11.0.0");
 // Maximum GLPI version, exclusive
@@ -151,6 +151,5 @@ function plugin_init_yagp(): void
                 PluginYagpTicket::class, 'pluginYagpItemAdd',
             ];
         }
-
     }
 }

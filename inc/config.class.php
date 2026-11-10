@@ -97,7 +97,6 @@ class PluginYagpConfig extends CommonDBTM
             $solutiontypes[$data['id']] = $data['name'];
         }
         $twig = TemplateRenderer::getInstance();
-        $twig->getEnvironment()->enableAutoReload();
         $template = "@yagp/config.html.twig";
         echo $twig->render($template, [
             'item'                  => $config,
@@ -169,7 +168,7 @@ class PluginYagpConfig extends CommonDBTM
             $solution_id = self::findDropdownByName($solutiontype, $solutionname)
                 ?: $solutiontype->add([
                     'name'      => $solutionname,
-                    'comment'   => __('Solution type for rejected tickets'),
+                    'comment'   => __('Solution type for rejected tickets', 'yagp'),
                 ]);
             $config->update(['id' => 1, 'solutiontypes_id_rejected' => $solution_id]);
         }
@@ -203,7 +202,7 @@ class PluginYagpConfig extends CommonDBTM
             $request_id = self::findDropdownByName($requesttype, $requestname)
                 ?: $requesttype->add([
                     'name'      => $requestname,
-                    'comment'   => __('Request type for reopening autoclosed tickets'),
+                    'comment'   => __('Request type for reopening autoclosed tickets', 'yagp'),
                 ]);
             $config->update(['id' => 1, 'requesttypes_id_reopen' => $request_id]);
         }

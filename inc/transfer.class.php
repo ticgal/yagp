@@ -367,7 +367,7 @@ class PluginYagpTransfer extends CommonDBTM
             $transfer->showForm(
                 1,
                 [
-                    'target'        => "/plugins/yagp/front/transfer.form.php",
+                    'target'        => $CFG_GLPI['root_doc'] . "/plugins/yagp/front/transfer.form.php",
                     'display'       => $display,
                     'transferlist'  => $transferlist,
                 ],

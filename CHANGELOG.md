@@ -1,5 +1,16 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 3.0.4-beta.1 - 2026-11-10
+### Bugfixes
+- Satisfaction expiry automatic action no longer expires surveys in entities without a time limit (duration 0), and reads the survey duration like GLPI does, including inherited entity settings
+- Saving the configuration without the "Change solved date" option no longer unregisters its automatic action or raises a PHP warning
+- Quick transfer now works when GLPI is served under a sub-path
+- Remove leftover debug output from the ticket form scripts and Twig auto-reload from the configuration page
+- Two configuration strings now use the plugin translation domain
+### Security
+- Autoclose rejected tickets: the requester check uses the logged-in user (or the sender of a collected mail) instead of the user sent with the followup, so another user can no longer close the ticket in the requester's name
+- Install and upgrade warn about profiles that still hold the "See group tickets only" right, which is no longer applied since 3.0.1
+
 ## 3.0.3 - 2026-10-23
 ### Bugfixes
 - Observers now lift the waiting status when the pending reason has no automatic closure; the status change now happens after the followup is stored
