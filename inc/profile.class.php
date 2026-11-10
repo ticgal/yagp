@@ -34,7 +34,8 @@ class PluginYagpProfile extends Profile
 {
     public static $rightname = "profile";
 
-    // Deprecated in GLPI 11 (native behavior available in core).
+    // "See group tickets only" was removed in 3.0.1. Core has no equivalent:
+    // "View new tickets" (READNEWTICKET) is not limited to the user's groups.
     // public const SEE_GROUP_TICKETS_ONLY = 1;
 
     /**
@@ -74,8 +75,7 @@ class PluginYagpProfile extends Profile
      */
     public static function getGeneralRights(): array
     {
-        // Deprecated in GLPI 11:
-        // "See group tickets only" is now a native GLPI capability.
+        // "See group tickets only" was removed in 3.0.1 (see install() for the upgrade warning).
         /*
         $crud = [
             self::SEE_GROUP_TICKETS_ONLY => __("See group tickets only", 'yagp'),
@@ -93,6 +93,57 @@ class PluginYagpProfile extends Profile
         return $rights;
         */
         return [];
+    }
+
+    /**
+     * Warn about profiles that still hold the "See group tickets only" right.
+     *
+     * The restriction stopped being applied in 3.0.1. The right rows are kept on
+     * purpose, so the administrator can still find out which profiles relied on it.
+     *
+     * @param Migration $migration
+     *
+     * @return void
+     */
+    public static function install(Migration $migration): void
+    {
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        $iterator = $DB->request([
+            'SELECT'     => [Profile::getTable() . '.name'],
+            'FROM'       => ProfileRight::getTable(),
+            'INNER JOIN' => [
+                Profile::getTable() => [
+                    'ON' => [
+                        ProfileRight::getTable() => 'profiles_id',
+                        Profile::getTable()      => 'id',
+                    ],
+                ],
+            ],
+            'WHERE'      => [
+                ProfileRight::getTable() . '.name'   => 'plugin_yagp_tickets',
+                ProfileRight::getTable() . '.rights' => ['>', 0],
+            ],
+            'ORDER'      => Profile::getTable() . '.name',
+        ]);
+
+        $profiles = [];
+        foreach ($iterator as $data) {
+            $profiles[] = $data['name'];
+        }
+        if ($profiles === []) {
+            return;
+        }
+
+        $message = sprintf(
+            __('The "See group tickets only" restriction is no longer applied since YAGP 3.0.1. Users of these profiles can see every new ticket of their entities: %s. Review their ticket rights.', 'yagp'),
+            implode(', ', $profiles),
+        );
+        // Migration messages only reach the console and the migration log,
+        // so the warning is also queued for the web interface.
+        $migration->addWarningMessage($message);
+        Session::addMessageAfterRedirect(htmlescape($message), false, WARNING);
     }
 
     /**

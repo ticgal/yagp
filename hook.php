@@ -90,6 +90,11 @@ function plugin_yagp_updateitem(CommonDBTM $item): void
     if ($item::getType() == "PluginYagpConfig") {
         /** @var PluginYagpConfig $item */
         $input = $item->input;
+        // Only react when the option itself is saved: a missing key would otherwise
+        // read as 0 and unregister the automatic action.
+        if (!isset($input["ticketsolveddate"])) {
+            return;
+        }
         if ($input["ticketsolveddate"] == 1) {
             CronTask::register("PluginYagpTicketsolveddate", 'changeDate', HOUR_TIMESTAMP, [
                 'state' => 1,

@@ -98,6 +98,9 @@ JAVASCRIPT;
      */
     public static function quickTransfer(array $params): bool
     {
+        /** @var array $CFG_GLPI */
+        global $CFG_GLPI;
+
         $item = isset($params['item']) ? $params['item'] : null;
         if (!is_object($item)) {
             return false;
@@ -116,7 +119,7 @@ JAVASCRIPT;
                 ) {
                     $entity_name = __("Select an entity to transfer", "yagp");
                     $ajax_id = 'ajax_playground';
-                    $ajax_url = '/plugins/yagp/ajax/quicktransfer.php';
+                    $ajax_url = $CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/quicktransfer.php';
                     $ajax_url .= "?itemtype={$item->getType()}&items_id={$item->getID()}";
                     $ajax_title = __("Transfer to", "yagp");
                     if (
