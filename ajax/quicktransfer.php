@@ -51,7 +51,7 @@ Html::header('yagp');
 
 $transfer = new Transfer();
 
-// The confirmed transfer only reads POST data (core CSRF check applies); GET only displays.
+// The confirmed transfer only reads POST data (covered by core's CSRF protection); GET only displays.
 $is_confirm = isset($_POST['confirm_transfer']);
 $request    = $is_confirm ? $_POST : $_GET;
 
@@ -64,7 +64,7 @@ if (isset($request['itemtype']) && isset($request['items_id'])) {
         throw new AccessDeniedHttpException();
     }
 
-    $item = new $itemtype();
+    $item = new Ticket();
     // Refuse ids coming from a creation form (-1) or pointing to a missing ticket,
     // and make sure the current user is actually allowed to transfer this one.
     if ($id <= 0 || !$item->getFromDB($id) || !$item->can($id, UPDATE)) {
@@ -84,7 +84,7 @@ if (isset($request['itemtype']) && isset($request['items_id'])) {
         && Session::haveAccessToEntity((int) $config->fields['transfer_entity'])
     ) {
         if (!$is_confirm) {
-            // State change only through a POST (core CSRF check applies), never on a plain GET.
+            // State change only through a POST (covered by core's CSRF protection), never on a plain GET.
             echo "<form method='post' action='" . htmlescape($CFG_GLPI['root_doc'] . '/plugins/yagp/ajax/quicktransfer.php')
                 . "' class='d-flex w-100 justify-content-center mt-4'>";
             echo Html::hidden('itemtype', ['value' => $itemtype]);

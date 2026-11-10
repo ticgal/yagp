@@ -1,5 +1,14 @@
 # YAGP GLPI Plugin CHANGELOG
 
+## 4.0.1-beta.1 - 2026-11-10
+### Bugfixes
+- Satisfaction expiry automatic action no longer expires surveys in entities without a time limit (duration 0), and reads the survey duration like GLPI does, including inherited entity settings
+- Three configuration strings now use the plugin translation domain
+- The deprecated `checkAllocatorAccess()` and `getAllocatorPermission()` helpers now log a deprecation notice
+### Security
+- Autoclose rejected tickets: the requester check uses the logged-in user (or the sender of a collected mail) instead of the user sent with the followup, so another user can no longer close the ticket in the requester's name
+- Install and upgrade warn about profiles that still hold the "See group tickets only" right, which is no longer applied since 3.0.1; the right is now only removed on uninstall, so administrators can review those profiles
+
 ## 4.0.0 - 2026-11-03
 ### Features
 - GLPI 12 support (GLPI 11 is no longer supported by this branch)

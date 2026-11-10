@@ -294,9 +294,9 @@ class Transfer extends CommonDBTM
          */
         global $DB, $CFG_GLPI;
 
-        // min-height evita que el iframe de la modal (Ajax::createIframeModalWindow)
-        // se congele con una altura demasiado pequeña al medir el contenido inicial,
-        // dejando el dropdown de entidad sin espacio para desplegarse.
+        // min-height keeps the modal iframe (Ajax::createIframeModalWindow) from freezing
+        // at a too small height when it measures the initial content, which would leave
+        // the entity dropdown no room to open.
         echo "<div class='d-flex w-100 flex-column' style='min-height: 400px;'>";
         if (isset($transferlist) && count($transferlist)) {
             echo "<div class='my-2 text-center'>";
