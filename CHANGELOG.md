@@ -1,6 +1,6 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 3.0.4-beta.1 - 2026-11-10
+## 3.0.4 - 2026-11-11
 ### Bugfixes
 - Satisfaction expiry automatic action no longer expires surveys in entities without a time limit (duration 0), and reads the survey duration like GLPI does, including inherited entity settings
 - Saving the configuration without the "Change solved date" option no longer unregisters its automatic action or raises a PHP warning
