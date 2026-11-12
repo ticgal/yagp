@@ -1,6 +1,6 @@
 # YAGP GLPI Plugin CHANGELOG
 
-## 4.0.1-beta.1 - 2026-11-10
+## 4.0.1 - 2026-11-12
 ### Bugfixes
 - Satisfaction expiry automatic action no longer expires surveys in entities without a time limit (duration 0), and reads the survey duration like GLPI does, including inherited entity settings
 - Three configuration strings now use the plugin translation domain
