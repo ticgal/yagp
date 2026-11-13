@@ -34,11 +34,15 @@ namespace GlpiPlugin\Yagp;
 use CommonGLPI;
 use Migration;
 use ProfileRight;
+use Session;
+use Toolbox;
 
 /**
- * "See group tickets only" right (2.3.0), removed in 3.0.1: GLPI handles it natively.
+ * "See group tickets only" right (2.3.0), removed in 3.0.1.
  *
- * Only kept to clean up the legacy right and for callers of the old public API.
+ * Core has no equivalent: "View new tickets" (READNEWTICKET) is not limited to the
+ * user's groups. Only kept to warn about profiles that relied on the legacy right,
+ * to clean it up on uninstall and for callers of the old public API.
  */
 class Profile extends CommonGLPI
 {
@@ -48,7 +52,7 @@ class Profile extends CommonGLPI
     private const LEGACY_RIGHT = 'plugin_yagp_tickets';
 
     /**
-     * @deprecated 3.0.1 "See group tickets only" is native in GLPI
+     * @deprecated 3.0.1 "See group tickets only" was removed
      *
      * @return array
      */
@@ -58,17 +62,19 @@ class Profile extends CommonGLPI
     }
 
     /**
-     * @deprecated 3.0.1 "See group tickets only" is native in GLPI
+     * @deprecated 3.0.1 "See group tickets only" was removed
      *
      * @return bool
      */
     public static function getAllocatorPermission(): bool
     {
+        Toolbox::deprecated('"See group tickets only" was removed in YAGP 3.0.1');
+
         return false;
     }
 
     /**
-     * @deprecated 3.0.1 "See group tickets only" is native in GLPI
+     * @deprecated 3.0.1 "See group tickets only" was removed: this no longer restricts anything
      *
      * @param \Ticket $item
      *
@@ -76,17 +82,60 @@ class Profile extends CommonGLPI
      */
     public static function checkAllocatorAccess(\Ticket $item): bool
     {
+        Toolbox::deprecated('"See group tickets only" was removed in YAGP 3.0.1, this check always allows');
+
         return true;
     }
 
     /**
+     * Warn about profiles that still hold the "See group tickets only" right.
+     *
+     * The rows are kept on purpose, so the administrator can still find out which
+     * profiles relied on the restriction. They are removed on uninstall.
+     *
      * @param Migration $migration
      *
      * @return void
      */
     public static function install(Migration $migration): void
     {
-        self::removeLegacyRight($migration);
+        /** @var \DBmysql $DB */
+        global $DB;
+
+        $iterator = $DB->request([
+            'SELECT'     => [\Profile::getTable() . '.name'],
+            'FROM'       => ProfileRight::getTable(),
+            'INNER JOIN' => [
+                \Profile::getTable() => [
+                    'ON' => [
+                        ProfileRight::getTable() => 'profiles_id',
+                        \Profile::getTable()     => 'id',
+                    ],
+                ],
+            ],
+            'WHERE'      => [
+                ProfileRight::getTable() . '.name'   => self::LEGACY_RIGHT,
+                ProfileRight::getTable() . '.rights' => ['>', 0],
+            ],
+            'ORDER'      => \Profile::getTable() . '.name',
+        ]);
+
+        $profiles = [];
+        foreach ($iterator as $data) {
+            $profiles[] = $data['name'];
+        }
+        if ($profiles === []) {
+            return;
+        }
+
+        $message = sprintf(
+            __('The "See group tickets only" restriction is no longer applied since YAGP 3.0.1. Users of these profiles can see every new ticket of their entities: %s. Review their ticket rights.', 'yagp'),
+            implode(', ', $profiles),
+        );
+        // Migration messages only reach the console and the migration log,
+        // so the warning is also queued for the web interface.
+        $migration->addWarningMessage($message);
+        Session::addMessageAfterRedirect(htmlescape($message), false, WARNING);
     }
 
     /**
@@ -95,16 +144,6 @@ class Profile extends CommonGLPI
      * @return void
      */
     public static function uninstall(Migration $migration): void
-    {
-        self::removeLegacyRight($migration);
-    }
-
-    /**
-     * @param Migration $migration
-     *
-     * @return void
-     */
-    private static function removeLegacyRight(Migration $migration): void
     {
         if (countElementsInTable(ProfileRight::getTable(), ['name' => self::LEGACY_RIGHT]) > 0) {
             $migration->displayMessage("Removing profile right " . self::LEGACY_RIGHT);

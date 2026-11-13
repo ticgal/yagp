@@ -37,6 +37,12 @@ use Html;
 class Preshowtab extends CommonDBTM
 {
     /**
+     * "Hide historical tab to post-only users": cosmetic only.
+     *
+     * The history is hidden with CSS, its content can still be requested. Access to the
+     * history is controlled by core's "logs" right, which is what must be used to
+     * actually restrict it.
+     *
      * @param  array $params
      *
      * @return void

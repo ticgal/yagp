@@ -125,9 +125,21 @@ class Ticket extends CommonDBTM
         ]);
         foreach ($iterator as $data) {
             $ticket = new \Ticket();
-            $ticket->getFromDB($data['tickets_id']);
+            if (!$ticket->getFromDB($data['tickets_id'])) {
+                continue;
+            }
 
-            $duration = (int) Entity::getUsedConfig('inquest_duration', $ticket->fields['entities_id']);
+            // Resolved through inquest_config, as core does (CommonITILSatisfaction),
+            // so inherited entity settings are honoured.
+            $duration = (int) Entity::getUsedConfig(
+                'inquest_config',
+                $ticket->fields['entities_id'],
+                'inquest_duration',
+            );
+            // 0 means "no time limit" in core: such surveys never expire.
+            if ($duration === 0) {
+                continue;
+            }
             if ((time() - strtotime($data['date_begin'])) > $duration * DAY_TIMESTAMP) {
                 $DB->update(TicketSatisfaction::getTable(), [
                     'date_answered' => date('Y-m-d H:i:s'),
@@ -530,9 +542,11 @@ class Ticket extends CommonDBTM
                     $ticket = new $parentItemtype();
                     // Only the requester refusing the solution may trigger the closure,
                     // not any user able to add a followup.
+                    $actor = self::getFollowupActor($item);
                     if (
-                        $ticket->getFromDB($parentItemsId)
-                        && $ticket->isUser(CommonITILActor::REQUESTER, (int) ($item->fields['users_id'] ?? 0))
+                        $actor > 0
+                        && $ticket->getFromDB($parentItemsId)
+                        && $ticket->isUser(CommonITILActor::REQUESTER, $actor)
                     ) {
                         $ticket->update(['id' => $parentItemsId, 'status' => \Ticket::CLOSED]);
                     }
@@ -541,6 +555,59 @@ class Ticket extends CommonDBTM
         }
 
         return true;
+    }
+
+    /**
+     * User who actually wrote the followup.
+     *
+     * The followup users_id cannot be trusted on its own: core keeps any users_id sent
+     * with the request. It is only trusted when GLPI itself is collecting mail, where
+     * core sets it from the sender and there is no user session to rely on.
+     *
+     * @param  ITILFollowup $followup
+     * @return int
+     */
+    private static function getFollowupActor(ITILFollowup $followup): int
+    {
+        if (self::isMailCollectorFollowup($followup)) {
+            return (int) ($followup->fields['users_id'] ?? 0);
+        }
+
+        return (int) Session::getLoginUserID();
+    }
+
+    /**
+     * Whether the followup was created by the mail collector.
+     *
+     * `_auto_import` is a plain input key a web user could send too, so it is only
+     * accepted together with an execution context a request cannot fake: a cron run
+     * (CLI or the session-less /front/cron.php) or the "Get email tickets now" action.
+     *
+     * @param  ITILFollowup $followup
+     * @return bool
+     */
+    private static function isMailCollectorFollowup(ITILFollowup $followup): bool
+    {
+        /** @var \Glpi\Kernel\Kernel|null $kernel */
+        global $kernel;
+
+        if (empty($followup->input['_auto_import'])) {
+            return false;
+        }
+
+        if (Session::isCron()) {
+            return true;
+        }
+
+        if (isCommandLine()) {
+            return false;
+        }
+
+        $request = $kernel?->getMainRequest();
+
+        return $request !== null
+            && $request->getPathInfo() === '/front/mailcollector.form.php'
+            && $request->request->has('get_mails');
     }
 
     /**
@@ -625,6 +692,9 @@ JAVASCRIPT;
     }
 
     /**
+     * "Hide historical tab to post-only users": cosmetic only, the tab is hidden with CSS.
+     * Core's "logs" right is what actually restricts access to the history.
+     *
      * @param array $params
      *
      * @return void
